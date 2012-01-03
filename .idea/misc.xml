@@ -3,6 +3,9 @@
   <component name="DependencyValidationManager">
     <option name="SKIP_IMPORT_STATEMENTS" value="false" />
   </component>
+  <component name="EntryPointsManager">
+    <entry_points version="2.0" />
+  </component>
   <component name="IdProvider" IDEtalkID="1C0AA8D8371641BE5DF6B3E015F9FFF6" />
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
