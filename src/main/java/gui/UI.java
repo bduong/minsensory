@@ -1,3 +1,4 @@
+
 package gui;
 
 import javax.swing.*;
@@ -12,8 +13,8 @@ public class UI {
     private int windowHeight;
 
     public UI () {
-        windowWidth = 600;
-        windowHeight = 400;
+        windowWidth = 900;
+        windowHeight = 600;
     }
 
     public UI (int width, int height) {
@@ -36,6 +37,12 @@ public class UI {
         application.setSize(windowWidth, windowHeight);
         application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         application.setVisible(false);
+
+        GroupLayout layout = new GroupLayout(application.getContentPane());
+        application.setLayout(layout);
+
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
 
         menuBar = new JMenuBar();
         file = new JMenu("File");
@@ -63,13 +70,23 @@ public class UI {
 
 
 
-        ImageIcon imageIcon = new ImageIcon(UI.class.getResource("/MINSensory Logo.jpg"));
-        application.setIconImage(imageIcon.getImage());
+//        ImageIcon imageIcon = new ImageIcon(UI.class.getResource("/MINSensory Logo.jpg"));
+//        application.setIconImage(imageIcon.getImage());
+
+        PlotPanel plotPanel = new PlotPanel();
+
+        layout.setHorizontalGroup(layout.createSequentialGroup()
+          .addGap(400)
+          .addComponent(plotPanel));
+
+        layout.setVerticalGroup(layout.createSequentialGroup()
+            .addComponent(plotPanel));
 
     }
 
     public void run() {
         if (application != null)
+
         application.setVisible(true);
     }
 
