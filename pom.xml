@@ -67,6 +67,7 @@
         </plugins>
     </build>
 
+    <!-- Profiles For Application Bundling On Windows and Mac OS X-->
     <profiles>
         <profile>
             <id>osx-deploy</id>

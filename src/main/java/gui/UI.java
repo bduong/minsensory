@@ -1,23 +1,21 @@
-
 package gui;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 
 public class UI {
 
     private int windowWidth;
     private int windowHeight;
 
-    public UI () {
+    public UI() {
         windowWidth = 900;
         windowHeight = 600;
     }
 
-    public UI (int width, int height) {
+    public UI(int width, int height) {
         windowWidth = width;
         windowHeight = height;
     }
@@ -26,12 +24,24 @@ public class UI {
 
     private JMenuBar menuBar;
     private JMenu file;
+    private JMenuItem load;
     private JMenuItem exit;
     private JMenu help;
     private JMenuItem about;
 
+    /** Set names for the UI components in order to test. */
+    private void setUIComponentNames() {
+        application.setName("applicationWindow");
+        menuBar.setName("menuBar");
+        file.setName("file");
+        exit.setName("exit");
+        help.setName("help");
+        about.setName("about");
+    }
 
-
+    /**
+     * Initializes the UI window
+     */
     public void init() {
         application = new JFrame("System For Sensing Neural Response");
         application.setSize(windowWidth, windowHeight);
@@ -47,6 +57,8 @@ public class UI {
         menuBar = new JMenuBar();
         file = new JMenu("File");
         file.setMnemonic('F');
+        load = new JMenu("Load");
+        load.setMnemonic('L');
         exit = new JMenuItem("Exit");
         exit.setMnemonic('E');
         exit.addActionListener(new ActionListener() {
@@ -55,6 +67,7 @@ public class UI {
                 System.exit(0);
             }
         });
+        file.add(load);
         file.add(exit);
 
         help = new JMenu("Help");
@@ -68,27 +81,26 @@ public class UI {
 
         application.setJMenuBar(menuBar);
 
-
-
-//        ImageIcon imageIcon = new ImageIcon(UI.class.getResource("/MINSensory Logo.jpg"));
-//        application.setIconImage(imageIcon.getImage());
-
         PlotPanel plotPanel = new PlotPanel();
+        ColorMappedImage colorMap = new ColorMappedImage(16,16);
+        colorMap.setSize(new Dimension(windowWidth/4, windowHeight/4));
+        PlotPanel plotPanel1 = new PlotPanel();
 
         layout.setHorizontalGroup(layout.createSequentialGroup()
-          .addGap(400)
+          .addComponent(plotPanel1)
+          .addGap(300)
           .addComponent(plotPanel));
 
         layout.setVerticalGroup(layout.createSequentialGroup()
-            .addComponent(plotPanel));
+          .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+            .addComponent(plotPanel1).addComponent(plotPanel)));
 
     }
 
     public void run() {
         if (application != null)
 
-        application.setVisible(true);
+            application.setVisible(true);
     }
-
 
 }

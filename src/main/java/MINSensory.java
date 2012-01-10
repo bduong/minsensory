@@ -10,7 +10,6 @@ import javax.swing.*;
 public class MINSensory {
 
     public static void main(String [] args) {
-        ImageIcon imageIcon = new ImageIcon(UI.class.getResource("/MINSensory Logo.jpg"));
         UI gui = new UI();
         gui.init();
         gui.run();
