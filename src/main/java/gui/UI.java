@@ -1,9 +1,13 @@
 package gui;
 
+import data.DataBank;
+import data.DataCollector;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 public class UI {
 
@@ -19,6 +23,9 @@ public class UI {
         windowWidth = width;
         windowHeight = height;
     }
+
+    private DataBank dataBank;
+    private DataCollector dataCollector;
 
     private JFrame application;
 
@@ -82,19 +89,42 @@ public class UI {
         application.setJMenuBar(menuBar);
 
         PlotPanel plotPanel = new PlotPanel();
+        plotPanel.setPreferredSize(new Dimension(windowWidth / 4, windowHeight));
         ColorMappedImage colorMap = new ColorMappedImage(16,16);
-        colorMap.setSize(new Dimension(windowWidth/4, windowHeight/4));
-        PlotPanel plotPanel1 = new PlotPanel();
+        
+        Random random = new Random();
+        int [] colors = new int[256];
+        for (int i = 0; i <256; i++) {
+           colors[i] = random.nextInt();
+        }
+        colorMap.setColors(colors);
+        colorMap.setPreferredSize(new Dimension(windowWidth / 4,
+          windowWidth / 4));
+        colorMap.setMaximumSize(new Dimension(windowWidth, windowHeight));
 
+        defineLayoutPositions(layout, plotPanel, colorMap);
+
+    }
+
+    private void defineLayoutPositions(GroupLayout layout, PlotPanel plotPanel,
+                                       ColorMappedImage colorMap) {
         layout.setHorizontalGroup(layout.createSequentialGroup()
-          .addComponent(plotPanel1)
-          .addGap(300)
+          .addGap(100)
+          .addComponent(colorMap)
+          .addGap(100)
           .addComponent(plotPanel));
 
         layout.setVerticalGroup(layout.createSequentialGroup()
           .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-            .addComponent(plotPanel1).addComponent(plotPanel)));
+            .addGroup(
+              layout.createSequentialGroup().addGap(200).addComponent(colorMap)
+                .addGap(200))
+            .addComponent(plotPanel)));
+    }
 
+    private void startDataCollection() {
+        dataBank = new DataBank();
+        dataCollector = new DataCollector(dataBank);
     }
 
     public void run() {

@@ -7,9 +7,11 @@ public class DataCollector extends SwingWorker<Void, DataLine>{
 
     private int numberOfLinesSince = 0;
     private DataBank dataBank;
+    private boolean stop;
 
     public DataCollector(DataBank dataBank) {
       this.dataBank = dataBank;
+        stop = false;
     }
     
     @Override
@@ -31,6 +33,5 @@ public class DataCollector extends SwingWorker<Void, DataLine>{
         returnedLine.divideBy(snapshotNumber);
         dataBank.addPoint(returnedLine);
     }
-
 
 }
