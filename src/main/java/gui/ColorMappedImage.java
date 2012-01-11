@@ -36,9 +36,5 @@ public class ColorMappedImage extends JPanel {
     public void paintComponent(Graphics g) {
        g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), this);
     }
-    
-//    @Override
-//    public void paint(Graphics g) {
-//        g.drawImage(image, 0, 0, null);
-//    }
+
 }

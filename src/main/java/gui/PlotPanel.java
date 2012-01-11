@@ -99,7 +99,7 @@ public class PlotPanel extends JPanel implements ActionListener{
 
     public void changePlot(int nodeToPlot){
         JFreeChart chart = plots.get(node);
-        chart.setTitle("Node" + nodeToPlot);
+        chart.setTitle("Node " + nodeToPlot);
         radioButtons.get(node).setSelected(false);
         if(++node > 4) {
             node = 0;

@@ -84,6 +84,7 @@
                         <artifactId>osxappbundle-maven-plugin</artifactId>
                         <version>1.0-alpha-1</version>
                         <configuration>
+                            <bundleName>MINSensory</bundleName>
                             <mainClass>MINSensory</mainClass>
                             <iconFile>
                                 ${basedir}/src/main/resources/MINSIcon.icns

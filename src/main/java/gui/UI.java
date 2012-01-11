@@ -2,6 +2,7 @@ package gui;
 
 import data.DataBank;
 import data.DataCollector;
+import gui.MacOS.MacOSEventHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,7 +65,6 @@ public class UI {
         layout.setAutoCreateContainerGaps(true);
 
         addMenuBar();
-
         final PlotPanel plotPanel = new PlotPanel();
         plotPanel.setPreferredSize(new Dimension(windowWidth / 4, windowHeight));
         final ColorMappedImage colorMap = new ColorMappedImage(16,16);
@@ -99,6 +99,10 @@ public class UI {
     }
 
     private void addMenuBar() {
+        if( onMac() ) {
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
+        }
+
         menuBar = new JMenuBar();
         file = new JMenu("File");
         file.setMnemonic('F');
@@ -112,14 +116,21 @@ public class UI {
                 System.exit(0);
             }
         });
-        file.add(load);
-        file.add(exit);
 
         help = new JMenu("Help");
         help.setMnemonic('H');
         about = new JMenuItem("About");
         about.setMnemonic('A');
-        help.add(about);
+
+
+
+        if( onMac() ){
+            new MacOSEventHandler();
+        } else {
+            file.add(exit);
+            help.add(about);
+        }
+        file.add(load);
 
         menuBar.add(file);
         menuBar.add(help);
@@ -152,6 +163,10 @@ public class UI {
         if (application != null)
 
             application.setVisible(true);
+    }
+
+    private boolean onMac() {
+        return (System.getProperty("mrj.version") != null);
     }
 
 }
