@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Random;
 
 public class UI {
@@ -61,6 +63,42 @@ public class UI {
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
 
+        addMenuBar();
+
+        final PlotPanel plotPanel = new PlotPanel();
+        plotPanel.setPreferredSize(new Dimension(windowWidth / 4, windowHeight));
+        final ColorMappedImage colorMap = new ColorMappedImage(16,16);
+        colorMap.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                int xScale = colorMap.getWidth()/16;
+                int yScale = colorMap.getHeight()/16;
+                int x = mouseEvent.getX()/xScale + 1;
+                int y = mouseEvent.getY()/yScale;
+                int number = y*16 + x;
+                if (number >256) {
+                    number-=16;
+                }
+                plotPanel.changePlot(number);
+            }
+        });
+        
+        Random random = new Random();
+        int [] colors = new int[256];
+        for (int i = 0; i <256; i++) {
+           colors[i] = random.nextInt();
+        }
+        colorMap.setColors(colors);
+        colorMap.setPreferredSize(new Dimension(windowWidth / 4,
+          windowWidth / 4));
+        colorMap.setMaximumSize(new Dimension(windowWidth, windowHeight));
+
+        defineLayoutPositions(layout, plotPanel, colorMap);
+
+        setUIComponentNames();
+    }
+
+    private void addMenuBar() {
         menuBar = new JMenuBar();
         file = new JMenu("File");
         file.setMnemonic('F');
@@ -87,23 +125,6 @@ public class UI {
         menuBar.add(help);
 
         application.setJMenuBar(menuBar);
-
-        PlotPanel plotPanel = new PlotPanel();
-        plotPanel.setPreferredSize(new Dimension(windowWidth / 4, windowHeight));
-        ColorMappedImage colorMap = new ColorMappedImage(16,16);
-        
-        Random random = new Random();
-        int [] colors = new int[256];
-        for (int i = 0; i <256; i++) {
-           colors[i] = random.nextInt();
-        }
-        colorMap.setColors(colors);
-        colorMap.setPreferredSize(new Dimension(windowWidth / 4,
-          windowWidth / 4));
-        colorMap.setMaximumSize(new Dimension(windowWidth, windowHeight));
-
-        defineLayoutPositions(layout, plotPanel, colorMap);
-
     }
 
     private void defineLayoutPositions(GroupLayout layout, PlotPanel plotPanel,

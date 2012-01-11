@@ -10,6 +10,8 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -17,13 +19,19 @@ import java.util.ArrayList;
  * Created by IntelliJ IDEA. User: bduong Date: 1/9/12 Time: 3:46 PM To change
  * this template use File | Settings | File Templates.
  */
-public class PlotPanel extends JPanel {
+public class PlotPanel extends JPanel implements ActionListener{
 
     private List<JFreeChart> plots;
+    private List<XYSeries> series;
+    private List<JRadioButton> radioButtons;
     private ButtonGroup buttonGroup = new ButtonGroup();
+    private int node;
     
     public PlotPanel() {
         plots = new ArrayList<JFreeChart>();
+        series = new ArrayList<XYSeries>();
+        radioButtons = new ArrayList<JRadioButton>();
+        node = 0;
         init();
     }
 
@@ -36,28 +44,33 @@ public class PlotPanel extends JPanel {
         plots.add(createSeriesAndChart(title));
         }
 
-        JPanel buttons = new JPanel(new GridLayout(5,1));
+        JPanel buttonPanel = new JPanel(new GridLayout(5,1));
 
-        JPanel charts = new JPanel(new GridLayout(5,1,0,5));
+        JPanel chartPanel = new JPanel(new GridLayout(5,1,0,5));
+        int chartNumber = 0;
         for (JFreeChart chart : plots) {
             JRadioButton button = new JRadioButton();
+            button.setActionCommand("" + chartNumber++);
             chart.getXYPlot().getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-            ChartPanel chartPanel = new ChartPanel(chart);
+            ChartPanel thisChart = new ChartPanel(chart);
+            radioButtons.add(button);
             buttonGroup.add(button);
 
-            buttons.add(button);
-            charts.add(chartPanel);
+            buttonPanel.add(button);
+            chartPanel.add(thisChart);
         }
+
+        radioButtons.get(0).setSelected(true);
         
         layout.setHorizontalGroup(layout.createSequentialGroup()
-          .addComponent(buttons)
+          .addComponent(buttonPanel)
           .addGap(20)
-          .addComponent(charts)
+          .addComponent(chartPanel)
         );
 
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-          .addComponent(buttons)
-        .addComponent(charts));
+          .addComponent(buttonPanel)
+        .addComponent(chartPanel));
 
     }
 
@@ -66,7 +79,7 @@ public class PlotPanel extends JPanel {
         for (int ii = -49; ii <= 0; ii++ ) {
             xySeries.add(ii, ii+49);
         }
-
+        series.add(xySeries);
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection(xySeries);
         return ChartFactory.createXYLineChart(
           title,
@@ -82,5 +95,21 @@ public class PlotPanel extends JPanel {
 
     public void run(){
         setVisible(true);
+    }
+
+    public void changePlot(int nodeToPlot){
+        JFreeChart chart = plots.get(node);
+        chart.setTitle("Node" + nodeToPlot);
+        radioButtons.get(node).setSelected(false);
+        if(++node > 4) {
+            node = 0;
+        }
+        radioButtons.get(node).setSelected(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        node = Integer.parseInt(actionEvent.getActionCommand());
+
     }
 }
