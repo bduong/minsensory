@@ -4,6 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
+	<name>MINSensory</name>
 
     <groupId>minsensory</groupId>
     <artifactId>minsensory</artifactId>
@@ -118,7 +119,41 @@
                         <artifactId>launch4j-plugin</artifactId>
                         <version>1.0.0.0</version>
                         <executions>
-
+							<execution>
+								<id>launch4j</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>launch4j</goal>
+								</goals>
+								<configuration>
+									<dontwrapjar>false</dontwrapjar>
+									<headertype>gui</headertype>
+									<outfile>${basedir}/target/${project.name}-${project.version}.exe</outfile>
+									<jar>${basedir}/${project.build.finalName}.jar</jar>
+									<errtitle>MINSensory</errtitle>
+									<jre>
+										<minversion>1.6.0</minversion>
+									</jre>
+									<classpath>
+										<mainclass>Minsensory</mainclass>
+										<adddependencies>false</adddependencies>
+										<precp>anything</precp>									
+									</classpath>
+									<icon>${basedir}/src/main/resources/MINSIcon.ico</icon>
+									<versionInfo>
+										<fileVersion>1.0.0.0</fileVersion>
+										<txtFileVersion>1.0</txtFileVersion>
+										<fileDescription>System For Sensing Neural Responses</fileDescription>
+										<copyright>Ben Duong, Nima Haghighi-Mood, Michael Kasparian</copyright>
+										<productVersion>1.0.0.0</productVersion>
+										<txtProductVersion>1.0</txtProductVersion>
+										<productName>System For Sensing Neural Response</productName>
+										<companyName>MINSensory</companyName>
+										<internalName>Minsesory</internalName>
+										<originalFilename>${project.name}-${project.version}.exe</originalFilename>					
+									</versionInfo>
+								</configuration>
+							</execution>
                         </executions>
                     </plugin>
                 </plugins>
