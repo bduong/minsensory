@@ -21,7 +21,7 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
-            <url>file:\\\${project.basedir}\lib</url>
+            <url>file://${project.basedir}/lib/</url>
         </repository>
     </repositories>
 
@@ -89,96 +89,96 @@
         </plugins>
     </build>
 
-    <!--&lt;!&ndash; Profiles For Application Bundling On Windows and Mac OS X&ndash;&gt;-->
-    <!--<profiles>-->
-    <!--<profile>-->
-    <!--<id>osx-deploy</id>-->
-    <!--<activation>-->
-    <!--<os>-->
-    <!--<family>mac</family>-->
-    <!--</os>-->
-    <!--</activation>-->
-    <!--<build>-->
-    <!--<plugins>-->
+    <!-- Profiles For Application Bundling On Windows and Mac OS X-->
+    <profiles>
+        <profile>
+            <id>osx-deploy</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <build>
+                <plugins>
 
-    <!--<plugin>-->
-    <!--<groupId>org.codehaus.mojo</groupId>-->
-    <!--<artifactId>osxappbundle-maven-plugin</artifactId>-->
-    <!--<version>1.0-alpha-1</version>-->
-    <!--<configuration>-->
-    <!--<bundleName>MINSensory</bundleName>-->
-    <!--<mainClass>MINSensory</mainClass>-->
-    <!--<iconFile>-->
-    <!--${basedir}/src/main/resources/MINSIcon.icns-->
-    <!--</iconFile>-->
-    <!--</configuration>-->
-    <!--<executions>-->
-    <!--<execution>-->
-    <!--<phase>package</phase>-->
-    <!--<goals>-->
-    <!--<goal>bundle</goal>-->
-    <!--</goals>-->
-    <!--</execution>-->
-    <!--</executions>-->
-    <!--</plugin>-->
-    <!--</plugins>-->
-    <!--</build>-->
-    <!--</profile>-->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>osxappbundle-maven-plugin</artifactId>
+                        <version>1.0-alpha-1</version>
+                        <configuration>
+                            <bundleName>MINSensory</bundleName>
+                            <mainClass>MINSensory</mainClass>
+                            <iconFile>
+                                ${basedir}/src/main/resources/MINSIcon.icns
+                            </iconFile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>bundle</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
-    <!--<profile>-->
-    <!--<id>windows-deploy</id>-->
-    <!--<activation>-->
-    <!--<os>-->
-    <!--<family>Windows</family>-->
-    <!--</os>-->
-    <!--</activation>-->
-    <!--<build>-->
-    <!--<plugins>-->
-    <!--&lt;!&ndash;<plugin>&ndash;&gt;-->
-    <!--&lt;!&ndash;<groupId>org.bluestemsoftware.open.maven.plugin </groupId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<artifactId>launch4j-plugin</artifactId>&ndash;&gt;-->
-    <!--&lt;!&ndash;<version>1.0.0.0</version>&ndash;&gt;-->
-    <!--&lt;!&ndash;<executions>&ndash;&gt;-->
-    <!--&lt;!&ndash;<execution>&ndash;&gt;-->
-    <!--&lt;!&ndash;<id>launch4j</id>&ndash;&gt;-->
-    <!--&lt;!&ndash;<phase>verify</phase>&ndash;&gt;-->
-    <!--&lt;!&ndash;&lt;!&ndash;<goals>&ndash;&gt;&ndash;&gt;-->
-    <!--&lt;!&ndash;&lt;!&ndash;<goal>launch4j</goal>&ndash;&gt;&ndash;&gt;-->
-    <!--&lt;!&ndash;&lt;!&ndash;</goals>&ndash;&gt;&ndash;&gt;-->
-    <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
-    <!--&lt;!&ndash;<dontwrapjar>false</dontwrapjar>&ndash;&gt;-->
-    <!--&lt;!&ndash;<headertype>gui</headertype>&ndash;&gt;-->
-    <!--&lt;!&ndash;<outfile>${basedir}/target/${project.name}-${project.version}.exe</outfile>&ndash;&gt;-->
-    <!--&lt;!&ndash;<jar>${basedir}/${project.build.finalName}.jar</jar>&ndash;&gt;-->
-    <!--&lt;!&ndash;<errtitle>MINSensory</errtitle>&ndash;&gt;-->
-    <!--&lt;!&ndash;<jre>&ndash;&gt;-->
-    <!--&lt;!&ndash;<minversion>1.6.0</minversion>&ndash;&gt;-->
-    <!--&lt;!&ndash;</jre>&ndash;&gt;-->
-    <!--&lt;!&ndash;<classpath>&ndash;&gt;-->
-    <!--&lt;!&ndash;<mainclass>Minsensory</mainclass>&ndash;&gt;-->
-    <!--&lt;!&ndash;<adddependencies>false</adddependencies>&ndash;&gt;-->
-    <!--&lt;!&ndash;<precp>anything</precp>&ndash;&gt;-->
-    <!--&lt;!&ndash;</classpath>&ndash;&gt;-->
-    <!--&lt;!&ndash;<icon>${basedir}/src/main/resources/MINSIcon.ico</icon>&ndash;&gt;-->
-    <!--&lt;!&ndash;<versionInfo>&ndash;&gt;-->
-    <!--&lt;!&ndash;<fileVersion>1.0.0.0</fileVersion>&ndash;&gt;-->
-    <!--&lt;!&ndash;<txtFileVersion>1.0</txtFileVersion>&ndash;&gt;-->
-    <!--&lt;!&ndash;<fileDescription>System For Sensing Neural Responses</fileDescription>&ndash;&gt;-->
-    <!--&lt;!&ndash;<copyright>Ben Duong, Nima Haghighi-Mood, Michael Kasparian</copyright>&ndash;&gt;-->
-    <!--&lt;!&ndash;<productVersion>1.0.0.0</productVersion>&ndash;&gt;-->
-    <!--&lt;!&ndash;<txtProductVersion>1.0</txtProductVersion>&ndash;&gt;-->
-    <!--&lt;!&ndash;<productName>System For Sensing Neural Response</productName>&ndash;&gt;-->
-    <!--&lt;!&ndash;<companyName>MINSensory</companyName>&ndash;&gt;-->
-    <!--&lt;!&ndash;<internalName>Minsensory</internalName>&ndash;&gt;-->
-    <!--&lt;!&ndash;<originalFilename>${project.name}-${project.version}.exe</originalFilename>&ndash;&gt;-->
-    <!--&lt;!&ndash;</versionInfo>&ndash;&gt;-->
-    <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
-    <!--&lt;!&ndash;</execution>&ndash;&gt;-->
-    <!--&lt;!&ndash;</executions>&ndash;&gt;-->
-    <!--&lt;!&ndash;</plugin>&ndash;&gt;-->
-    <!--</plugins>-->
-    <!--</build>-->
-    <!--</profile>-->
-    <!--</profiles>-->
+        <profile>
+            <id>windows-deploy</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.bluestemsoftware.open.maven.plugin </groupId>
+                        <artifactId>launch4j-plugin</artifactId>
+                        <version>1.0.0.0</version>
+                        <executions>
+                            <execution>
+                                <id>launch4j</id>
+                                <phase>verify</phase>
+                                <!--<goals>-->
+                                <!--<goal>launch4j</goal>-->
+                                <!--</goals>-->
+                                <configuration>
+                                    <dontwrapjar>false</dontwrapjar>
+                                    <headertype>gui</headertype>
+                                    <outfile>${basedir}/target/${project.name}-${project.version}.exe</outfile>
+                                    <jar>${basedir}/${project.build.finalName}.jar</jar>
+                                    <errtitle>MINSensory</errtitle>
+                                    <jre>
+                                        <minversion>1.6.0</minversion>
+                                    </jre>
+                                    <classpath>
+                                        <mainclass>Minsensory</mainclass>
+                                        <adddependencies>false</adddependencies>
+                                        <precp>anything</precp>
+                                    </classpath>
+                                    <icon>${basedir}/src/main/resources/MINSIcon.ico</icon>
+                                    <versionInfo>
+                                        <fileVersion>1.0.0.0</fileVersion>
+                                        <txtFileVersion>1.0</txtFileVersion>
+                                        <fileDescription>System For Sensing Neural Responses</fileDescription>
+                                        <copyright>Ben Duong, Nima Haghighi-Mood, Michael Kasparian</copyright>
+                                        <productVersion>1.0.0.0</productVersion>
+                                        <txtProductVersion>1.0</txtProductVersion>
+                                        <productName>System For Sensing Neural Response</productName>
+                                        <companyName>MINSensory</companyName>
+                                        <internalName>Minsensory</internalName>
+                                        <originalFilename>${project.name}-${project.version}.exe</originalFilename>
+                                    </versionInfo>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
