@@ -7,8 +7,6 @@ import com.apple.eawt.QuitHandler;
 import com.apple.eawt.QuitResponse;
 import gui.AboutDialog;
 
-import javax.swing.*;
-
 public class MacOSEventHandler extends Application{
 
     public MacOSEventHandler() {

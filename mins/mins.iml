@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+    <content url="file://$MODULE_DIR$/../mins">
+      <sourceFolder url="file://$MODULE_DIR$/../mins/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../mins/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../mins/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../mins/src/test/resources" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../mins/target/generated-sources/annotations" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/target/application-1.0.app" />
+      <excludeFolder url="file://$MODULE_DIR$/../mins/target/archive-tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/../mins/target/classes" />
+      <excludeFolder url="file://$MODULE_DIR$/../mins/target/maven-archiver" />
+      <excludeFolder url="file://$MODULE_DIR$/../mins/target/test-classes" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: jfree:jfreechart:1.0.13" level="project" />
+    <orderEntry type="library" name="Maven: jfree:jcommon:1.0.16" level="project" />
+    <orderEntry type="library" name="Maven: com.apple:AppleJavaExtensions:1.6" level="project" />
+  </component>
+</module>
+
