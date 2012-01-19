@@ -10,6 +10,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>testing</artifactId>
+    <version>1.0</version>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>minsensory</groupId>
+            <artifactId>mins</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+        </dependency>
+    </dependencies>
 </project>

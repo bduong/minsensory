@@ -10,7 +10,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mins</artifactId>
+    <version>1.0</version>
 
+    <dependencies>
+            <dependency>
+                <groupId>jfree</groupId>
+                <artifactId>jfreechart</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>com.apple</groupId>
+                <artifactId>AppleJavaExtensions</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+            </dependency>
+    </dependencies>
     <!-- Profiles For Application Bundling On Windows and Mac OS X-->
     <profiles>
         <profile>
