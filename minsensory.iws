@@ -2,10 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f6c001fc-79db-4574-99c5-30648625b7ce" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/com/apple/1.6/AppleJavaExtensions-1.6.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/com/apple/1.6/AppleJavaExtensions-1.6.pom" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mins/mins.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mins/pom.xml" afterPath="$PROJECT_DIR$/mins/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minsensory.iml" afterPath="$PROJECT_DIR$/minsensory.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minsensory.ipr" afterPath="$PROJECT_DIR$/minsensory.ipr" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minsensory.iws" afterPath="$PROJECT_DIR$/minsensory.iws" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testing/pom.xml" afterPath="$PROJECT_DIR$/testing/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testing/testing.iml" afterPath="$PROJECT_DIR$/testing/testing.iml" />
     </list>
     <ignored path="minsensory.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -64,37 +68,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="73" selection-start="226" selection-end="226" vertical-scroll-proportion="0.0">
+            <state line="43" column="18" selection-start="1422" selection-end="1422" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MacOSEventHandler.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/gui/MacOS/MacOSEventHandler.java">
+      <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/mins/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="48" selection-start="290" selection-end="290" vertical-scroll-proportion="0.0">
+            <state line="41" column="62" selection-start="1494" selection-end="1494" vertical-scroll-proportion="-0.22358346">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PlotPanel.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/gui/PlotPanel.java">
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/testing/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="12" selection-start="253" selection-end="253" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AppleJavaExtensions-1.6.pom" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/com/apple/1.6/AppleJavaExtensions-1.6.pom">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="18" selection-start="456" selection-end="456" vertical-scroll-proportion="0.0">
+            <state line="17" column="62" selection-start="679" selection-end="679" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -117,6 +112,8 @@
         <option value="$PROJECT_DIR$/src/main/java/gui/MacOS/MacOSEventHandler.java" />
         <option value="$PROJECT_DIR$/lib/com/apple/1.6/AppleJavaExtensions-1.6.pom" />
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/mins/pom.xml" />
+        <option value="$PROJECT_DIR$/testing/pom.xml" />
       </list>
     </option>
   </component>
@@ -134,14 +131,6 @@
         <PATH_ELEMENT>
           <option name="myItemId" value="" />
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="MINSensory" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="Dependencies" />
-          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$DependenciesNode" />
         </PATH_ELEMENT>
       </PATH>
       <PATH>
@@ -189,6 +178,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -221,6 +211,34 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="testing" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="minsensory" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="minsensory" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mins" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="minsensory" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="minsensory" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="lib" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -230,10 +248,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="apple" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="1.6" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -254,7 +268,6 @@
         </subPane>
       </pane>
       <pane id="Favorites" />
-      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -265,6 +278,7 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
+    <property name="dynamic.classpath" value="false" />
     <property name="MemberChooser.copyJavadoc" value="false" />
   </component>
   <component name="RunManager">
@@ -391,7 +405,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="355" y="161" width="1384" height="846" extended-state="0" />
+    <frame x="373" y="216" width="1384" height="846" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -404,7 +418,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31642696" sideWeight="0.67057675" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32096896" sideWeight="0.67057675" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25586677" sideWeight="0.67057675" order="0" side_tool="false" content_ui="tabs" />
@@ -471,8 +485,8 @@
           <OriginalElement>minsensory:minsensory:1.0</OriginalElement>
           <nodes>
             <node x="" y="">jfree:jfreechart:jar:1.0.13/jfree:jcommon:jar:1.0.16</node>
-            <node x="" y="">com.apple:AppleJavaExtensions:jar:1.5.4</node>
             <node x="" y="">jfree:jfreechart:jar:1.0.13</node>
+            <node x="" y="">com.apple:AppleJavaExtensions:jar:1.5.4</node>
             <node x="" y="">minsensory:minsensory:1.0</node>
           </nodes>
           <notes />
@@ -490,26 +504,23 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/gui/PlotPanel.java">
+    <entry file="file://$PROJECT_DIR$/testing/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="12" selection-start="253" selection-end="253" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/gui/MacOS/MacOSEventHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="48" selection-start="290" selection-end="290" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/com/apple/1.6/AppleJavaExtensions-1.6.pom">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="18" selection-start="456" selection-end="456" vertical-scroll-proportion="0.0">
+        <state line="17" column="62" selection-start="679" selection-end="679" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="73" selection-start="226" selection-end="226" vertical-scroll-proportion="0.0">
+        <state line="43" column="18" selection-start="1422" selection-end="1422" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mins/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="41" column="62" selection-start="1494" selection-end="1494" vertical-scroll-proportion="-0.22358346">
           <folding />
         </state>
       </provider>
