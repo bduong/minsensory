@@ -18,8 +18,8 @@ public class UI {
     private int windowHeight;
 
     public UI() {
-        windowWidth = 900;
-        windowHeight = 600;
+        windowWidth = 1920;
+        windowHeight = 1200;
     }
 
     public UI(int width, int height) {

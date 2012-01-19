@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>Testing</name>
     <artifactId>testing</artifactId>
     <version>1.0</version>
     <build>

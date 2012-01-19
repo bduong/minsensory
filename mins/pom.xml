@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>MINSensory Application</name>
     <artifactId>mins</artifactId>
     <version>1.0</version>
 
@@ -91,25 +92,25 @@
                     <plugin>
                         <groupId>org.bluestemsoftware.open.maven.plugin </groupId>
                         <artifactId>launch4j-plugin</artifactId>
-                        <version>1.0.0.0</version>
+                        <version>1.5.0.0</version>
                         <executions>
                             <execution>
                                 <id>launch4j</id>
                                 <phase>verify</phase>
-                                <!--<goals>-->
-                                <!--<goal>launch4j</goal>-->
-                                <!--</goals>-->
+                                <goals>
+                                    <goal>launch4j</goal>
+                                </goals>
                                 <configuration>
                                     <dontwrapjar>false</dontwrapjar>
-                                    <headertype>gui</headertype>
-                                    <outfile>${basedir}//target/${project.name}-${project.version}.exe</outfile>
-                                    <jar>${basedir}/${project.build.finalName}.jar</jar>
+                                    <headerType>gui</headerType>
+                                    <outfile>${basedir}${file.separator}target${file.separator}${project.name}-${project.version}.exe</outfile>
+                                    <jar>${basedir}${file.separator}target${file.separator}mins-1.0.jar</jar>
                                     <errtitle>MINSensory</errtitle>
                                     <jre>
-                                        <minversion>1.6.0</minversion>
+                                        <minVersion>1.6.0</minVersion>
                                     </jre>
                                     <classpath>
-                                        <mainclass>Minsensory</mainclass>
+                                        <mainclass>MINSensory</mainclass>
                                         <adddependencies>false</adddependencies>
                                         <precp>anything</precp>
                                     </classpath>

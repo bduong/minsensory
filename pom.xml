@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
-    <name>MINSensory</name>
+    <name>MINSensory Master</name>
     <modules>
         <module>testing</module>
         <module>mins</module>
@@ -25,7 +25,7 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
-            <url>file://${basedir}${file.seperator}lib</url>
+            <url>file://${basedir}${file.separator}lib</url>
         </repository>
     </repositories>
 
