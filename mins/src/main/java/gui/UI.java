@@ -73,16 +73,15 @@ public class UI {
             public void mouseClicked(MouseEvent mouseEvent) {
                 int xScale = colorMap.getWidth()/16;
                 int yScale = colorMap.getHeight()/16;
-                int x = mouseEvent.getX()/xScale + 1;
-                int y = mouseEvent.getY()/yScale;
-                int number = y*16 + x;
-                if (number >256) {
-                    number-=16;
+                int x = mouseEvent.getX()/xScale;
+                int y = mouseEvent.getY()/yScale + 1;
+                if (y > 16) {
+                    y=16;
                 }
-                plotPanel.changePlot(number);
+                plotPanel.changePlot(y,x);
             }
         });
-        
+
         Random random = new Random();
         int [] colors = new int[256];
         for (int i = 0; i <256; i++) {
@@ -93,7 +92,9 @@ public class UI {
           windowWidth / 4));
         colorMap.setMaximumSize(new Dimension(windowWidth, windowHeight));
 
-        defineLayoutPositions(layout, plotPanel, colorMap);
+        ColorGrid colorGrid = new ColorGrid(colorMap);
+
+        defineLayoutPositions(layout, plotPanel, colorGrid);
 
         setUIComponentNames();
     }
@@ -139,18 +140,20 @@ public class UI {
     }
 
     private void defineLayoutPositions(GroupLayout layout, PlotPanel plotPanel,
-                                       ColorMappedImage colorMap) {
+                                       ColorGrid colorMap) {
         layout.setHorizontalGroup(layout.createSequentialGroup()
-          .addGap(100)
+          .addGap(20)
           .addComponent(colorMap)
-          .addGap(100)
+          .addGap(200)
           .addComponent(plotPanel));
 
         layout.setVerticalGroup(layout.createSequentialGroup()
           .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
             .addGroup(
-              layout.createSequentialGroup().addGap(200).addComponent(colorMap)
-                .addGap(200))
+              layout.createSequentialGroup()
+                .addGap(100)
+                .addComponent(colorMap)
+                .addGap(250))
             .addComponent(plotPanel)));
     }
 

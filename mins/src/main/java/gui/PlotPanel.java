@@ -33,6 +33,7 @@ public class PlotPanel extends JPanel implements ActionListener{
         radioButtons = new ArrayList<JRadioButton>();
         node = 0;
         init();
+        setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
 
     private void init() {
@@ -40,7 +41,7 @@ public class PlotPanel extends JPanel implements ActionListener{
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
 
-        for (String title : new String[] {"Node 1", "Node 2", "Node 5", "Node 4", "Node 5"})    {
+        for (String title : new String[] {"Node 1-A", "Node 2-A", "Node 3-A", "Node 4-A", "Node 5-A"})    {
         plots.add(createSeriesAndChart(title));
         }
 
@@ -50,12 +51,16 @@ public class PlotPanel extends JPanel implements ActionListener{
         int chartNumber = 0;
         for (JFreeChart chart : plots) {
             JRadioButton button = new JRadioButton();
+            button.setHorizontalAlignment(JRadioButton.RIGHT);
             button.setActionCommand("" + chartNumber++);
+            button.addActionListener(this);
             chart.getXYPlot().getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
             ChartPanel thisChart = new ChartPanel(chart);
             radioButtons.add(button);
             buttonGroup.add(button);
 
+            button.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+            thisChart.setBorder(BorderFactory.createLineBorder(Color.RED));
             buttonPanel.add(button);
             chartPanel.add(thisChart);
         }
@@ -64,7 +69,7 @@ public class PlotPanel extends JPanel implements ActionListener{
         
         layout.setHorizontalGroup(layout.createSequentialGroup()
           .addComponent(buttonPanel)
-          .addGap(20)
+          .addGap(10)
           .addComponent(chartPanel)
         );
 
@@ -97,9 +102,11 @@ public class PlotPanel extends JPanel implements ActionListener{
         setVisible(true);
     }
 
-    public void changePlot(int nodeToPlot){
+    private static char [] nodes ="ABCDEFGHIJKLMNOP".toCharArray();
+
+    public void changePlot(int rowNode, int colNode){
         JFreeChart chart = plots.get(node);
-        chart.setTitle("Node " + nodeToPlot);
+        chart.setTitle("Node " + rowNode +"-"+ nodes[colNode]);
         radioButtons.get(node).setSelected(false);
         if(++node > 4) {
             node = 0;
