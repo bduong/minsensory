@@ -3,14 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="f6c001fc-79db-4574-99c5-30648625b7ce" name="Default" comment="">
       <change type="DELETED" beforePath="X:\code\minsensory\mins\target\mins-1.0-jar-with-dependencies.jar" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mins/target/mins-1.0.jar" afterPath="$PROJECT_DIR$/mins/target/mins-1.0.jar" />
+      <change type="DELETED" beforePath="X:\code\minsensory\mins\target\mins-1.0.jar" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mins/mins.iml" afterPath="$PROJECT_DIR$/mins/mins.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mins/pom.xml" afterPath="$PROJECT_DIR$/mins/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mins/src/main/java/gui/UI.java" afterPath="$PROJECT_DIR$/mins/src/main/java/gui/UI.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minsensory.ipr" afterPath="$PROJECT_DIR$/minsensory.ipr" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/minsensory.iws" afterPath="$PROJECT_DIR$/minsensory.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testing/pom.xml" afterPath="$PROJECT_DIR$/testing/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testing/testing.iml" afterPath="$PROJECT_DIR$/testing/testing.iml" />
     </list>
     <ignored path="minsensory.iws" />
@@ -73,7 +69,7 @@
       <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="85" column="51" selection-start="2961" selection-end="2961" vertical-scroll-proportion="0.0">
+            <state line="81" column="57" selection-start="2820" selection-end="2820" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -82,7 +78,16 @@
       <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mins/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="81" column="85" selection-start="2933" selection-end="2933" vertical-scroll-proportion="0.52208835">
+            <state line="103" column="44" selection-start="3813" selection-end="3813" vertical-scroll-proportion="1.4093264">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mins.iml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mins/mins.iml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="26" column="34" selection-start="1743" selection-end="1743" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -181,6 +186,10 @@
           <option name="myItemId" value="MINSensory Application" />
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
         </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Dependencies" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$DependenciesNode" />
+        </PATH_ELEMENT>
       </PATH>
       <PATH>
         <PATH_ELEMENT>
@@ -202,8 +211,18 @@
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="MINSensory Master" />
+          <option name="myItemId" value="MINSensory Application" />
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Profiles" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProfilesNode" />
         </PATH_ELEMENT>
       </PATH>
     </treeState>
@@ -497,9 +516,9 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Favorites" />
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="Favorites" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -509,8 +528,8 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="dynamic.classpath" value="false" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="Remote" factoryName="Remote">
@@ -637,7 +656,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Phing Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -649,10 +668,10 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23011212" sideWeight="0.67057675" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33368927" sideWeight="0.0" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18045916" sideWeight="0.67057675" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32995194" sideWeight="0.0" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -716,8 +735,8 @@
           <OriginalElement>minsensory:minsensory:1.0</OriginalElement>
           <nodes>
             <node x="" y="">jfree:jfreechart:jar:1.0.13/jfree:jcommon:jar:1.0.16</node>
-            <node x="" y="">com.apple:AppleJavaExtensions:jar:1.5.4</node>
             <node x="" y="">jfree:jfreechart:jar:1.0.13</node>
+            <node x="" y="">com.apple:AppleJavaExtensions:jar:1.5.4</node>
             <node x="" y="">minsensory:minsensory:1.0</node>
           </nodes>
           <notes />
@@ -733,13 +752,6 @@
     <entry file="file://$PROJECT_DIR$/minsensory.ipr">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testing/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="17" selection-start="459" selection-end="459" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mins/src/main/java/gui/PlotPanel.java">
@@ -770,16 +782,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/testing/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="17" selection-start="459" selection-end="459" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="85" column="51" selection-start="2961" selection-end="2961" vertical-scroll-proportion="0.0">
+        <state line="81" column="57" selection-start="2820" selection-end="2820" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mins/mins.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="34" selection-start="1743" selection-end="1743" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mins/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="81" column="85" selection-start="2933" selection-end="2933" vertical-scroll-proportion="0.52208835">
+        <state line="103" column="44" selection-start="3813" selection-end="3813" vertical-scroll-proportion="1.4093264">
           <folding />
         </state>
       </provider>
