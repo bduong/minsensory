@@ -5,13 +5,15 @@ import data.DataLine;
 import data.generator.DataGen;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import type.TestType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
+import static type.TestType.*;
 
-@Test(groups="all")
+@Test(groups= { ALL, DATA})
 public class DataBankTests {
     
     private DataBank dataBank;

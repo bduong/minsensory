@@ -9,19 +9,9 @@ package type;
  *
  * @author bduong
  */
-public enum TestType {
+public interface TestType {
     
-    ALL("all"),
+    public static final String ALL = "all";
     
-    DATA("data");
-    
-    private String type;
-    
-    TestType(String type) {
-        this.type = type;
-    }
-    
-    public String getType(){
-        return type;
-    }
+    public static final String DATA = "data";
 }
