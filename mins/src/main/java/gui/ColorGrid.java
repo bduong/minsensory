@@ -3,10 +3,6 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by IntelliJ IDEA. User: bduong Date: 1/19/12 Time: 10:02 PM To change
- * this template use File | Settings | File Templates.
- */
 public class ColorGrid extends JPanel{
 
     private ColorMappedImage image;
@@ -15,9 +11,11 @@ public class ColorGrid extends JPanel{
 
     public ColorGrid(ColorMappedImage image) {
         this.image = image;
+        image.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         rowTicks = new JPanel(new GridLayout(16, 1, 0, 0));
         colTicks = new JPanel(new GridLayout(1, 16, 0, 0));
         init();
+        //setBorder(BorderFactory.createLineBorder(Color.RED));
     }
 
     private static char [] nodes ="ABCDEFGHIJKLMNOP".toCharArray();
@@ -39,6 +37,8 @@ public class ColorGrid extends JPanel{
         size = colTicks.getPreferredSize();
         size.setSize(imageSize.getWidth(), size.getHeight());
         colTicks.setPreferredSize(size);
+        //rowTicks.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        //colTicks.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -47,23 +47,27 @@ public class ColorGrid extends JPanel{
         layout.setAutoCreateGaps(false);
 
         layout.setHorizontalGroup(layout.createSequentialGroup()
-          .addComponent(rowTicks)
+          .addComponent(rowTicks, 0, GroupLayout.PREFERRED_SIZE, 25)
           .addGap(10)
           .addGroup(
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-              .addComponent(colTicks)
-              .addComponent(image))
+              .addComponent(colTicks, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+              .addComponent(image, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE))
         );
 
+        //layout.linkSize(SwingConstants.HORIZONTAL, image, colTicks);
+
         layout.setVerticalGroup(layout.createSequentialGroup()
-          .addComponent(colTicks)
+          .addComponent(colTicks, 0, GroupLayout.PREFERRED_SIZE, 20)
           .addGap(10)
           .addGroup(
             layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-            .addComponent(rowTicks)
-            .addComponent(image)
+            .addComponent(rowTicks, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+            .addComponent(image, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
           )
         );
+
+        //layout.linkSize(SwingConstants.VERTICAL, image, rowTicks);
 
     }
 }

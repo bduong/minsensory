@@ -35,14 +35,19 @@ public class PlotPanel extends JPanel implements ActionListener{
         init();
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
+    
+    private static Color colors[] = {Color.RED, Color.BLUE, Color.GREEN, Color.BLACK, Color.MAGENTA};
 
     private void init() {
         //GridLayout layout = new GridLayout(5,2);
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
-
+        
+        int colorNum = 0;
         for (String title : new String[] {"Node 1-A", "Node 2-A", "Node 3-A", "Node 4-A", "Node 5-A"})    {
-        plots.add(createSeriesAndChart(title));
+            JFreeChart chart = createSeriesAndChart(title);
+            chart.getXYPlot().getRenderer().setSeriesPaint(0, colors[colorNum++]);
+            plots.add(chart);
         }
 
         JPanel buttonPanel = new JPanel(new GridLayout(5,1));
@@ -55,12 +60,12 @@ public class PlotPanel extends JPanel implements ActionListener{
             button.setActionCommand("" + chartNumber++);
             button.addActionListener(this);
             chart.getXYPlot().getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-            ChartPanel thisChart = new ChartPanel(chart);
+            ChartPanel thisChart = new ChartPanel(chart);           
             radioButtons.add(button);
             buttonGroup.add(button);
 
-            button.setBorder(BorderFactory.createLineBorder(Color.BLUE));
-            thisChart.setBorder(BorderFactory.createLineBorder(Color.RED));
+            //button.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+            //thisChart.setBorder(BorderFactory.createLineBorder(Color.RED));
             buttonPanel.add(button);
             chartPanel.add(thisChart);
         }
@@ -68,14 +73,14 @@ public class PlotPanel extends JPanel implements ActionListener{
         radioButtons.get(0).setSelected(true);
         
         layout.setHorizontalGroup(layout.createSequentialGroup()
-          .addComponent(buttonPanel)
+          .addComponent(buttonPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
           .addGap(10)
-          .addComponent(chartPanel)
+          .addComponent(chartPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
         );
 
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-          .addComponent(buttonPanel)
-        .addComponent(chartPanel));
+          .addComponent(buttonPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+        .addComponent(chartPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE));
 
     }
 
@@ -84,7 +89,7 @@ public class PlotPanel extends JPanel implements ActionListener{
         for (int ii = -49; ii <= 0; ii++ ) {
             xySeries.add(ii, ii+49);
         }
-        series.add(xySeries);
+        series.add(xySeries);        
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection(xySeries);
         return ChartFactory.createXYLineChart(
           title,
