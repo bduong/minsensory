@@ -6,7 +6,7 @@
     <packaging>pom</packaging>
     <name>MINSensory Master</name>
     <modules>
-        <module>testing</module>
+        <!--<module>testing</module>-->
         <module>mins</module>
     </modules>
 
@@ -106,6 +106,28 @@
         </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>testing</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>testing</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>all</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>mins</module>
+                <module>testing</module>
+            </modules>
+        </profile>
+    </profiles>
 
 
 
