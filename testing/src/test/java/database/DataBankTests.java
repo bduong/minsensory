@@ -1,20 +1,23 @@
 package database;
 
+import commons.ProjectTests;
 import data.DataBank;
 import data.DataLine;
 import data.generator.DataGen;
+import org.apache.log4j.Logger;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import type.TestType;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
-import static type.TestType.*;
+import static type.TestType.ALL;
+import static type.TestType.DATA;
 
 @Test(groups= { ALL, DATA})
-public class DataBankTests {
+public class DataBankTests extends ProjectTests {
     
     private DataBank dataBank;
     private DataGen dataGen;
@@ -22,6 +25,8 @@ public class DataBankTests {
     private final int dataSize = 256;
     
     private List<DataLine> dataLines;
+
+    Logger logger = Logger.getLogger(this.getClass());
             
     @BeforeClass
     private void createEntities() {
@@ -40,8 +45,14 @@ public class DataBankTests {
        }
        
        for( int ii = 0; ii < 1000; ii++) {
-            assertEquals(dataBank.getNextPoint(), dataLines.get(ii), "Data At Line " + ii +" Does Not Match");           
+            assertEquals(dataBank.getNextPoint(), dataLines.get(ii), "Data At Line " + ii +" Does Not Match");
        }
     }
+    
+    @Test
+    public void dataReadFromFileIsStored() throws IOException {
+        logger.info(dataFile.getName());
+//        DataWriter.createFile(dataFile, 256, 1000);
 
+    }
 }

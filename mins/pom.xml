@@ -62,7 +62,7 @@
                         <version>1.0-alpha-1</version>
                         <configuration>
                             <bundleName>MINSensory</bundleName>
-                            <mainClass>MINSensory</mainClass>
+                            <mainClass>frontend.MINSensory</mainClass>
                             <iconFile>
                                 ${basedir}/src/main/resources/MINSIcon.icns
                             </iconFile>
@@ -110,7 +110,7 @@
                                         <minVersion>1.6.0</minVersion>
                                     </jre>
                                     <classpath>
-                                        <mainclass>MINSensory</mainclass>
+                                        <mainclass>frontend.MINSensory</mainclass>
                                         <adddependencies>false</adddependencies>
                                         <precp>anything</precp>
                                     </classpath>

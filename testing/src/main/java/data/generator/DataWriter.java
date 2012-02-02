@@ -2,15 +2,16 @@ package data.generator;
 
 import data.DataLine;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
 public class DataWriter {
 
-    public static void createFile(String fileName, int dataSize, int numberOfLines) throws IOException {
+    public static void createFile(File file, int dataSize, int numberOfLines) throws IOException {
         DataGen dataGen = new DataGen(dataSize);
-        ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(fileName));
+        ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
 
         for (int ii = 0; ii < numberOfLines; ii ++) {
             try {
@@ -24,6 +25,5 @@ public class DataWriter {
         }
 
         outputStream.close();
-
     }
 }
