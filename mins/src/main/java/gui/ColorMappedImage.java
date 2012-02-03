@@ -4,6 +4,7 @@
 /******************************************************************************/
 package gui;
 
+import data.DataLine;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -32,9 +33,24 @@ public class ColorMappedImage extends JPanel {
         }
     }
     
+    /**
+     * Update
+     * 
+     * @param line 
+     */
+    public void updateImage(DataLine line){
+        image.setRGB(0, 0, width, height, line.getLine(), 0, width);
+        repaint();
+    }
+    
+    private int[] convertDataToColors(int[] data) {
+        
+        
+        return data;
+    }
+    
     @Override
     public void paintComponent(Graphics g) {
        g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), this);
-    }
-
+    }   
 }

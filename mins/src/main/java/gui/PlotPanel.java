@@ -1,5 +1,6 @@
 package gui;
 
+import data.DataLine;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -15,29 +16,32 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- * Created by IntelliJ IDEA. User: bduong Date: 1/9/12 Time: 3:46 PM To change
- * this template use File | Settings | File Templates.
- */
 public class PlotPanel extends JPanel implements ActionListener{
 
     private List<JFreeChart> plots;
     private List<XYSeries> series;
     private List<JRadioButton> radioButtons;
     private ButtonGroup buttonGroup = new ButtonGroup();
+    private int [] plotNodes;
     private int node;
+    private int time;
     
     public PlotPanel() {
         plots = new ArrayList<JFreeChart>();
         series = new ArrayList<XYSeries>();
         radioButtons = new ArrayList<JRadioButton>();
+        plotNodes = new int[]{1, 2, 3, 4, 5};
         node = 0;
+        time = 0;
         init();
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
     
     private static Color colors[] = {Color.RED, Color.BLUE, Color.GREEN, Color.BLACK, Color.MAGENTA};
 
+    /**
+     * Initialize the Charts and Plots
+     */
     private void init() {
         //GridLayout layout = new GridLayout(5,2);
         GroupLayout layout = new GroupLayout(this);
@@ -88,6 +92,7 @@ public class PlotPanel extends JPanel implements ActionListener{
         XYSeries xySeries = new XYSeries(title);
         for (int ii = -49; ii <= 0; ii++ ) {
             xySeries.add(ii, ii+49);
+            time++;
         }
         series.add(xySeries);        
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection(xySeries);
@@ -109,10 +114,17 @@ public class PlotPanel extends JPanel implements ActionListener{
 
     private static char [] nodes ="ABCDEFGHIJKLMNOP".toCharArray();
 
+    /**
+     * Change the plot of the currently selected chart.
+     * 
+     * @param rowNode the user selected row
+     * @param colNode the user selected column
+     */
     public void changePlot(int rowNode, int colNode){
         JFreeChart chart = plots.get(node);
         chart.setTitle("Node " + rowNode +"-"+ nodes[colNode]);
         radioButtons.get(node).setSelected(false);
+        plotNodes[node] = rowNode + colNode*16;
         if(++node > 4) {
             node = 0;
         }
@@ -123,5 +135,16 @@ public class PlotPanel extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent actionEvent) {
         node = Integer.parseInt(actionEvent.getActionCommand());
 
+    }
+    
+    /**
+     * Update the plots with the given data.
+     * 
+     * @param data the data to update with
+     */
+    public void updatePlots(DataLine data){
+        for (int plotNumber = 0; plotNumber < 5; plotNumber++){
+            series.get(plotNumber).add(time, data.getDataAt(plotNodes[plotNumber]));
+        }
     }
 }

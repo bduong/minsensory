@@ -4,6 +4,8 @@ import data.DataBank;
 import data.DataCollector;
 import gui.MacOS.MacOSEventHandler;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -120,6 +122,9 @@ public class UI {
         setUIComponentNames();
     }
 
+    /**
+     * Add the Menu Bar to the Application.
+     */
     private void addMenuBar() {
         if( onMac() ) {
             System.setProperty("apple.laf.useScreenMenuBar", "true");
@@ -160,6 +165,13 @@ public class UI {
         application.setJMenuBar(menuBar);
     }
 
+    /**
+     * Defines the positions for the Group Layout
+     * 
+     * @param layout the group layout
+     * @param plotPanel the JPanel with the plots
+     * @param colorMap the JPanel with the color grid
+     */
     private void defineLayoutPositions(GroupLayout layout, PlotPanel plotPanel,
                                        ColorGrid colorMap) {
         layout.setHorizontalGroup(layout.createSequentialGroup()
@@ -181,11 +193,20 @@ public class UI {
                         .addComponent(plotPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)));
     }
 
-    private void startDataCollection() {
+    /**
+     * Start the collection of Data
+     * 
+     * @throws URISyntaxException if the file cannot be found
+     * @throws IOException if the file cannot be read
+     */
+    private void startDataCollection() throws URISyntaxException, IOException {
         dataBank = new DataBank();
         dataCollector = new DataCollector(dataBank);
     }
 
+    /**
+     * Maximizes the windows and set the UI to be visible.
+     */
     public void run() {
         if (application != null)
             application.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -194,8 +215,12 @@ public class UI {
             application.setResizable(false);
     }
 
+    /**
+     * Defines whether the application is running on a Mac or not
+     * 
+     * @return true if on a Mac, false otherwise;
+     */
     private boolean onMac() {
         return (System.getProperty("mrj.version") != null);
     }
-
 }

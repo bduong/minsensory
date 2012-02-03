@@ -41,6 +41,10 @@ public class DataLine {
     public int[] getLine() {
         return line;
     }
+    
+    public int getDataAt(int index){
+        return line[index];
+    }
 
     /**
      * Set the data.

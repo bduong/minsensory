@@ -1,5 +1,8 @@
 package data;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import javax.swing.*;
 import java.util.List;
 
@@ -8,17 +11,23 @@ public class DataCollector extends SwingWorker<Void, DataLine>{
     private int numberOfLinesSince = 0;
     private DataBank dataBank;
     private boolean stop;
+    private DataReader dataReader;
 
-    public DataCollector(DataBank dataBank) {
+    public DataCollector(DataBank dataBank) throws URISyntaxException, IOException {
       this.dataBank = dataBank;
+      File dataFile = new File(this.getClass().getResource("dataFile.txt").toURI());
+      dataReader = new DataReader(dataFile);
         stop = false;
     }
     
     @Override
     protected Void doInBackground() throws Exception {
         numberOfLinesSince++;
-        //do some stuff to get data
-        publish(new DataLine(256));
+        int [] dataLine = new int[256];
+        for (int ii = 0; ii < 256; ii++) {
+            dataLine[ii] = dataReader.readNextInt();
+        }
+        publish(new DataLine(dataLine));
         return null;
     }
 
