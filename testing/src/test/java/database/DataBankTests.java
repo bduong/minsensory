@@ -1,6 +1,5 @@
 package database;
 
-import commons.ProjectTests;
 import data.DataBank;
 import data.DataLine;
 import data.generator.DataGen;
@@ -17,7 +16,7 @@ import static type.TestType.ALL;
 import static type.TestType.DATA;
 
 @Test(groups= { ALL, DATA})
-public class DataBankTests extends ProjectTests {
+public class DataBankTests{
     
     private DataBank dataBank;
     private DataGen dataGen;
@@ -51,7 +50,7 @@ public class DataBankTests extends ProjectTests {
     
     @Test
     public void dataReadFromFileIsStored() throws IOException {
-        logger.info(dataFile.getName());
+       // logger.info(dataFile.getName());
 //        DataWriter.createFile(dataFile, 256, 1000);
 
     }
