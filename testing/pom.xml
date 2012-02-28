@@ -21,6 +21,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>${testing.skipTests}</skipTests>
+                    <!--<groups>${testing.groups}</groups>-->
+                    <!--<excludedGroups>${testing.excludedGroups}</excludedGroups>-->
+                    <includes>
+                        <include>**/*Tests.java</include>
+                    </includes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -40,15 +48,11 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
+            <artifactId>org.springframework.context.support</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
+            <artifactId>org.springframework.test</artifactId>
         </dependency>
     </dependencies>
 </project>

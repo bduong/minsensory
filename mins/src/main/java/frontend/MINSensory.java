@@ -1,5 +1,6 @@
 package frontend;
 
+import gui.OperatingMode;
 import gui.UI;
 
 /**
@@ -9,7 +10,7 @@ import gui.UI;
 public class MINSensory {
 
     public static void main(String [] args) {
-        UI gui = new UI();
+        UI gui = new UI(OperatingMode.FROM_FILE);
         gui.init();
         gui.run();
     }

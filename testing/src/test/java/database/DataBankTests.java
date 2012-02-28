@@ -1,6 +1,7 @@
 package database;
 
 import data.DataBank;
+import data.DynamicDataBank;
 import data.DataLine;
 import data.generator.DataGen;
 import org.apache.log4j.Logger;
@@ -29,7 +30,7 @@ public class DataBankTests{
             
     @BeforeClass
     private void createEntities() {
-       dataBank = new DataBank();
+       dataBank = new DynamicDataBank();
        dataGen = new DataGen(dataSize);       
        dataLines = new ArrayList<DataLine>();
     }

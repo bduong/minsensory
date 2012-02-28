@@ -5,7 +5,6 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
 import gnu.io.SerialPort;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -81,34 +80,6 @@ public class COMReader{
 
     public InputStream getInputStream() {
         return in;
-    }
-
-    /** */
-    public static class SerialReader implements Runnable
-    {
-        InputStream in;
-
-        public SerialReader ( InputStream in )
-        {
-            this.in = in;
-        }
-
-        public void run ()
-        {
-            byte[] buffer = new byte[1024];
-            int len = -1;
-            try
-            {
-                while ( ( len = this.in.read(buffer)) > -1 )
-                {
-                    System.out.print(new String(buffer,0,len));
-                }
-            }
-            catch ( IOException e )
-            {
-                e.printStackTrace();
-            }
-        }
     }
 
 }

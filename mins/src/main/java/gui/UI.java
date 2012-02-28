@@ -1,7 +1,9 @@
 package gui;
 
 import data.DataBank;
+import data.DynamicDataBank;
 import data.DataCollector;
+import data.StaticDataBank;
 import gui.MacOS.MacOSEventHandler;
 
 import java.io.IOException;
@@ -15,16 +17,19 @@ public class UI {
 
     private int windowWidth;
     private int windowHeight;
+    private OperatingMode operatingMode;
 
-    public UI() {
+    public UI(OperatingMode mode) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         windowWidth = screenSize.width/2;
         windowHeight = screenSize.height/2;
+        operatingMode = mode;
     }
 
-    public UI(int width, int height) {
+    public UI(int width, int height, OperatingMode mode) {
         windowWidth = width;
         windowHeight = height;
+        operatingMode = mode;
     }
 
     private DataBank dataBank;
@@ -200,7 +205,14 @@ public class UI {
      * @throws IOException if the file cannot be read
      */
     private void startDataCollection() throws URISyntaxException, IOException {
-        dataBank = new DataBank();
+        switch (operatingMode) {
+        case FROM_FILE:
+            dataBank = new StaticDataBank();
+            break;
+        case FROM_COM_PORT:
+            dataBank = new DynamicDataBank();
+            break;
+        }
         dataCollector = new DataCollector(dataBank);
     }
 
