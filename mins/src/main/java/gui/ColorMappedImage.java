@@ -9,6 +9,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * Image to hold color grid
+ */
 public class ColorMappedImage extends JPanel {
     
     private BufferedImage image;

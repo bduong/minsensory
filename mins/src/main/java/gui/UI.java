@@ -13,6 +13,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
 
+/**
+ * User Interface
+ */
 public class UI {
 
     private int windowWidth;

@@ -16,6 +16,9 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Panel to display five graphs.
+ */
 public class PlotPanel extends JPanel implements ActionListener{
 
     private List<JFreeChart> plots;
