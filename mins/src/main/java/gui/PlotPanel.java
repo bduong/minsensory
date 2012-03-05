@@ -57,13 +57,14 @@ public class PlotPanel extends JPanel implements ActionListener{
             plots.add(chart);
         }
 
+        JPanel chartPanel = new JPanel(new GridLayout(5,1,0,5));
+
         JPanel buttonPanel = new JPanel(new GridLayout(5,1));
 
-        JPanel chartPanel = new JPanel(new GridLayout(5,1,0,5));
         int chartNumber = 0;
         for (JFreeChart chart : plots) {
             JRadioButton button = new JRadioButton();
-            button.setHorizontalAlignment(JRadioButton.RIGHT);
+            button.setHorizontalAlignment(JRadioButton.LEFT);
             button.setActionCommand("" + chartNumber++);
             button.addActionListener(this);
             chart.getXYPlot().getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
@@ -71,21 +72,23 @@ public class PlotPanel extends JPanel implements ActionListener{
             radioButtons.add(button);
             buttonGroup.add(button);
 
-            //button.setBorder(BorderFactory.createLineBorder(Color.BLUE));
-            //thisChart.setBorder(BorderFactory.createLineBorder(Color.RED));
+            button.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+            thisChart.setBorder(BorderFactory.createLineBorder(Color.RED));
             buttonPanel.add(button);
             chartPanel.add(thisChart);
         }
 
         radioButtons.get(0).setSelected(true);
+
+        buttonPanel.setPreferredSize(new Dimension(20, 900));
         
         layout.setHorizontalGroup(layout.createSequentialGroup()
           .addComponent(buttonPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
-          .addGap(10)
+          .addGap(50)
           .addComponent(chartPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
         );
 
-        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
           .addComponent(buttonPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
         .addComponent(chartPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE));
 

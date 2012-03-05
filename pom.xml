@@ -121,61 +121,87 @@
 
     <build>
         <pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.8.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
-                    <docletArtifact>
-                        <groupId>org.umlgraph</groupId>
-                        <artifactId>doclet</artifactId>
-                        <version>5.1</version>
-                    </docletArtifact>
-                    <show>private</show>
-                    <additionalparam>-all -constructors -inferrel -inferdep</additionalparam>
-                    <useStandardDocletOptions>false</useStandardDocletOptions>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2.1</version>
-
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.10</version>
-                <configuration>
-                    <properties>
-                        <property>
-                            <name>listener</name>
-                            <value>testng.LoggingListener</value>
-                        </property>
-                    </properties>
-                </configuration>
-            </plugin>
-
-        </plugins>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.8.1</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+                        <docletArtifact>
+                            <groupId>org.umlgraph</groupId>
+                            <artifactId>doclet</artifactId>
+                            <version>5.1</version>
+                        </docletArtifact>
+                        <show>private</show>
+                        <additionalparam>
+                            -all -inferrel -inferdep -quiet -hide java.*
+                            -collpackages java.util.* -qualify
+                            -postfixpackage -nodefontsize 9
+                            -nodefontpackagesize 7 -outputencoding utf8
+                            -collapsible
+                        </additionalparam>
+                        <destDir>target/apidoc</destDir>
+                        <useStandardDocletOptions>false</useStandardDocletOptions>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.3.2</version>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.2.1</version>
+                    <configuration>
+                        <descriptorRefs>
+                            <descriptorRef>jar-with-dependencies</descriptorRef>
+                        </descriptorRefs>
+                        <archive>
+                            <manifest>
+                                <mainClass>frontend.MINSensory</mainClass>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>make-assembly</id>
+                            <!-- this is used for inheritance merges -->
+                            <phase>package</phase>
+                            <!-- bind to the packaging phase -->
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.10</version>
+                    <configuration>
+                        <properties>
+                            <property>
+                                <name>listener</name>
+                                <value>testng.LoggingListener</value>
+                            </property>
+                        </properties>
+                    </configuration>
+                </plugin>
+            </plugins>
         </pluginManagement>
     </build>
 
@@ -193,7 +219,12 @@
                         <!--<version>5.1</version>-->
                     <!--</docletArtifact>-->
                     <!--<show>private</show>-->
-                    <!--<additionalparam>-all -constructors</additionalparam>-->
+                    <!--<additionalparam>-->
+                        <!---all -inferrel -inferdep -quiet -hide java.*-->
+                        <!---collpackages java.util.* -qualify-->
+                        <!---postfixpackage -nodefontsize 9-->
+                        <!---nodefontpackagesize 7 -outputencoding utf8-->
+                    <!--</additionalparam>-->
                     <!--<useStandardDocletOptions>false</useStandardDocletOptions>-->
                 <!--</configuration>-->
             <!--</plugin>-->
@@ -220,7 +251,7 @@
                 <module>testing</module>
             </modules>
             <properties>
-            <testing.skipTests>false</testing.skipTests>
+                <testing.skipTests>false</testing.skipTests>
             </properties>
         </profile>
         <profile>

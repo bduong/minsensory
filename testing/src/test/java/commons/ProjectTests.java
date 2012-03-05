@@ -1,7 +1,7 @@
 package commons;
 
 
-import data.DataReader;
+import data.FileReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -18,6 +18,6 @@ public class ProjectTests extends AbstractTestNGSpringContextTests {
     protected File dataFile;
 
     @Autowired
-    DataReader dataReader;
+    FileReader dataReader;
 }
 

@@ -1,5 +1,7 @@
 package data;
 
+import gui.OperatingMode;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -13,10 +15,10 @@ public class DataCollector extends SwingWorker<Void, DataLine>{
     private boolean stop;
     private DataReader dataReader;
 
-    public DataCollector(DataBank dataBank) throws URISyntaxException, IOException {
+    public DataCollector(DataBank dataBank, DataReader reader) throws URISyntaxException, IOException {
       this.dataBank = dataBank;
       File dataFile = new File(this.getClass().getResource("dataFile.txt").toURI());
-      dataReader = new DataReader(dataFile);
+      dataReader = reader;
         stop = false;
     }
     

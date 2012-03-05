@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-public class COMReader{
+public class COMReader implements DataReader{
 
     InputStream in = null;
     public COMReader() {
@@ -82,4 +82,8 @@ public class COMReader{
         return in;
     }
 
+    @Override
+    public int readNextInt() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

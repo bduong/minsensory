@@ -1,8 +1,10 @@
 package gui;
 
+import data.COMReader;
 import data.DataBank;
 import data.DynamicDataBank;
 import data.DataCollector;
+import data.FileReader;
 import data.StaticDataBank;
 import gui.MacOS.MacOSEventHandler;
 
@@ -211,12 +213,13 @@ public class UI {
         switch (operatingMode) {
         case FROM_FILE:
             dataBank = new StaticDataBank();
+            dataCollector = new DataCollector(dataBank, new FileReader("file.name"));
             break;
         case FROM_COM_PORT:
             dataBank = new DynamicDataBank();
+            dataCollector = new DataCollector(dataBank, new COMReader());
             break;
         }
-        dataCollector = new DataCollector(dataBank);
     }
 
     /**
