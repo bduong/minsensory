@@ -35,12 +35,24 @@ public class COMReaderTests {
     void testCOM3() throws Exception {
         comReader.connectTo(COM_NAME);
         InputStream inputStream = comReader.getInputStream();
-        byte[] buffer = new byte[256];
+		OutputStream outputStream = comReader.getOutputStream();
+		
+		int multiplier = 1000;
+		int iter = 5;
+
+        byte[] buffer = new byte[multiplier*iter];
+		outputStream.write((byte) iter)
         inputStream.read(buffer);
 
-        for (byte buf : buffer) {
-            logger.info(buf);
-        }
+		StringBuilder comp;
+		char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+
+		for (int ii = 0; ii < multiplier*iter; ii++) {
+			comp.append(alphabet[ii % alphabet.length]);
+		}
+		
+		assertEquals(buffer, comp.toString);
+
     }
 
 }

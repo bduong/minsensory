@@ -13,6 +13,7 @@ import java.util.List;
 public class COMReader implements DataReader{
 
     InputStream in = null;
+    OutputStream out = null;
     public COMReader() {
 
     }
@@ -65,6 +66,7 @@ public class COMReader implements DataReader{
                 serialPort.setSerialPortParams(9600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
 
                 in = serialPort.getInputStream();
+		out = serialPort.getOutputStream();
                // OutputStream out = serialPort.getOutputStream();
                //(new Thread(reader)).start();
                 //(new Thread(new SerialWriter(out))).start();
@@ -80,6 +82,10 @@ public class COMReader implements DataReader{
 
     public InputStream getInputStream() {
         return in;
+    }
+
+    public OutputStream getOutputStream() {
+	return out;
     }
 
     @Override
