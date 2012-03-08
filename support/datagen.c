@@ -84,21 +84,22 @@ void main(void)
 
     TimerA_UART_init();                     // Start Timer_A UART
 
+	init_TX();
 
     for (;;)
     {
-        init_button();
+        //init_button()
 
         // Wait for incoming character
     	_bis_SR_register(GIE+LPM0_bits);
 
-    	init_TX();
+    	//init_TX();
 
         // Echo received character
         int counter = 0;
         	
         	int ii;
-        	for (ii = 0; ii < 5000; ii++)
+        	for (ii = 0; ii < 1000*rxBuffer; ii++)
         	{        		
         			// Echo received character
         			TimerA_UART_tx(characters[counter]);
