@@ -6,6 +6,7 @@ import gnu.io.NoSuchPortException;
 import gnu.io.SerialPort;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -66,7 +67,7 @@ public class COMReader implements DataReader{
                 serialPort.setSerialPortParams(9600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
 
                 in = serialPort.getInputStream();
-		out = serialPort.getOutputStream();
+		        out = serialPort.getOutputStream();
                // OutputStream out = serialPort.getOutputStream();
                //(new Thread(reader)).start();
                 //(new Thread(new SerialWriter(out))).start();
