@@ -1,13 +1,15 @@
 package gui;
 
-import data.COMReader;
+import data.playback.DataPopulator;
+import data.playback.FileReader;
+import data.playback.StaticDataBank;
+import data.realtime.COMReader;
 import data.DataBank;
-import data.DynamicDataBank;
-import data.DataCollector;
-import data.FileReader;
-import data.StaticDataBank;
+import data.realtime.DynamicDataBank;
+import data.realtime.DataCollector;
 import gui.MacOS.MacOSEventHandler;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import javax.swing.*;
@@ -49,6 +51,14 @@ public class UI {
     private JMenu help;
     private JMenuItem about;
 
+    private JFileChooser fileChooser;
+    private File dataFile;
+
+    private PlotPanel plotPanel;
+    private ColorMappedImage colorMap;
+
+    private UpdateTimer updater;
+
     /** Set names for the UI components in order to test. */
     private void setUIComponentNames() {
         application.setName("applicationWindow");
@@ -73,13 +83,17 @@ public class UI {
         GroupLayout layout = new GroupLayout(application.getContentPane());
         application.setLayout(layout);
 
+        fileChooser = new JFileChooser("Choose Data File");
+        fileChooser.setMultiSelectionEnabled(false);
+
+
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
 
         addMenuBar();
-        final PlotPanel plotPanel = new PlotPanel();
+        plotPanel = new PlotPanel();
         plotPanel.setPreferredSize(new Dimension(windowWidth / 4, windowHeight));
-        final ColorMappedImage colorMap = new ColorMappedImage(16,16);
+        colorMap = new ColorMappedImage(16,16);
         colorMap.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
@@ -93,6 +107,7 @@ public class UI {
                 plotPanel.changePlot(y,x);
             }
         });
+
 
         Random random = new Random();
         int [] colors = new int[256];
@@ -143,8 +158,25 @@ public class UI {
         menuBar = new JMenuBar();
         file = new JMenu("File");
         file.setMnemonic('F');
-        load = new JMenu("Load");
+        load = new JMenuItem("Load");
         load.setMnemonic('L');
+        load.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                int returnVal = fileChooser.showOpenDialog(application);
+
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                    dataFile = fileChooser.getSelectedFile();
+                    try {
+                        startDataCollection();
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    } catch (IOException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    }
+                }
+            }
+        });
         exit = new JMenuItem("Exit");
         exit.setMnemonic('E');
         exit.addActionListener(new ActionListener() {
@@ -213,24 +245,40 @@ public class UI {
         switch (operatingMode) {
         case FROM_FILE:
             dataBank = new StaticDataBank();
-            dataCollector = new DataCollector(dataBank, new FileReader("file.name"));
+            DataPopulator populator = new DataPopulator(dataBank, new FileReader(dataFile));
+            populator.execute();
+            startPlayBack();
             break;
         case FROM_COM_PORT:
             dataBank = new DynamicDataBank();
             dataCollector = new DataCollector(dataBank, new COMReader());
+            dataCollector.execute();
             break;
         }
+        testBank();
+    }
+
+    private void testBank() {
+        System.out.print(dataBank.getSize());
+    }
+
+    private void startPlayBack() {
+        updater = new UpdateTimer(1000/30, colorMap, plotPanel, dataBank);
+        updater.startTimer();
     }
 
     /**
      * Maximizes the windows and set the UI to be visible.
      */
     public void run() {
-        if (application != null)
+        if (application != null) {
             application.setExtendedState(JFrame.MAXIMIZED_BOTH);
             
             application.setVisible(true);
             application.setResizable(false);
+
+
+        }
     }
 
     /**

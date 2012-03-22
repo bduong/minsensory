@@ -1,7 +1,7 @@
 package database;
 
 import data.DataBank;
-import data.DynamicDataBank;
+import data.realtime.DynamicDataBank;
 import data.DataLine;
 import data.generator.DataGen;
 import org.apache.log4j.Logger;

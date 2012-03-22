@@ -6,5 +6,7 @@ public interface DataBank {
 
    public DataLine getPoint(int number);
 
-    public void addPoint(DataLine datum);
+   public void addPoint(DataLine datum);
+
+    public int getSize();
 }

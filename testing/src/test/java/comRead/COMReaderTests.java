@@ -1,6 +1,6 @@
 package comRead;
 
-import data.COMReader;
+import data.realtime.COMReader;
 import gnu.io.NoSuchPortException;
 import org.apache.log4j.Logger;
 import org.testng.annotations.BeforeClass;
@@ -8,7 +8,10 @@ import org.testng.annotations.Test;
 import type.TestType;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
+
+import static org.testng.Assert.assertEquals;
 
 @Test(groups = TestType.ALL)
 public class COMReaderTests {
@@ -41,18 +44,20 @@ public class COMReaderTests {
 		int iter = 5;
 
         byte[] buffer = new byte[multiplier*iter];
-		outputStream.write((byte) iter)
+		outputStream.write((byte) iter);
         inputStream.read(buffer);
 
-		StringBuilder comp;
+		StringBuilder comp = new StringBuilder();
 		char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 
 		for (int ii = 0; ii < multiplier*iter; ii++) {
 			comp.append(alphabet[ii % alphabet.length]);
 		}
 		
-		assertEquals(buffer, comp.toString);
+		assertEquals(buffer, comp.toString());
 
     }
+
+
 
 }

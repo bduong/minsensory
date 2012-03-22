@@ -98,7 +98,6 @@ public class PlotPanel extends JPanel implements ActionListener{
         XYSeries xySeries = new XYSeries(title);
         for (int ii = -49; ii <= 0; ii++ ) {
             xySeries.add(ii, ii+49);
-            time++;
         }
         series.add(xySeries);        
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection(xySeries);
@@ -151,6 +150,8 @@ public class PlotPanel extends JPanel implements ActionListener{
     public void updatePlots(DataLine data){
         for (int plotNumber = 0; plotNumber < 5; plotNumber++){
             series.get(plotNumber).add(time, data.getDataAt(plotNodes[plotNumber]));
+            series.get(plotNumber).remove(0);
         }
+        time++;
     }
 }

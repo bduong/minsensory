@@ -42,7 +42,7 @@ public class ColorMappedImage extends JPanel {
      * @param line 
      */
     public void updateImage(DataLine line){
-        image.setRGB(0, 0, width, height, line.getLine(), 0, width);
+        image.setRGB(0, 0, width, height, ColorMap.translate(line.getLine()), 0, width);
         repaint();
     }
     

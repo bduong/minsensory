@@ -8,6 +8,6 @@ import java.io.IOException;
  */
 public interface DataReader {
 
-    int readNextInt();
+    int readNextInt() throws IOException;
 
 }

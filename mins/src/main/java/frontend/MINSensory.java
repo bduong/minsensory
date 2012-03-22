@@ -9,7 +9,7 @@ import gui.UI;
 */
 public class MINSensory {
     public static void main(String [] args) {
-        UI gui = new UI(OperatingMode.FROM_COM_PORT);
+        UI gui = new UI(OperatingMode.FROM_FILE);
         gui.init();
         gui.run();
     }

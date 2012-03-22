@@ -12,7 +12,7 @@ public class DataLine {
      * @param size size of the data line
      */
     public DataLine(int size) {
-       line = new int[size];
+        line = new int[size];
     }
 
     /**
@@ -41,7 +41,7 @@ public class DataLine {
     public int[] getLine() {
         return line;
     }
-    
+
     public int getDataAt(int index){
         return line[index];
     }
@@ -76,5 +76,28 @@ public class DataLine {
         for (int node : line) {
             node /= divisor;
         }
+    }
+
+    @Override
+    public boolean equals(Object dataLine){
+        boolean equal = true;
+        if (dataLine instanceof DataLine) {
+
+            int [] data = ((DataLine) dataLine).getLine();
+            for (int ii = 0; ii < line.length; ii++) {
+                if (line[ii] != data[ii]) {
+                    equal = false;
+                }
+            }
+
+            return equal;
+        } else {
+            return false;
+        }
+    }
+    
+    @Override
+    public int hashCode() {
+         return 31 + line.hashCode();
     }
 }

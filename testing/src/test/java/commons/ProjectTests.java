@@ -1,7 +1,7 @@
 package commons;
 
 
-import data.FileReader;
+import data.playback.FileReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
