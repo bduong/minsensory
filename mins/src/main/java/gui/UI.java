@@ -59,6 +59,28 @@ public class UI {
 
     private UpdateTimer updater;
 
+    private JButton realTimeSelect;
+    private JButton playBackSelect;
+    
+    private JButton startRealTimeData;
+    private JButton loadData;
+
+    /**
+     * buttons for playback
+     */
+    private JButton startPlayBack;
+    private JButton stopPlayBack;
+    
+    private JSlider seekSlider;
+    private int moveAmount = 100;
+
+    private JButton back;
+    private JButton next;
+
+    private boolean started;
+
+    private GroupLayout layout;
+
     /** Set names for the UI components in order to test. */
     private void setUIComponentNames() {
         application.setName("applicationWindow");
@@ -73,6 +95,8 @@ public class UI {
      * Initializes the UI window
      */
     public void init() {
+        started = false;
+
         application = new JFrame("System For Sensing Neural Response");
         application.setSize(windowWidth, windowHeight);
         application.setMinimumSize(new Dimension(windowWidth, windowHeight));
@@ -80,11 +104,147 @@ public class UI {
         application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         application.setVisible(false);
 
-        GroupLayout layout = new GroupLayout(application.getContentPane());
+        layout = new GroupLayout(application.getContentPane());
         application.setLayout(layout);
 
         fileChooser = new JFileChooser("Choose Data File");
         fileChooser.setMultiSelectionEnabled(false);
+
+        int buttonLength = 250;
+        int buttonWidth = 100;
+        realTimeSelect = new JButton("Real Time Data");
+        realTimeSelect.setPreferredSize(new Dimension(buttonLength, buttonWidth));
+        realTimeSelect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                realTimeSelect.setEnabled(false);
+                playBackSelect.setEnabled(true);
+                startRealTimeData.setVisible(true);
+                loadData.setVisible(false);
+            }
+        });
+        playBackSelect = new JButton("Play Back Data");
+        playBackSelect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                realTimeSelect.setEnabled(true);
+                playBackSelect.setEnabled(false);
+                startRealTimeData.setVisible(false);
+                loadData.setVisible(true);
+            }
+        });
+
+        startRealTimeData = new JButton("Start");
+        loadData = new JButton("Load");
+        loadData.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                int returnVal = fileChooser.showOpenDialog(application);
+
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                    dataFile = fileChooser.getSelectedFile();
+                    loadData.setVisible(false);
+                    playBackSelect.setVisible(false);
+                    realTimeSelect.setVisible(false);
+
+                    dataBank = new StaticDataBank();
+                    try {
+                        DataPopulator populator = new DataPopulator(dataBank, new FileReader(dataFile));
+                        populator.execute();
+                        seekSlider.setMaximum(dataBank.getSize());
+                        seekSlider.setMajorTickSpacing(dataBank.getSize()/20);
+                        seekSlider.setMinorTickSpacing(dataBank.getSize()/200);
+                    } catch (Exception e) {}
+                    
+                    layout.replace(realTimeSelect, startPlayBack);
+                    layout.replace(playBackSelect, stopPlayBack);
+                    stopPlayBack.setEnabled(false);
+
+                    layout.linkSize(SwingConstants.HORIZONTAL, startPlayBack, stopPlayBack);
+                    layout.linkSize(SwingConstants.VERTICAL, startPlayBack, stopPlayBack);
+
+                    layout.setHonorsVisibility(startRealTimeData, true);
+                    layout.setHonorsVisibility(loadData, true);
+                    seekSlider.setVisible(true);
+                    back.setVisible(true);
+                    next.setVisible(true);
+                }
+            }
+        }
+        );
+
+        startRealTimeData.setVisible(false);
+        loadData.setVisible(false);
+
+        startPlayBack = new JButton("Start PlayBack");
+        startPlayBack.setPreferredSize(new Dimension(buttonLength, buttonWidth));
+        startPlayBack.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (!started) {
+                    updater = new UpdateTimer(1000/30, colorMap, plotPanel, dataBank);
+                    updater.setSlider(seekSlider);
+                    started = true;
+                }
+                seekSlider.setEnabled(false);
+                back.setEnabled(false);
+                next.setEnabled(false);
+                updater.startTimer();
+                startPlayBack.setEnabled(false);
+                stopPlayBack.setEnabled(true);
+
+            }
+        });
+        stopPlayBack = new JButton("Stop PlayBack");
+        stopPlayBack.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                updater.stopTimer();
+                startPlayBack.setEnabled(true);
+                stopPlayBack.setEnabled(false);
+                seekSlider.setEnabled(true);
+                back.setEnabled(true);
+                next.setEnabled(true);
+            }
+        });
+
+        // @TODO implement slider change listener to actually seek
+
+        int backButtonLength = 20;
+        seekSlider = new JSlider(JSlider.HORIZONTAL, 0, 1, 0);
+        seekSlider.setPreferredSize(new Dimension(buttonLength, buttonWidth));
+        seekSlider.setVisible(false);
+        seekSlider.setPaintLabels(true);
+        seekSlider.setPaintTicks(true);
+
+        next = new JButton(">>");
+        next.setVisible(false);
+        next.setPreferredSize(new Dimension(backButtonLength, buttonWidth));
+        next.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                int value = seekSlider.getValue();
+                if (value < seekSlider.getMaximum()-1-moveAmount){
+                    seekSlider.setValue(value + moveAmount);
+                } else {
+                    seekSlider.setValue(seekSlider.getMaximum()-1);   
+                }                
+            }
+        });
+        back = new JButton("<<");
+        back.setVisible(false);
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                int value = seekSlider.getValue();
+                if (value >= moveAmount) {
+                    seekSlider.setValue(value - moveAmount);
+                } else {
+                    seekSlider.setValue(0);
+                }
+            }
+        });
+
 
 
         layout.setAutoCreateGaps(true);
@@ -108,7 +268,7 @@ public class UI {
             }
         });
 
-
+         //Color Plot
         Random random = new Random();
         int [] colors = new int[256];
         for (int i = 0; i <256; i++) {
@@ -123,7 +283,91 @@ public class UI {
         colorGrid.setPreferredSize(new Dimension(windowWidth / 3,
                 windowWidth / 3));
 
-        defineLayoutPositions(layout, plotPanel, colorGrid);
+        /**
+         * Set Layouts
+         */
+        layout.setHonorsVisibility(false);
+        layout.setHonorsVisibility(seekSlider, true);
+        layout.setHonorsVisibility(back, true);
+        layout.setHonorsVisibility(next, true);
+
+        layout.setHorizontalGroup(layout.createSequentialGroup()
+          .addGap(40)
+          .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+            .addComponent(colorGrid, 0, GroupLayout.PREFERRED_SIZE,
+              Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+              .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                .addComponent(realTimeSelect, 0, GroupLayout.PREFERRED_SIZE,
+                  buttonLength)
+                .addComponent(startRealTimeData, 0, GroupLayout.PREFERRED_SIZE,
+                  buttonLength)
+              )
+              .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                .addComponent(playBackSelect, 0, GroupLayout.PREFERRED_SIZE,
+                  buttonLength)
+                .addComponent(loadData, 0, GroupLayout.PREFERRED_SIZE,
+                  buttonLength)
+              )
+            )
+            .addGroup(layout.createSequentialGroup()
+              .addComponent(back)
+              .addComponent(seekSlider)
+              .addComponent(next)
+            )
+
+          )
+          .addGap(100)
+          .addComponent(plotPanel, 0, GroupLayout.PREFERRED_SIZE,
+            Short.MAX_VALUE));
+
+        int vertGap = (application.getHeight()-colorGrid.getPreferredSize().height)/2;
+        layout.setVerticalGroup(layout.createSequentialGroup()
+          .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+            .addGroup(
+              layout.createSequentialGroup()
+                .addComponent(colorGrid, 0, GroupLayout.PREFERRED_SIZE,
+                  Short.MAX_VALUE)
+                .addGap(20)
+                .addGroup(
+                  layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                    .addComponent(realTimeSelect, 0, GroupLayout.PREFERRED_SIZE,
+                      buttonWidth)
+                    .addComponent(playBackSelect, 0, GroupLayout.PREFERRED_SIZE,
+                      buttonWidth)
+                )
+                .addGroup(
+                  layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                    .addComponent(startRealTimeData, 0,
+                      GroupLayout.PREFERRED_SIZE, buttonWidth)
+                    .addComponent(loadData, 0, GroupLayout.PREFERRED_SIZE,
+                      buttonWidth)
+                )
+                .addGroup(
+                  layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                    .addComponent(back)
+                    .addComponent(seekSlider)
+                    .addComponent(next)
+                )
+                .addGap(20)
+            )
+            .addComponent(plotPanel, 0, GroupLayout.PREFERRED_SIZE,
+              Short.MAX_VALUE)));
+
+        layout.linkSize(SwingConstants.HORIZONTAL, realTimeSelect, playBackSelect);
+        layout.linkSize(SwingConstants.HORIZONTAL, realTimeSelect,
+          startRealTimeData);
+        layout.linkSize(SwingConstants.HORIZONTAL, realTimeSelect, loadData);
+        layout.linkSize(SwingConstants.VERTICAL, realTimeSelect, playBackSelect);
+        layout.linkSize(SwingConstants.VERTICAL, realTimeSelect,
+          startRealTimeData);
+        layout.linkSize(SwingConstants.VERTICAL, realTimeSelect, loadData);
+        layout.linkSize(SwingConstants.VERTICAL, next, back);
+        layout.linkSize(SwingConstants.HORIZONTAL, next, back);
+
+
+
+
 
 //        application.addComponentListener(new ComponentAdapter() {
 //            @Override
@@ -146,6 +390,7 @@ public class UI {
 
         setUIComponentNames();
     }
+
 
     /**
      * Add the Menu Bar to the Application.
@@ -217,22 +462,20 @@ public class UI {
     private void defineLayoutPositions(GroupLayout layout, PlotPanel plotPanel,
                                        ColorGrid colorMap) {
         layout.setHorizontalGroup(layout.createSequentialGroup()
-                .addGap(20)
-                .addComponent(colorMap, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
-                .addGap(200)
-                .addComponent(plotPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE));
+          .addGap(80)
+          .addComponent(colorMap, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+          .addGap(140)
+          .addComponent(plotPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE));
 
         int vertGap = (application.getHeight()-colorMap.getPreferredSize().height)/2;
         layout.setVerticalGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                        .addGroup(
-                layout.createSequentialGroup()
-                            .addGap(vertGap)                    
-                            .addComponent(colorMap, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
-                            .addGap(vertGap)
-                        )
-                
-                        .addComponent(plotPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)));
+          .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+            .addGroup(layout.createSequentialGroup()
+              .addComponent(colorMap, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+              .addGap(vertGap*2)
+            )
+
+            .addComponent(plotPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)));
     }
 
     /**
@@ -247,7 +490,7 @@ public class UI {
             dataBank = new StaticDataBank();
             DataPopulator populator = new DataPopulator(dataBank, new FileReader(dataFile));
             populator.execute();
-            startPlayBack();
+            //startPlayBack();
             break;
         case FROM_COM_PORT:
             dataBank = new DynamicDataBank();
@@ -262,10 +505,7 @@ public class UI {
         System.out.print(dataBank.getSize());
     }
 
-    private void startPlayBack() {
-        updater = new UpdateTimer(1000/30, colorMap, plotPanel, dataBank);
-        updater.startTimer();
-    }
+
 
     /**
      * Maximizes the windows and set the UI to be visible.
@@ -275,7 +515,7 @@ public class UI {
             application.setExtendedState(JFrame.MAXIMIZED_BOTH);
             
             application.setVisible(true);
-            application.setResizable(false);
+           // application.setResizable(false);
 
 
         }

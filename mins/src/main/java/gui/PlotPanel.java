@@ -149,7 +149,7 @@ public class PlotPanel extends JPanel implements ActionListener{
      */
     public void updatePlots(DataLine data){
         for (int plotNumber = 0; plotNumber < 5; plotNumber++){
-            series.get(plotNumber).add(time, data.getDataAt(plotNodes[plotNumber]));
+            series.get(plotNumber).add(time, data.getDataAt(plotNodes[plotNumber]-1));
             series.get(plotNumber).remove(0);
         }
         time++;

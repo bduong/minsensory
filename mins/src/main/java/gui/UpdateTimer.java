@@ -4,7 +4,7 @@ import data.DataBank;
 import data.DataLine;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.Timer;
+import javax.swing.*;
 
 public class UpdateTimer implements ActionListener{
 
@@ -14,6 +14,8 @@ public class UpdateTimer implements ActionListener{
     private PlotPanel plotPanel;
     private DataBank dataBank;
     private int count;
+
+    private JSlider slider;
 
     public UpdateTimer() {
         delay = 1000/30;
@@ -26,6 +28,8 @@ public class UpdateTimer implements ActionListener{
     }
 
     public UpdateTimer(int delay, ColorMappedImage image, PlotPanel plotPanel, DataBank dataBank) {
+        slider = null;
+
         this.delay = delay;
         this.image = image;
         this.plotPanel = plotPanel;
@@ -34,16 +38,22 @@ public class UpdateTimer implements ActionListener{
     }
 
     private void setupTimer() {
+        count = 0;
         timer = new Timer(delay, this);
     }
 
     public void startTimer() {
-        count = 0;
-        timer.start();
+        if (count < 10000){
+            timer.start();
+        }
     }
 
     public void stopTimer() {
         timer.stop();
+    }
+
+    public void setSlider(JSlider slider){
+        this.slider = slider;
     }
 
     @Override
@@ -53,9 +63,14 @@ public class UpdateTimer implements ActionListener{
             DataLine data = dataBank.getNextPoint();
             plotPanel.updatePlots(data);
             image.updateImage(data);
+
+            if(slider != null) {
+                slider.setValue(slider.getValue()+1);
+            }
+
         } else {
             stopTimer();
             System.out.println("DONE");
         }
-}
+    }
 }

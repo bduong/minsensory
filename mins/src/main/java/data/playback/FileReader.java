@@ -48,5 +48,4 @@ public class FileReader implements DataReader {
     public void close() throws IOException {
         reader.close();
     }
-
 }
