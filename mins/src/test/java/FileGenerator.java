@@ -18,8 +18,8 @@ import static org.testng.Assert.assertEquals;
  */
 public class FileGenerator {
 
-    private static final String fileName = "random_data.bin";
-    private static final int NUMBER_OF_POINTS = 10000;
+    private static final String fileName = "large_random_data.bin";
+    private static final int NUMBER_OF_POINTS = 100000;
 
 //    public static void main(String [] args) throws IOException {
 //        createFile();
@@ -35,7 +35,7 @@ public class FileGenerator {
 
         int array[] = new int[256];
         for (int jj = 0; jj < 256; jj++) {
-            array[jj] = 1000* (jj % 10) ;
+            array[jj] = 1000* (jj % 20) ;
         }
         boolean [] up = new boolean[256];
         for (int jj = 0; jj < 256; jj++) {
@@ -61,7 +61,11 @@ public class FileGenerator {
                     array[jj] +=30254;
                 }
             }
-            System.out.println(array[0] & 0x000003FF);
+
+            //System.out.println(array[0] & 0x000003FF);
+            if( ii % 1000 == 0)
+                System.out.println(ii);
+
         }
         output2.close();
     }

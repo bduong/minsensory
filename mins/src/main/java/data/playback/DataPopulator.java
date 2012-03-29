@@ -15,6 +15,8 @@ public class DataPopulator {
     private FileReader reader;
     private int lineSize = 256;
     
+    private final int NUMBER_OF_POINTS = 10000;
+    
     public DataPopulator(DataBank dataBank, FileReader fileReader) {
         bank = dataBank;
         reader = fileReader;
@@ -25,7 +27,7 @@ public class DataPopulator {
     public void execute(){
         int count = 0;
         outer:
-        while (count < 10000) {
+        while (count < NUMBER_OF_POINTS) {
             int array[] = new int[lineSize];
             for (int ii = 0; ii < lineSize; ii++) {
                 try {
