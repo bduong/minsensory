@@ -97,7 +97,7 @@ public class PlotPanel extends JPanel implements ActionListener{
     private JFreeChart createSeriesAndChart(String title) {
         XYSeries xySeries = new XYSeries(title);
         for (int ii = -49; ii <= 0; ii++ ) {
-            xySeries.add(ii, ii+49);
+            xySeries.add(ii, 0);
         }
         series.add(xySeries);        
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection(xySeries);
@@ -149,9 +149,31 @@ public class PlotPanel extends JPanel implements ActionListener{
      */
     public void updatePlots(DataLine data){
         for (int plotNumber = 0; plotNumber < 5; plotNumber++){
-            series.get(plotNumber).add(time, data.getDataAt(plotNodes[plotNumber]-1));
+            int dataPoint = data.getDataAt(plotNodes[plotNumber]-1);
+            dataPoint = dataPoint & 0x000003FF;
+            series.get(plotNumber).add(time, dataPoint);
             series.get(plotNumber).remove(0);
         }
         time++;
+    }
+
+
+    public void resetPlotsTo(List<DataLine> data, int newTime) {
+        int begin = newTime - data.size();
+        this.time = newTime;
+
+        for (int plotNumber = 0; plotNumber < 5; plotNumber++){
+            series.get(plotNumber).clear();
+        }
+        int resetTime = begin;
+        for (int timeNumber = 0; timeNumber < data.size(); timeNumber++) {
+            DataLine line = data.get(timeNumber);
+            for (int plotNumber = 0; plotNumber < 5; plotNumber++){
+                int dataPoint = line.getDataAt(plotNodes[plotNumber]-1);
+                dataPoint = dataPoint & 0x000003FF;
+                series.get(plotNumber).add(resetTime, dataPoint);
+            }
+            resetTime++;
+        }
     }
 }

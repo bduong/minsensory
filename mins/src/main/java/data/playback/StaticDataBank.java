@@ -27,6 +27,11 @@ public class StaticDataBank implements DataBank {
     }
 
     @Override
+    public List<DataLine> getPoints(int begin, int end) {
+        return data.subList(begin, end);
+    }
+
+    @Override
     public void addPoint(DataLine datum) {
         data.add(datum);
     }
@@ -34,5 +39,15 @@ public class StaticDataBank implements DataBank {
     @Override
     public int getSize() {
         return data.size();
+    }
+
+    @Override
+    public void resetTo(int point) {
+        count = point;
+    }
+
+    @Override
+    public int getPositiob() {
+        return count;
     }
 }

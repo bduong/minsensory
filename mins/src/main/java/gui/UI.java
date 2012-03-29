@@ -1,5 +1,6 @@
 package gui;
 
+import data.DataLine;
 import data.playback.DataPopulator;
 import data.playback.FileReader;
 import data.playback.StaticDataBank;
@@ -13,9 +14,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Random;
+import java.util.*;
+import java.util.List;
 
 /**
  * User Interface
@@ -70,7 +74,8 @@ public class UI {
      */
     private JButton startPlayBack;
     private JButton stopPlayBack;
-    
+
+    private boolean userSeek = true;
     private JSlider seekSlider;
     private int moveAmount = 100;
 
@@ -216,6 +221,20 @@ public class UI {
         seekSlider.setVisible(false);
         seekSlider.setPaintLabels(true);
         seekSlider.setPaintTicks(true);
+        seekSlider.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent changeEvent) {
+                if( userSeek) {
+                    int value = seekSlider.getValue();
+                    if (value >= seekSlider.getMaximum()) {
+                        seekSlider.setValue(value - 1);
+                    }
+                    seekTime();
+                } else {
+                    userSeek = true;
+                }
+            }
+        });
 
         next = new JButton(">>");
         next.setVisible(false);
@@ -228,7 +247,9 @@ public class UI {
                     seekSlider.setValue(value + moveAmount);
                 } else {
                     seekSlider.setValue(seekSlider.getMaximum()-1);   
-                }                
+                }
+                userSeek = false;
+                seekTime();
             }
         });
         back = new JButton("<<");
@@ -242,6 +263,8 @@ public class UI {
                 } else {
                     seekSlider.setValue(0);
                 }
+                userSeek = false;
+                seekTime();
             }
         });
 
@@ -391,6 +414,15 @@ public class UI {
         setUIComponentNames();
     }
 
+    private void seekTime() {
+        int value;
+        value = seekSlider.getValue();
+        int begin = value - 50;
+        if (begin < 0)  begin = 0;
+        List<DataLine> dataLineList = dataBank.getPoints(begin, value);
+        plotPanel.resetPlotsTo(dataLineList, value);
+        colorMap.updateImage(dataBank.getPoint(value));
+    }
 
     /**
      * Add the Menu Bar to the Application.

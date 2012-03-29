@@ -23,11 +23,10 @@ public class DataPopulator {
     //TODO Change 10000 hard count to length of file
 
     public void execute(){
-        int array[] = new int[lineSize];
         int count = 0;
         outer:
         while (count < 10000) {
-
+            int array[] = new int[lineSize];
             for (int ii = 0; ii < lineSize; ii++) {
                 try {
                     array[ii] = reader.readNextInt();

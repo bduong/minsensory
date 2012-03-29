@@ -28,6 +28,43 @@ public class FileGenerator {
 //    }
 //
 
+    private void createDatFile() throws IOException    {
+        FileOutputStream output2 = new FileOutputStream(fileName);
+
+        Random gen = new Random();
+
+        int array[] = new int[256];
+        for (int jj = 0; jj < 256; jj++) {
+            array[jj] = 1000* (jj % 10) ;
+        }
+        boolean [] up = new boolean[256];
+        for (int jj = 0; jj < 256; jj++) {
+            up[jj] = true;
+        }
+        byte bytes[] = new byte[2];
+        for (int ii = 0; ii < NUMBER_OF_POINTS; ii++) {
+            for (int jj = 0; jj < 256; jj++) {
+                int num = array[jj] & 0x0000FFFF;
+                bytes[0] = (byte)((num & 0x0000FF00) >>8);
+                bytes[1] = (byte)(num & 0x000000FF);
+                output2.write(bytes, 0, 2);
+                if (up[jj]){
+                    array[jj] +=15563;
+                }else {
+                    array[jj] -=26325;
+                }
+                if (array[jj] > 65535) {
+                    up[jj] = false;
+                    array[jj] -=17885;
+                } else if (array[jj] < 0) {
+                    up[jj] = true;
+                    array[jj] +=30254;
+                }
+            }
+            System.out.println(array[0] & 0x000003FF);
+        }
+        output2.close();
+    }
 
     private void createFile() throws IOException {
         //ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(fileName));
@@ -46,16 +83,16 @@ public class FileGenerator {
                 bytes[1] = (byte)(num & 0x000000FF);
                 output2.write(bytes);
                 if (up){
-                    num +=6;
+                    num +=33;
                 }else {
-                    num -=6;
+                    num -=33;
                 }
                 if (num > 65535) {
                     up = false;
-                    num -=6;
+                    num -=58;
                 } else if (num < 0) {
                     up = true;
-                    num +=6;
+                    num +=58;
                 }
             }
             referenceBank.addPoint(new DataLine(array));
@@ -74,6 +111,10 @@ public class FileGenerator {
         referenceBank = new StaticDataBank();
     }
 
+    @Test
+    public void makeFile() throws IOException {
+        createDatFile();
+    }
     @Test
     public void testRead() throws IOException {
         createFile();
@@ -101,5 +142,25 @@ public class FileGenerator {
 
     }
 
+    @Test
+    public void test() throws IOException {
+        FileReader reader = new FileReader("random_data.bin");
+        for (int ii = 0; ii < NUMBER_OF_POINTS; ii++) {
+            int array[] = new int[256];
+
+            for (int jj = 0; jj < 256; jj++) {
+                array[jj] = reader.readNextInt();
+            }
+            bank.addPoint(new DataLine(array));
+        }
+        reader.close();
+        
+        for (int ii = 0; ii < 100; ii++) {
+            DataLine line = bank.getNextPoint();
+            System.out.println(line.getDataAt(0));
+
+        }
+
+    }
 
 }

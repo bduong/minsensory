@@ -4,6 +4,7 @@ import data.DataBank;
 import data.DataLine;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Holds the lines of data to be processed
@@ -43,6 +44,11 @@ public class DynamicDataBank implements DataBank {
         return data.removeFirst();
     }
 
+    @Override
+    public List<DataLine> getPoints(int begin, int end) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     /**
      * Add a data point to the bottom of the bank.
      *
@@ -56,5 +62,15 @@ public class DynamicDataBank implements DataBank {
     @Override
     public int getSize() {
         return data.size();
+    }
+
+    @Override
+    public void resetTo(int point) {
+
+    }
+
+    @Override
+    public int getPositiob() {
+        return 0;
     }
 }

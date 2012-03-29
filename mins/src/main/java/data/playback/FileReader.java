@@ -30,11 +30,9 @@ public class FileReader implements DataReader {
 
     @Override
     public int readNextInt() throws IOException{
-       // return reader.readUnsignedShort();
-
         reader.read(bytes, 0, 2);
-        int value = bytes[0] & 0x000000FF;
-        return (value << 8) | (bytes[1] & 0x000000FF);
+        int value = bytes[0] << 8;
+        return (0x0000FFFF & ((value) | (bytes[1] & 0x000000FF)));
     }
 
     public String getFileName(){
