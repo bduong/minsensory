@@ -84,6 +84,8 @@ public class UI {
 
     private boolean started;
 
+    private File saveDataFile;
+
     private GroupLayout layout;
 
     /** Set names for the UI components in order to test. */
@@ -112,7 +114,26 @@ public class UI {
         layout = new GroupLayout(application.getContentPane());
         application.setLayout(layout);
 
-        fileChooser = new JFileChooser("Choose Data File");
+        fileChooser = new JFileChooser("Choose Data File") {
+            @Override
+            public void approveSelection(){
+                File f = getSelectedFile();
+                if(f.exists() && getDialogType() == SAVE_DIALOG){
+                    int result = JOptionPane.showConfirmDialog(this,"The file exists, overwrite?","Existing file",JOptionPane.YES_NO_CANCEL_OPTION);
+                    switch(result){
+                    case JOptionPane.YES_OPTION:
+                        super.approveSelection();
+                        return;
+                    case JOptionPane.NO_OPTION:
+                        return;
+                    case JOptionPane.CANCEL_OPTION:
+                        cancelSelection();
+                        return;
+                    }
+                }
+                super.approveSelection();
+            }
+            };
         fileChooser.setMultiSelectionEnabled(false);
 
         int buttonLength = 250;
@@ -140,6 +161,21 @@ public class UI {
         });
 
         startRealTimeData = new JButton("Start");
+        startRealTimeData.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                 int returnVal = fileChooser.showSaveDialog(application);
+
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                     saveDataFile = fileChooser.getSelectedFile();
+                }
+            }
+        });
+
+        startRealTimeData.setVisible(false);
+
+
+
         loadData = new JButton("Load");
         loadData.addActionListener(new ActionListener() {
             @Override
@@ -178,7 +214,6 @@ public class UI {
         }
         );
 
-        startRealTimeData.setVisible(false);
         loadData.setVisible(false);
 
         startPlayBack = new JButton("Start PlayBack");
@@ -485,32 +520,6 @@ public class UI {
     }
 
     /**
-     * Defines the positions for the Group Layout
-     * 
-     * @param layout the group layout
-     * @param plotPanel the JPanel with the plots
-     * @param colorMap the JPanel with the color grid
-     */
-    private void defineLayoutPositions(GroupLayout layout, PlotPanel plotPanel,
-                                       ColorGrid colorMap) {
-        layout.setHorizontalGroup(layout.createSequentialGroup()
-          .addGap(80)
-          .addComponent(colorMap, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
-          .addGap(140)
-          .addComponent(plotPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE));
-
-        int vertGap = (application.getHeight()-colorMap.getPreferredSize().height)/2;
-        layout.setVerticalGroup(layout.createSequentialGroup()
-          .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-            .addGroup(layout.createSequentialGroup()
-              .addComponent(colorMap, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
-              .addGap(vertGap*2)
-            )
-
-            .addComponent(plotPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)));
-    }
-
-    /**
      * Start the collection of Data
      * 
      * @throws URISyntaxException if the file cannot be found
@@ -522,11 +531,10 @@ public class UI {
             dataBank = new StaticDataBank();
             DataPopulator populator = new DataPopulator(dataBank, new FileReader(dataFile));
             populator.execute();
-            //startPlayBack();
             break;
         case FROM_COM_PORT:
             dataBank = new DynamicDataBank();
-            dataCollector = new DataCollector(dataBank, new COMReader());
+            dataCollector = new DataCollector(dataBank, new COMReader(), saveDataFile);
             dataCollector.execute();
             break;
         }

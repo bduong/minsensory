@@ -6,6 +6,9 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
 import gnu.io.SerialPort;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -14,10 +17,11 @@ import java.util.List;
 
 public class COMReader implements DataReader {
 
-    InputStream in = null;
-    OutputStream out = null;
+    BufferedInputStream in = null;
+    BufferedOutputStream out = null;
+    private byte [] bytes;
     public COMReader() {
-
+          bytes = new byte[2];
     }
 
     public static List<String> listPorts() throws NoSuchPortException {
@@ -67,11 +71,9 @@ public class COMReader implements DataReader {
                 SerialPort serialPort = (SerialPort) commPort;
                 serialPort.setSerialPortParams(9600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
 
-                in = serialPort.getInputStream();
-		        out = serialPort.getOutputStream();
-               // OutputStream out = serialPort.getOutputStream();
-               //(new Thread(reader)).start();
-                //(new Thread(new SerialWriter(out))).start();
+                in = new BufferedInputStream(serialPort.getInputStream());
+		        out = new BufferedOutputStream(serialPort.getOutputStream());
+
 
             }
             else
@@ -91,7 +93,9 @@ public class COMReader implements DataReader {
     }
 
     @Override
-    public int readNextInt() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    public int readNextInt() throws IOException {
+        in.read(bytes, 0, 2);
+        int value = bytes[0] << 8;
+        return (0x0000FFFF & ((value) | (bytes[1] & 0x000000FF)));
     }
 }

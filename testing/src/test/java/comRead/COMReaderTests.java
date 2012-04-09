@@ -25,6 +25,7 @@ public class COMReaderTests {
         comReader = new COMReader();
     }
 
+    // @TODO Mac is 32-bit fix rxtx to be compatable
     @Test
     void testPortList() throws NoSuchPortException {
         List<String> ports = COMReader.listPorts();

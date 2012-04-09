@@ -3,9 +3,10 @@ package data.realtime;
 import data.DataBank;
 import data.DataLine;
 import data.DataReader;
-import gui.OperatingMode;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import javax.swing.*;
@@ -17,22 +18,47 @@ public class DataCollector extends SwingWorker<Void, DataLine>{
     private DataBank dataBank;
     private boolean stop;
     private DataReader dataReader;
+    private BufferedOutputStream outputStream;
+    private byte [] bytes;
 
     public DataCollector(DataBank dataBank, DataReader reader) throws URISyntaxException, IOException {
       this.dataBank = dataBank;
       dataReader = reader;
+      stop = false;
+    }
+
+    public DataCollector(DataBank dataBank, DataReader reader, File file) throws URISyntaxException, IOException {
+        this.dataBank = dataBank;
+        dataReader = reader;
         stop = false;
+        outputStream = new BufferedOutputStream(new FileOutputStream(file));
+        bytes = new byte[2];
+    }
+
+    public void setFileName() {
+
     }
     
     @Override
     protected Void doInBackground() throws Exception {
         numberOfLinesSince++;
-        int [] dataLine = new int[256];
-        for (int ii = 0; ii < 256; ii++) {
-            dataLine[ii] = dataReader.readNextInt();
+        while (!stop) {
+            int [] dataLine = new int[256];
+            for (int ii = 0; ii < 256; ii++) {
+                dataLine[ii] = dataReader.readNextInt();
+                createWritableBytes(dataLine[ii]);
+                outputStream.write(bytes);
+            }
+            publish(new DataLine(dataLine));
         }
-        publish(new DataLine(dataLine));
         return null;
+    }
+
+    private void createWritableBytes(int i) {
+        int upper =  i & 0x0000FF00;
+        int lower = i & 0x000000FF;
+        bytes[0] = (byte) (upper >> 8);
+        bytes[1] = (byte) lower;
     }
 
     @Override
