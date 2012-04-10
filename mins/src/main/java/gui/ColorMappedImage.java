@@ -17,6 +17,8 @@ public class ColorMappedImage extends JPanel {
     private BufferedImage image;
     private int width = 16;
     private int height = 16;
+
+    private DataType dataType;
     
     public ColorMappedImage() {
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -26,6 +28,11 @@ public class ColorMappedImage extends JPanel {
         this.width = width;
         this.height = height;
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        dataType = DataType.PROCESSED;
+    }
+
+    public void setDataType(DataType type) {
+        dataType = type;
     }
     
     public void setColors(int [] rgb) {
@@ -42,7 +49,11 @@ public class ColorMappedImage extends JPanel {
      * @param line 
      */
     public void updateImage(DataLine line){
-        image.setRGB(0, 0, width, height, translate(line.getLine()), 0, width);
+        if (dataType == DataType.PROCESSED) {
+            image.setRGB(0, 0, width, height, translateToRGB(line.getLine()), 0, width);
+        } else {
+            image.setRGB(0, 0, width, height, translateToGrayscale(line.getLine()), 0, width);
+        }
         repaint();
     }
     
@@ -57,7 +68,19 @@ public class ColorMappedImage extends JPanel {
        g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), this);
     }
 
-    public int [] translate(int [] points){
+    public int [] translateToGrayscale(int[] points){
+        int [] newPoints = new int[points.length];
+        for( int ii = 0; ii < points.length; ii++) {
+            int number = points[ii];
+            int value = (number & 0x00000FF0);
+            value = value>>4;
+            newPoints[ii] = new Color(value, value, value).getRGB();
+
+        }
+        return newPoints;
+    }
+
+    public int [] translateToRGB(int[] points){
         int [] newPoints = new int[points.length];
         for( int ii = 0; ii < points.length; ii++) {
             int number = points[ii];

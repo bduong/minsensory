@@ -26,6 +26,8 @@ import java.util.List;
  */
 public class UI {
 
+
+
     private int windowWidth;
     private int windowHeight;
     private OperatingMode operatingMode;
@@ -114,7 +116,11 @@ public class UI {
         layout = new GroupLayout(application.getContentPane());
         application.setLayout(layout);
 
+
+
         fileChooser = new JFileChooser("Choose Data File") {
+
+            Object[] options = {"Raw Data", "Signal Processed Data"};
             @Override
             public void approveSelection(){
                 File f = getSelectedFile();
@@ -128,6 +134,25 @@ public class UI {
                         return;
                     case JOptionPane.CANCEL_OPTION:
                         cancelSelection();
+                        return;
+                    }
+                }
+
+                if(f.exists() && getDialogType() == OPEN_DIALOG) {
+                    Object selectedValue = JOptionPane.showInputDialog(null,
+                      "Choose Data Type", "Input",
+                      JOptionPane.INFORMATION_MESSAGE, null,
+                      options, options[0]);
+                    if (selectedValue == null) {
+                        cancelSelection();
+                        return;
+                    } else if (selectedValue == options[0]) {
+                        colorMap.setDataType(DataType.RAW);
+                        super.approveSelection();
+                        return;
+                    } else {
+                        colorMap.setDataType(DataType.PROCESSED);
+                        super.approveSelection();
                         return;
                     }
                 }
