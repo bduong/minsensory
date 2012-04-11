@@ -28,7 +28,9 @@ public class PlotPanel extends JPanel implements ActionListener{
     private int [] plotNodes;
     private int node;
     private int time;
-    
+
+    private DataType dataType;
+
     public PlotPanel() {
         plots = new ArrayList<JFreeChart>();
         series = new ArrayList<XYSeries>();
@@ -39,7 +41,7 @@ public class PlotPanel extends JPanel implements ActionListener{
         init();
         //setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
-    
+
     private static Color colors[] = {Color.RED, Color.BLUE, Color.GREEN, Color.BLACK, Color.MAGENTA};
 
     /**
@@ -66,7 +68,7 @@ public class PlotPanel extends JPanel implements ActionListener{
             button.setActionCommand("" + chartNumber++);
             button.addActionListener(this);
             chart.getXYPlot().getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-            ChartPanel thisChart = new ChartPanel(chart);           
+            ChartPanel thisChart = new ChartPanel(chart);
             radioButtons.add(button);
             buttonGroup.add(button);
 
@@ -80,7 +82,7 @@ public class PlotPanel extends JPanel implements ActionListener{
 
         add(buttonPanel);
         add(chartPanel);
-        
+
 //        layout.setHorizontalGroup(layout.createSequentialGroup()
 //          .addComponent(buttonPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
 //          .addGap(50)
@@ -98,7 +100,7 @@ public class PlotPanel extends JPanel implements ActionListener{
         for (int ii = -49; ii <= 0; ii++ ) {
             xySeries.add(ii, 0);
         }
-        series.add(xySeries);        
+        series.add(xySeries);
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection(xySeries);
         return ChartFactory.createXYLineChart(
           title,
@@ -116,11 +118,15 @@ public class PlotPanel extends JPanel implements ActionListener{
         setVisible(true);
     }
 
+    public void setDataType(DataType type){
+        dataType = type;
+    }
+
     private static char [] nodes ="ABCDEFGHIJKLMNOP".toCharArray();
 
     /**
      * Change the plot of the currently selected chart.
-     * 
+     *
      * @param rowNode the user selected row
      * @param colNode the user selected column
      */
@@ -140,16 +146,16 @@ public class PlotPanel extends JPanel implements ActionListener{
         node = Integer.parseInt(actionEvent.getActionCommand());
 
     }
-    
+
     /**
      * Update the plots with the given data.
-     * 
+     *
      * @param data the data to update with
      */
     public void updatePlots(DataLine data){
         for (int plotNumber = 0; plotNumber < 5; plotNumber++){
             int dataPoint = data.getDataAt(plotNodes[plotNumber]-1);
-            dataPoint = dataPoint & 0x000003FF;
+            dataPoint = translatePoint(dataPoint);
             series.get(plotNumber).add(time, dataPoint);
             series.get(plotNumber).remove(0);
         }
@@ -169,10 +175,20 @@ public class PlotPanel extends JPanel implements ActionListener{
             DataLine line = data.get(timeNumber);
             for (int plotNumber = 0; plotNumber < 5; plotNumber++){
                 int dataPoint = line.getDataAt(plotNodes[plotNumber]-1);
-                dataPoint = dataPoint & 0x000003FF;
+                dataPoint = translatePoint(dataPoint);
                 series.get(plotNumber).add(resetTime, dataPoint);
             }
             resetTime++;
         }
+    }
+
+    private int translatePoint(int point) {
+        switch (dataType) {
+        case RAW:
+            return point & 0x00000FFF;
+        case PROCESSED:
+            return point & 0x000003FF;
+        }
+        return 0;
     }
 }

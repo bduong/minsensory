@@ -62,6 +62,9 @@ public class UI {
 
     private UpdateTimer updater;
 
+    private int buttonLength = 250;
+    private int buttonWidth = 100;
+
     private JButton realTimeSelect;
     private JButton playBackSelect;
     
@@ -74,6 +77,7 @@ public class UI {
     private JButton startDataRead;
     private JButton stopDataRead;
     private JButton disconnect;
+    private JButton selectPort;
 
     /**
      * buttons for playback
@@ -152,10 +156,12 @@ public class UI {
                         return;
                     } else if (selectedValue == options[0]) {
                         colorMap.setDataType(DataType.RAW);
+                        plotPanel.setDataType(DataType.RAW);
                         super.approveSelection();
                         return;
                     } else {
                         colorMap.setDataType(DataType.PROCESSED);
+                        plotPanel.setDataType(DataType.PROCESSED);
                         super.approveSelection();
                         return;
                     }
@@ -165,187 +171,24 @@ public class UI {
             };
         fileChooser.setMultiSelectionEnabled(false);
 
-        int buttonLength = 250;
-        int buttonWidth = 100;
-        realTimeSelect = new JButton("Real Time Data");
-        realTimeSelect.setPreferredSize(new Dimension(buttonLength, buttonWidth));
-        realTimeSelect.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                realTimeSelect.setEnabled(false);
-                playBackSelect.setEnabled(true);
-                startRealTimeData.setVisible(true);
-                loadData.setVisible(false);
-            }
-        });
-        playBackSelect = new JButton("Play Back Data");
-        playBackSelect.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                realTimeSelect.setEnabled(true);
-                playBackSelect.setEnabled(false);
-                startRealTimeData.setVisible(false);
-                loadData.setVisible(true);
-            }
-        });
+        /**
+         * RealTime
+         */
 
-        startRealTimeData = new JButton("Start");
-        startRealTimeData.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                int returnVal = fileChooser.showSaveDialog(application);
+        initializeRealTimeButtons();
 
-                if(returnVal == JFileChooser.APPROVE_OPTION) {
-                     saveDataFile = fileChooser.getSelectedFile();
-                }
-            }
-        });
+        /**
+         * PlayBack
+         */
 
-        startRealTimeData.setVisible(false);
+        initializePlayBackButtons();
 
 
-
-        loadData = new JButton("Load");
-        loadData.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                int returnVal = fileChooser.showOpenDialog(application);
-
-                if(returnVal == JFileChooser.APPROVE_OPTION) {
-                    dataFile = fileChooser.getSelectedFile();
-                    loadData.setVisible(false);
-                    playBackSelect.setVisible(false);
-                    realTimeSelect.setVisible(false);
-
-                    dataBank = new StaticDataBank();
-                    try {
-                        DataPopulator populator = new DataPopulator(dataBank, new FileReader(dataFile));
-                        populator.execute();
-                        int dataBankSize = dataBank.getSize();
-                        seekSlider.setMaximum(dataBankSize);
-                        seekSlider.setMajorTickSpacing(dataBankSize / 20);
-                        seekSlider.setMinorTickSpacing(dataBankSize / 200);
-                        int tickSize = (int)Math.ceil(Math.log10(dataBankSize/20));
-                        Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
-                        for (int ii = 0; ii <= 20; ii++) {
-                            labelTable.put(dataBankSize/20 * ii, new JLabel(String.format("%.1f",((float)dataBankSize)/20/(Math.pow(10, tickSize)) * ii) ));
-                        }
-                        seekSlider.setLabelTable(labelTable);
-
-                    } catch (Exception e) {}
-                    
-                    layout.replace(realTimeSelect, startPlayBack);
-                    layout.replace(playBackSelect, stopPlayBack);
-                    stopPlayBack.setEnabled(false);
-
-                    layout.linkSize(SwingConstants.HORIZONTAL, startPlayBack, stopPlayBack);
-                    layout.linkSize(SwingConstants.VERTICAL, startPlayBack, stopPlayBack);
-
-                    layout.setHonorsVisibility(startRealTimeData, true);
-                    layout.setHonorsVisibility(loadData, true);
-                    seekSlider.setVisible(true);
-                    back.setVisible(true);
-                    next.setVisible(true);
-                }
-            }
-        }
-        );
-
-        loadData.setVisible(false);
-
-        startPlayBack = new JButton("Start PlayBack");
-        startPlayBack.setPreferredSize(new Dimension(buttonLength, buttonWidth));
-        startPlayBack.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if (!started) {
-                    updater = new UpdateTimer(1000/30, colorMap, plotPanel, dataBank);
-                    updater.setSlider(seekSlider);
-                    updater.setApplication(UI.this);
-                    started = true;
-                }
-                seekSlider.setEnabled(false);
-                back.setEnabled(false);
-                next.setEnabled(false);
-                updater.startTimer();
-                startPlayBack.setEnabled(false);
-                stopPlayBack.setEnabled(true);
-
-            }
-        });
-        stopPlayBack = new JButton("Stop PlayBack");
-        stopPlayBack.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                updater.stopTimer();
-                startPlayBack.setEnabled(true);
-                stopPlayBack.setEnabled(false);
-                seekSlider.setEnabled(true);
-                back.setEnabled(true);
-                next.setEnabled(true);
-            }
-        });
-
-
-        int backButtonLength = 20;
-        seekSlider = new JSlider(JSlider.HORIZONTAL, 0, 1, 0);
-        seekSlider.setPreferredSize(new Dimension(buttonLength, buttonWidth));
-        seekSlider.setVisible(false);
-        seekSlider.setPaintLabels(true);
-        seekSlider.setPaintTicks(true);
-        seekSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent changeEvent) {
-                if( userSeek) {
-                    int value = seekSlider.getValue();
-                    if (value >= seekSlider.getMaximum()) {
-                        seekSlider.setValue(value - 1);
-                    }
-                    seekTime();
-                } else {
-                    userSeek = true;
-                }
-            }
-        });
-
-        next = new JButton(">>");
-        next.setVisible(false);
-        next.setPreferredSize(new Dimension(backButtonLength, buttonWidth));
-        next.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                int value = seekSlider.getValue();
-                if (value < seekSlider.getMaximum()-1-moveAmount){
-                    seekSlider.setValue(value + moveAmount);
-                } else {
-                    seekSlider.setValue(seekSlider.getMaximum()-1);   
-                }
-                userSeek = false;
-                seekTime();
-            }
-        });
-        back = new JButton("<<");
-        back.setVisible(false);
-        back.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                int value = seekSlider.getValue();
-                if (value >= moveAmount) {
-                    seekSlider.setValue(value - moveAmount);
-                } else {
-                    seekSlider.setValue(0);
-                }
-                userSeek = false;
-                seekTime();
-            }
-        });
-
-
+        addMenuBar();
 
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
 
-        addMenuBar();
         plotPanel = new PlotPanel();
         plotPanel.setPreferredSize(new Dimension(windowWidth / 4, windowHeight));
         colorMap = new ColorMappedImage(16,16);
@@ -460,6 +303,242 @@ public class UI {
         layout.linkSize(SwingConstants.HORIZONTAL, next, back);
 
         setUIComponentNames();
+    }
+
+    private void initializeRealTimeButtons() {
+        realTimeSelect = new JButton("Real Time Data");
+        realTimeSelect.setPreferredSize(new Dimension(buttonLength, buttonWidth));
+        realTimeSelect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                realTimeSelect.setEnabled(false);
+                playBackSelect.setEnabled(true);
+                startRealTimeData.setVisible(true);
+                loadData.setVisible(false);
+            }
+        });
+
+        startRealTimeData = new JButton("Start");
+        startRealTimeData.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                int returnVal = fileChooser.showSaveDialog(application);
+
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                     saveDataFile = fileChooser.getSelectedFile();
+
+                    layout.replace(realTimeSelect, startDataRead);
+                    layout.replace(playBackSelect, stopDataRead);
+                    layout.replace(startRealTimeData, selectPort);
+                    layout.replace(loadData, disconnect);
+
+                    layout.linkSize(SwingConstants.HORIZONTAL, startDataRead, stopDataRead);
+                    layout.linkSize(SwingConstants.HORIZONTAL, startDataRead, selectPort);
+                    layout.linkSize(SwingConstants.HORIZONTAL, startDataRead, disconnect);
+                    layout.linkSize(SwingConstants.VERTICAL, startDataRead, stopDataRead);
+                    layout.linkSize(SwingConstants.VERTICAL, startDataRead, selectPort);
+                    layout.linkSize(SwingConstants.VERTICAL, startDataRead, disconnect);
+
+                    startDataRead.setEnabled(false);
+                    stopDataRead.setEnabled(false);
+                    disconnect.setEnabled(false);
+                    selectPort.setEnabled(true);
+                }
+            }
+        });
+
+        startRealTimeData.setVisible(false);
+
+        startDataRead = new JButton("Start Data Stream");
+        startDataRead.setPreferredSize(new Dimension(buttonLength, buttonWidth));
+        startDataRead.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                startDataRead.setEnabled(false);
+                stopDataRead.setEnabled(true);
+                disconnect.setEnabled(false);
+                selectPort.setEnabled(false);
+            }
+        });
+
+        stopDataRead = new JButton("Stop Data Stream");
+        stopDataRead.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                startDataRead.setEnabled(true);
+                stopDataRead.setEnabled(false);
+                disconnect.setEnabled(true);
+            }
+        });
+
+        disconnect = new JButton("Disconnect Data Stream");
+        disconnect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                startDataRead.setEnabled(false);
+                stopDataRead.setEnabled(false);
+                disconnect.setEnabled(false);
+                selectPort.setEnabled(true);
+            }
+        });
+
+        selectPort = new JButton("Select Port");
+        selectPort.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                startDataRead.setEnabled(true);
+                disconnect.setEnabled(true);
+                selectPort.setEnabled(false);
+            }
+        });
+
+    }
+
+    private void initializePlayBackButtons() {
+        playBackSelect = new JButton("Play Back Data");
+        playBackSelect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                realTimeSelect.setEnabled(true);
+                playBackSelect.setEnabled(false);
+                startRealTimeData.setVisible(false);
+                loadData.setVisible(true);
+            }
+        });
+
+        loadData = new JButton("Load");
+        loadData.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                int returnVal = fileChooser.showOpenDialog(application);
+
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                    dataFile = fileChooser.getSelectedFile();
+                    loadData.setVisible(false);
+                    playBackSelect.setVisible(false);
+                    realTimeSelect.setVisible(false);
+
+                    dataBank = new StaticDataBank();
+                    try {
+                        DataPopulator populator = new DataPopulator(dataBank, new FileReader(dataFile));
+                        populator.execute();
+                        int dataBankSize = dataBank.getSize();
+                        seekSlider.setMaximum(dataBankSize);
+                        seekSlider.setMajorTickSpacing(dataBankSize / 20);
+                        seekSlider.setMinorTickSpacing(dataBankSize / 200);
+                        int tickSize = (int)Math.ceil(Math.log10(dataBankSize/20));
+                        Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
+                        for (int ii = 0; ii <= 20; ii++) {
+                            labelTable.put(dataBankSize/20 * ii, new JLabel(String.format("%.1f",((float)dataBankSize)/20/(Math.pow(10, tickSize)) * ii) ));
+                        }   //@TODO put some sort of modifer here to length of data file
+                        seekSlider.setLabelTable(labelTable);
+
+                    } catch (Exception e) {}
+
+                    layout.replace(realTimeSelect, startPlayBack);
+                    layout.replace(playBackSelect, stopPlayBack);
+                    stopPlayBack.setEnabled(false);
+
+                    layout.linkSize(SwingConstants.HORIZONTAL, startPlayBack, stopPlayBack);
+                    layout.linkSize(SwingConstants.VERTICAL, startPlayBack, stopPlayBack);
+
+                    layout.setHonorsVisibility(startRealTimeData, true);
+                    layout.setHonorsVisibility(loadData, true);
+                    seekSlider.setVisible(true);
+                    back.setVisible(true);
+                    next.setVisible(true);
+                }
+            }
+        }
+        );
+
+        loadData.setVisible(false);
+
+        startPlayBack = new JButton("Start PlayBack");
+        startPlayBack.setPreferredSize(new Dimension(buttonLength, buttonWidth));
+        startPlayBack.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (!started) {
+                    updater = new UpdateTimer(1000/30, colorMap, plotPanel, dataBank);
+                    updater.setSlider(seekSlider);
+                    updater.setApplication(UI.this);
+                    started = true;
+                }
+                seekSlider.setEnabled(false);
+                back.setEnabled(false);
+                next.setEnabled(false);
+                updater.startTimer();
+                startPlayBack.setEnabled(false);
+                stopPlayBack.setEnabled(true);
+
+            }
+        });
+        stopPlayBack = new JButton("Stop PlayBack");
+        stopPlayBack.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                updater.stopTimer();
+                startPlayBack.setEnabled(true);
+                stopPlayBack.setEnabled(false);
+                seekSlider.setEnabled(true);
+                back.setEnabled(true);
+                next.setEnabled(true);
+            }
+        });
+
+        int backButtonLength = 20;
+        seekSlider = new JSlider(JSlider.HORIZONTAL, 0, 1, 0);
+        seekSlider.setPreferredSize(new Dimension(buttonLength, buttonWidth));
+        seekSlider.setVisible(false);
+        seekSlider.setPaintLabels(true);
+        seekSlider.setPaintTicks(true);
+        seekSlider.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent changeEvent) {
+                if( userSeek) {
+                    int value = seekSlider.getValue();
+                    if (value >= seekSlider.getMaximum()) {
+                        seekSlider.setValue(value - 1);
+                    }
+                    seekTime();
+                } else {
+                    userSeek = true;
+                }
+            }
+        });
+
+        next = new JButton(">>");
+        next.setVisible(false);
+        next.setPreferredSize(new Dimension(backButtonLength, buttonWidth));
+        next.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                int value = seekSlider.getValue();
+                if (value < seekSlider.getMaximum()-1-moveAmount){
+                    seekSlider.setValue(value + moveAmount);
+                } else {
+                    seekSlider.setValue(seekSlider.getMaximum()-1);
+                }
+                userSeek = false;
+                seekTime();
+            }
+        });
+        back = new JButton("<<");
+        back.setVisible(false);
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                int value = seekSlider.getValue();
+                if (value >= moveAmount) {
+                    seekSlider.setValue(value - moveAmount);
+                } else {
+                    seekSlider.setValue(0);
+                }
+                userSeek = false;
+                seekTime();
+            }
+        });
     }
 
     private void seekTime() {
