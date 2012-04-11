@@ -16,5 +16,7 @@ public interface DataBank {
 
    public void resetTo(int point);
 
-    public int getPositiob();
+   public int getPosition();
+
+   public boolean isAtEnd();
 }

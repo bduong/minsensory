@@ -30,7 +30,10 @@ public class FileReader implements DataReader {
 
     @Override
     public int readNextInt() throws IOException{
-        reader.read(bytes, 0, 2);
+        int bytesRead = reader.read(bytes, 0, 2);
+        if(bytesRead == -1) {
+            throw new IOException("End of File");
+        }
         int value = bytes[0] << 8;
         return (0x0000FFFF & ((value) | (bytes[1] & 0x000000FF)));
     }

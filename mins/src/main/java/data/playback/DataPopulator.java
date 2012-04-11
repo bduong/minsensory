@@ -24,19 +24,22 @@ public class DataPopulator {
 
     //TODO Change 10000 hard count to length of file
 
-    public void execute(){
-        int count = 0;
+    public void execute() throws IOException {
+        //int count = 0;
         outer:
-        while (count < NUMBER_OF_POINTS) {
+        while (true) {
             int array[] = new int[lineSize];
             for (int ii = 0; ii < lineSize; ii++) {
                 try {
                     array[ii] = reader.readNextInt();
                 } catch (IOException e) {
-                    break outer;
+                    if (e.getMessage().equals("End of File")) {
+                        break outer;
+                    } else {
+                        throw e;
+                    }
                 }
             }
-            count++;
             bank.addPoint(new DataLine(array));
         }
     }

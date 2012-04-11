@@ -37,7 +37,7 @@ public class PlotPanel extends JPanel implements ActionListener{
         node = 0;
         time = 0;
         init();
-        setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        //setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
     
     private static Color colors[] = {Color.RED, Color.BLUE, Color.GREEN, Color.BLACK, Color.MAGENTA};
@@ -46,10 +46,8 @@ public class PlotPanel extends JPanel implements ActionListener{
      * Initialize the Charts and Plots
      */
     private void init() {
-        //GridLayout layout = new GridLayout(5,2);
-        GroupLayout layout = new GroupLayout(this);
-        setLayout(layout);
-        
+
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         int colorNum = 0;
         for (String title : new String[] {"Node 1-A", "Node 2-A", "Node 3-A", "Node 4-A", "Node 5-A"})    {
             JFreeChart chart = createSeriesAndChart(title);
@@ -72,25 +70,26 @@ public class PlotPanel extends JPanel implements ActionListener{
             radioButtons.add(button);
             buttonGroup.add(button);
 
-            button.setBorder(BorderFactory.createLineBorder(Color.BLUE));
-            thisChart.setBorder(BorderFactory.createLineBorder(Color.RED));
+            //button.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+            thisChart.setBorder(BorderFactory.createLineBorder(Color.BLUE));
             buttonPanel.add(button);
             chartPanel.add(thisChart);
         }
 
         radioButtons.get(0).setSelected(true);
 
-        buttonPanel.setPreferredSize(new Dimension(20, 900));
+        add(buttonPanel);
+        add(chartPanel);
         
-        layout.setHorizontalGroup(layout.createSequentialGroup()
-          .addComponent(buttonPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
-          .addGap(50)
-          .addComponent(chartPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
-        );
-
-        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-          .addComponent(buttonPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
-        .addComponent(chartPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE));
+//        layout.setHorizontalGroup(layout.createSequentialGroup()
+//          .addComponent(buttonPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+//          .addGap(50)
+//          .addComponent(chartPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+//        );
+//
+//        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+//          .addComponent(buttonPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+//        .addComponent(chartPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE));
 
     }
 

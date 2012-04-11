@@ -70,7 +70,12 @@ public class DynamicDataBank implements DataBank {
     }
 
     @Override
-    public int getPositiob() {
+    public int getPosition() {
         return 0;
+    }
+
+    @Override
+    public boolean isAtEnd() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

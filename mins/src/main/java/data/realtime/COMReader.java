@@ -98,4 +98,8 @@ public class COMReader implements DataReader {
         int value = bytes[0] << 8;
         return (0x0000FFFF & ((value) | (bytes[1] & 0x000000FF)));
     }
+
+    public void startStream() throws IOException {
+        out.write(1);
+    }
 }

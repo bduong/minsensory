@@ -25,9 +25,6 @@ import java.util.List;
  * User Interface
  */
 public class UI {
-
-
-
     private int windowWidth;
     private int windowHeight;
     private OperatingMode operatingMode;
@@ -70,6 +67,13 @@ public class UI {
     
     private JButton startRealTimeData;
     private JButton loadData;
+    /**
+     * buttons for real time data read
+     */
+
+    private JButton startDataRead;
+    private JButton stopDataRead;
+    private JButton disconnect;
 
     /**
      * buttons for playback
@@ -189,7 +193,7 @@ public class UI {
         startRealTimeData.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                 int returnVal = fileChooser.showSaveDialog(application);
+                int returnVal = fileChooser.showSaveDialog(application);
 
                 if(returnVal == JFileChooser.APPROVE_OPTION) {
                      saveDataFile = fileChooser.getSelectedFile();
@@ -217,9 +221,17 @@ public class UI {
                     try {
                         DataPopulator populator = new DataPopulator(dataBank, new FileReader(dataFile));
                         populator.execute();
-                        seekSlider.setMaximum(dataBank.getSize());
-                        seekSlider.setMajorTickSpacing(dataBank.getSize()/20);
-                        seekSlider.setMinorTickSpacing(dataBank.getSize()/200);
+                        int dataBankSize = dataBank.getSize();
+                        seekSlider.setMaximum(dataBankSize);
+                        seekSlider.setMajorTickSpacing(dataBankSize / 20);
+                        seekSlider.setMinorTickSpacing(dataBankSize / 200);
+                        int tickSize = (int)Math.ceil(Math.log10(dataBankSize/20));
+                        Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
+                        for (int ii = 0; ii <= 20; ii++) {
+                            labelTable.put(dataBankSize/20 * ii, new JLabel(String.format("%.1f",((float)dataBankSize)/20/(Math.pow(10, tickSize)) * ii) ));
+                        }
+                        seekSlider.setLabelTable(labelTable);
+
                     } catch (Exception e) {}
                     
                     layout.replace(realTimeSelect, startPlayBack);
@@ -249,6 +261,7 @@ public class UI {
                 if (!started) {
                     updater = new UpdateTimer(1000/30, colorMap, plotPanel, dataBank);
                     updater.setSlider(seekSlider);
+                    updater.setApplication(UI.this);
                     started = true;
                 }
                 seekSlider.setEnabled(false);
@@ -273,7 +286,6 @@ public class UI {
             }
         });
 
-        // @TODO implement slider change listener to actually seek
 
         int backButtonLength = 20;
         seekSlider = new JSlider(JSlider.HORIZONTAL, 0, 1, 0);
@@ -352,10 +364,9 @@ public class UI {
         });
 
          //Color Plot
-        Random random = new Random();
         int [] colors = new int[256];
         for (int i = 0; i <256; i++) {
-            colors[i] = random.nextInt();
+            colors[i] = Integer.MAX_VALUE * ((i/16 % 2 + i) % 2);
         }
         colorMap.setColors(colors);
 //        colorMap.setPreferredSize(new Dimension(windowWidth / 3,
@@ -448,29 +459,6 @@ public class UI {
         layout.linkSize(SwingConstants.VERTICAL, next, back);
         layout.linkSize(SwingConstants.HORIZONTAL, next, back);
 
-
-
-
-
-//        application.addComponentListener(new ComponentAdapter() {
-//            @Override
-//            public void componentResized(ComponentEvent e) {
-//                windowWidth = application.getWidth();
-//                windowHeight = application.getHeight();
-//                
-//                System.out.println(windowWidth);
-//                System.out.println(windowHeight);
-//                colorMap.setPreferredSize(new Dimension(windowWidth / 3,
-//                       windowWidth / 3));
-//                colorMap.repaint();
-//                //colorMap.setSize(new Dimension(windowWidth / 3,
-//                //     windowWidth / 3));
-//                //colorMap.setMaximumSize(new Dimension(windowWidth, windowHeight));
-//                System.out.println(colorMap.getSize());
-//                plotPanel.setPreferredSize(new Dimension(windowWidth / 4, windowHeight));
-//            }
-//        });
-
         setUIComponentNames();
     }
 
@@ -479,6 +467,7 @@ public class UI {
         value = seekSlider.getValue();
         int begin = value - 50;
         if (begin < 0)  begin = 0;
+        dataBank.resetTo(value);
         List<DataLine> dataLineList = dataBank.getPoints(begin, value);
         plotPanel.resetPlotsTo(dataLineList, value);
         colorMap.updateImage(dataBank.getPoint(value));
@@ -593,5 +582,13 @@ public class UI {
      */
     private boolean onMac() {
         return (System.getProperty("mrj.version") != null);
+    }
+
+    public void reportFinish() {
+        startPlayBack.setEnabled(true);
+        stopPlayBack.setEnabled(false);
+        seekSlider.setEnabled(true);
+        back.setEnabled(true);
+        next.setEnabled(true);
     }
 }

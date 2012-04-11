@@ -7,8 +7,8 @@ import org.testng.annotations.Test;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import static org.testng.Assert.assertEquals;
 
@@ -21,6 +21,7 @@ public class FileGenerator {
     private static final String fileName = "large_random_data.bin";
     private static final int NUMBER_OF_POINTS = 100000;
 
+    Logger logger = Logger.getLogger("hello");
 //    public static void main(String [] args) throws IOException {
 //        createFile();
 //
@@ -28,7 +29,7 @@ public class FileGenerator {
 //    }
 //
 
-    private void createDatFile() throws IOException    {
+    private void createDataFile() throws IOException    {
         FileOutputStream output2 = new FileOutputStream(fileName);
 
         Random gen = new Random();
@@ -117,7 +118,7 @@ public class FileGenerator {
 
     @Test
     public void makeFile() throws IOException {
-        createDatFile();
+        createDataFile();
     }
     @Test
     public void testRead() throws IOException {
@@ -128,7 +129,6 @@ public class FileGenerator {
 
             for (int jj = 0; jj < 256; jj++) {
                 array[jj] = reader.readNextInt();
-                //System.out.print(array[jj] + " ");
             }
             bank.addPoint(new DataLine(array));
         }
@@ -165,6 +165,24 @@ public class FileGenerator {
 
         }
 
+    }
+
+    @Test(expectedExceptions = IOException.class)
+    public void testReadAllPoints() throws IOException {
+        createFile();
+        logger.info("created file");
+        FileReader reader = new FileReader(fileName);
+        int array[] = new int[256];
+        int count = 0;
+        while (count++ < NUMBER_OF_POINTS + 10000) {
+
+                for (int jj = 0; jj < 256; jj++) {
+                    array[jj] = reader.readNextInt();
+                }
+            if(count % 1000 == 0) logger.info(String.valueOf(count));
+        }
+
+        System.out.println(count);
     }
 
 }

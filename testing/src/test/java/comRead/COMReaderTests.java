@@ -54,11 +54,8 @@ public class COMReaderTests {
 		for (int ii = 0; ii < multiplier*iter; ii++) {
 			comp.append(alphabet[ii % alphabet.length]);
 		}
-		
+
 		assertEquals(buffer, comp.toString());
-
     }
-
-
 
 }

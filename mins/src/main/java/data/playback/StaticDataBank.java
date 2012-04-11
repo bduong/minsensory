@@ -47,7 +47,12 @@ public class StaticDataBank implements DataBank {
     }
 
     @Override
-    public int getPositiob() {
+    public int getPosition() {
         return count;
+    }
+
+    @Override
+    public boolean isAtEnd() {
+        return count >= data.size()-1;
     }
 }

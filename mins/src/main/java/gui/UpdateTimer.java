@@ -15,6 +15,8 @@ public class UpdateTimer implements ActionListener{
     private DataBank dataBank;
     private int count;
 
+    private UI ui;
+
     private final int NUMBER_OF_POINTS = 10000;
     
     private JSlider slider;
@@ -39,14 +41,20 @@ public class UpdateTimer implements ActionListener{
         setupTimer();
     }
 
+    public void setApplication(UI ui){
+        this.ui = ui;
+    }
+
     private void setupTimer() {
         count = 0;
         timer = new Timer(delay, this);
     }
 
     public void startTimer() {
-        if (count < NUMBER_OF_POINTS){
+        if (!dataBank.isAtEnd()){
             timer.start();
+        } else {
+            ui.reportFinish();
         }
     }
 
@@ -60,8 +68,7 @@ public class UpdateTimer implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println(count);
-        if (count++ < NUMBER_OF_POINTS){
+        if (!dataBank.isAtEnd()){
             DataLine data = dataBank.getNextPoint();
             plotPanel.updatePlots(data);
             image.updateImage(data);
@@ -72,7 +79,7 @@ public class UpdateTimer implements ActionListener{
 
         } else {
             stopTimer();
-            System.out.println("DONE");
+            ui.reportFinish();
         }
     }
 }
