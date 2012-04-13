@@ -2,9 +2,10 @@ package gui;
 
 import data.DataBank;
 import data.DataLine;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
 
 public class UpdateTimer implements ActionListener{
 
@@ -74,6 +75,7 @@ public class UpdateTimer implements ActionListener{
             image.updateImage(data);
 
             if(slider != null) {
+                ui.setUserSeek(false);
                 slider.setValue(slider.getValue()+1);
             }
 

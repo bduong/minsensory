@@ -1,24 +1,27 @@
 package gui;
 
+import data.DataBank;
 import data.DataLine;
 import data.playback.DataPopulator;
 import data.playback.FileReader;
 import data.playback.StaticDataBank;
 import data.realtime.COMReader;
-import data.DataBank;
-import data.realtime.DynamicDataBank;
 import data.realtime.DataCollector;
+import data.realtime.DynamicDataBank;
 import gui.MacOS.MacOSEventHandler;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -669,5 +672,9 @@ public class UI {
         seekSlider.setEnabled(true);
         back.setEnabled(true);
         next.setEnabled(true);
+    }
+
+    public void setUserSeek(boolean seek){
+        userSeek = seek;
     }
 }
