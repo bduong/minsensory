@@ -65,13 +65,8 @@ public class COMReaderTests {
         comReader.connectTo(COM_NAME);
         BufferedOutputStream out = comReader.getOutputStream();
 
- //       byte [] bytes = new byte[1];
-//        bytes[0] = 5;
         out.write("5".getBytes());
-
         out.close();
-//        int buffer = comReader.readNextInt();
-//        logger.info(buffer);
         Thread.sleep(500);
         int [] buffer = new int[5000];
         for (int ii = 0; ii < 5000; ii++) {

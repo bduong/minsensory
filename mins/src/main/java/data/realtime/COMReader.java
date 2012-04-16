@@ -1,10 +1,15 @@
 package data.realtime;
 
 import data.DataReader;
-import gnu.io.*;
-import org.apache.log4j.Logger;
+import gnu.io.CommPort;
+import gnu.io.CommPortIdentifier;
+import gnu.io.NoSuchPortException;
+import gnu.io.SerialPort;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -25,30 +30,12 @@ public class COMReader implements DataReader {
         while ( portEnum.hasMoreElements() )
         {
             CommPortIdentifier portIdentifier = portEnum.nextElement();
-            ports.add(portIdentifier.getName()  +  " - " +  getPortTypeName(portIdentifier.getPortType()) );
+            if (portIdentifier.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+                ports.add(portIdentifier.getName());
+            }
         }
         return ports;
     }
-
-    static String getPortTypeName ( int portType )
-    {
-        switch ( portType )
-        {
-            case CommPortIdentifier.PORT_I2C:
-                return "I2C";
-            case CommPortIdentifier.PORT_PARALLEL:
-                return "Parallel";
-            case CommPortIdentifier.PORT_RAW:
-                return "Raw";
-            case CommPortIdentifier.PORT_RS485:
-                return "RS485";
-            case CommPortIdentifier.PORT_SERIAL:
-                return "Serial";
-            default:
-                return "unknown type";
-        }
-    }
-
 
     public void connectTo(String portName) throws Exception
     {
@@ -99,70 +86,9 @@ public class COMReader implements DataReader {
         return (0x0000FFFF & ((value) | (bytes[1] & 0x000000FF)));
     }
 
-    public void startStream() throws IOException {
-        out.write(1);
+    public void startStream() throws IOException, InterruptedException {
+        out.write("5".getBytes());
+        out.close();
+        Thread.sleep(100);
     }
-
-    public static class SerialReader implements SerialPortEventListener
-    {
-        private Logger logger = Logger.getLogger(this.getClass());
-        private InputStream in;
-        private byte[] buffer = new byte[1024];
-
-        public SerialReader ( InputStream in )
-        {
-            this.in = in;
-        }
-
-        public void serialEvent(SerialPortEvent arg0) {
-            int data;
-
-            try
-            {
-                int len = 0;
-                while ( ( data = in.read()) > -1 )
-                {
-                    if ( data == '\n' ) {
-                        break;
-                    }
-                    buffer[len++] = (byte) data;
-                }
-                logger.info(new String(buffer,0,len));
-            }
-            catch ( IOException e )
-            {
-                e.printStackTrace();
-                System.exit(-1);
-            }
-        }
-
-    }
-
-    /** */
-    public static class SerialWriter implements Runnable
-    {
-        OutputStream out;
-
-        public SerialWriter ( OutputStream out )
-        {
-            this.out = out;
-        }
-
-        public void run ()
-        {
-            try
-            {
-                int c = 0;
-                while ( ( c = System.in.read()) > -1 )
-                {
-                    this.out.write(c);
-                }
-            }
-            catch ( IOException e )
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
 }

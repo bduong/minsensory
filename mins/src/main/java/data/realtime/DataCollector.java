@@ -2,14 +2,13 @@ package data.realtime;
 
 import data.DataBank;
 import data.DataLine;
-import data.DataReader;
 
+import javax.swing.*;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import javax.swing.*;
 import java.util.List;
 
 public class DataCollector extends SwingWorker<Void, DataLine>{
@@ -17,17 +16,17 @@ public class DataCollector extends SwingWorker<Void, DataLine>{
     private int numberOfLinesSince = 0;
     private DataBank dataBank;
     private boolean stop;
-    private DataReader dataReader;
+    private COMReader dataReader;
     private BufferedOutputStream outputStream;
     private byte [] bytes;
 
-    public DataCollector(DataBank dataBank, DataReader reader) throws URISyntaxException, IOException {
+    public DataCollector(DataBank dataBank, COMReader reader) throws URISyntaxException, IOException {
       this.dataBank = dataBank;
       dataReader = reader;
       stop = false;
     }
 
-    public DataCollector(DataBank dataBank, DataReader reader, File file) throws URISyntaxException, IOException {
+    public DataCollector(DataBank dataBank, COMReader reader, File file) throws URISyntaxException, IOException {
         this.dataBank = dataBank;
         dataReader = reader;
         stop = false;
