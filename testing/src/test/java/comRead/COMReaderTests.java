@@ -7,6 +7,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import type.TestType;
 
+import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -46,7 +47,8 @@ public class COMReaderTests {
 
         byte[] buffer = new byte[multiplier*iter];
 		outputStream.write((byte) iter);
-        inputStream.read(buffer);
+        int numOfBytes = inputStream.read(buffer, 0, multiplier*iter);
+        assertEquals(numOfBytes, multiplier*iter);
 
 		StringBuilder comp = new StringBuilder();
 		char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
@@ -57,5 +59,39 @@ public class COMReaderTests {
 
 		assertEquals(buffer, comp.toString());
     }
+
+    @Test
+    void testCOMReading() throws Exception {
+        comReader.connectTo(COM_NAME);
+        BufferedOutputStream out = comReader.getOutputStream();
+
+ //       byte [] bytes = new byte[1];
+//        bytes[0] = 5;
+        out.write("5".getBytes());
+
+        out.close();
+//        int buffer = comReader.readNextInt();
+//        logger.info(buffer);
+        Thread.sleep(500);
+        int [] buffer = new int[5000];
+        for (int ii = 0; ii < 5000; ii++) {
+            buffer[ii] = comReader.readNextInt();
+    }
+        int count = 0;
+        for (int num : buffer){
+            logger.info(count++ + " :: " + numToString(num));
+        }
+    }
+    
+    private String numToString(int num){
+
+        int value = num & 0x000000FF;
+        int upper = num & 0x0000FF00;
+        upper = upper >> 8;
+
+        return "" + (char) upper + "-" + (char) value;
+    }
+
+
 
 }
