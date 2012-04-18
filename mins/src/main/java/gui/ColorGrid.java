@@ -47,27 +47,27 @@ public class ColorGrid extends JPanel{
         layout.setAutoCreateGaps(false);
 
         layout.setHorizontalGroup(layout.createSequentialGroup()
-          .addComponent(rowTicks, 0, GroupLayout.PREFERRED_SIZE, 25)
+          .addComponent(rowTicks)
           .addGap(10)
           .addGroup(
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-              .addComponent(colTicks, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+              .addComponent(colTicks)
               .addComponent(image, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE))
         );
 
         //layout.linkSize(SwingConstants.HORIZONTAL, image, colTicks);
 
         layout.setVerticalGroup(layout.createSequentialGroup()
-          .addComponent(colTicks, 0, GroupLayout.PREFERRED_SIZE, 20)
+          .addComponent(colTicks)
           .addGap(10)
           .addGroup(
             layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-            .addComponent(rowTicks, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
+            .addComponent(rowTicks)
             .addComponent(image, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
           )
         );
 
-        //layout.linkSize(SwingConstants.VERTICAL, image, rowTicks);
+        //layout.linkSize(SwingConstants.VERTICAL, rowTicks, image);
 
     }
 }

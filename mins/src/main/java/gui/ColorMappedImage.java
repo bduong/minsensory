@@ -84,7 +84,7 @@ public class ColorMappedImage extends JPanel {
         int [] newPoints = new int[points.length];
         for( int ii = 0; ii < points.length; ii++) {
             int number = points[ii];
-            int rgb = number & 0x0000FA00;
+            int rgb = number & 0x0000FC00;
             rgb = rgb >> 10;
             int value = (number & 0x000003F0);
             value = value>>6;

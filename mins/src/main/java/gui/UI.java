@@ -153,7 +153,7 @@ public class UI {
                     Object selectedValue = JOptionPane.showInputDialog(null,
                       "Choose Data Type", "Input",
                       JOptionPane.INFORMATION_MESSAGE, null,
-                      options, options[0]);
+                      options, options[1]);
                     if (selectedValue == null) {
                         cancelSelection();
                         return;

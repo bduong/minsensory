@@ -18,8 +18,8 @@ import static org.testng.Assert.assertEquals;
  */
 public class FileGenerator {
 
-    private static final String fileName = "large_random_data.bin";
-    private static final int NUMBER_OF_POINTS = 100000;
+    private static final String fileName = "pretty_data.bin";
+    private static final int NUMBER_OF_POINTS = 10000;
 
     Logger logger = Logger.getLogger("hello");
 //    public static void main(String [] args) throws IOException {
@@ -29,16 +29,16 @@ public class FileGenerator {
 //    }
 //
 
-    private void createDataFile() throws IOException    {
+    private void createDataFile() throws IOException {
         FileOutputStream output2 = new FileOutputStream(fileName);
 
         Random gen = new Random();
 
         int array[] = new int[256];
         for (int jj = 0; jj < 256; jj++) {
-            array[jj] = 1000* (jj % 20) ;
+            array[jj] = 1000 * (jj % 20);
         }
-        boolean [] up = new boolean[256];
+        boolean[] up = new boolean[256];
         for (int jj = 0; jj < 256; jj++) {
             up[jj] = true;
         }
@@ -46,25 +46,25 @@ public class FileGenerator {
         for (int ii = 0; ii < NUMBER_OF_POINTS; ii++) {
             for (int jj = 0; jj < 256; jj++) {
                 int num = array[jj] & 0x0000FFFF;
-                bytes[0] = (byte)((num & 0x0000FF00) >>8);
-                bytes[1] = (byte)(num & 0x000000FF);
+                bytes[0] = (byte) ((num & 0x0000FF00) >> 8);
+                bytes[1] = (byte) (num & 0x000000FF);
                 output2.write(bytes, 0, 2);
-                if (up[jj]){
-                    array[jj] +=15563;
-                }else {
-                    array[jj] -=26325;
+                if (up[jj]) {
+                    array[jj] += 15563;
+                } else {
+                    array[jj] -= 26325;
                 }
                 if (array[jj] > 65535) {
                     up[jj] = false;
-                    array[jj] -=17885;
+                    array[jj] -= 17885;
                 } else if (array[jj] < 0) {
                     up[jj] = true;
-                    array[jj] +=30254;
+                    array[jj] += 30254;
                 }
             }
 
             //System.out.println(array[0] & 0x000003FF);
-            if( ii % 1000 == 0)
+            if (ii % 1000 == 0)
                 System.out.println(ii);
 
         }
@@ -76,28 +76,28 @@ public class FileGenerator {
         FileOutputStream output2 = new FileOutputStream(fileName);
 
         Random gen = new Random();
-        int num = gen.nextInt(65535*2) - 65535;
+        int num = gen.nextInt(65535 * 2) - 65535;
 
         boolean up = true;
         int array[] = new int[256];
         byte bytes[] = new byte[2];
         for (int ii = 0; ii < NUMBER_OF_POINTS; ii++) {
             for (int jj = 0; jj < 256; jj++) {
-                array[jj] =  num & 0x0000FFFF;
-                bytes[0] = (byte)((num & 0x0000FF00) >>8);
-                bytes[1] = (byte)(num & 0x000000FF);
+                array[jj] = num & 0x0000FFFF;
+                bytes[0] = (byte) ((num & 0x0000FF00) >> 8);
+                bytes[1] = (byte) (num & 0x000000FF);
                 output2.write(bytes);
-                if (up){
-                    num +=33;
-                }else {
-                    num -=33;
+                if (up) {
+                    num += 33;
+                } else {
+                    num -= 33;
                 }
                 if (num > 65535) {
                     up = false;
-                    num -=58;
+                    num -= 58;
                 } else if (num < 0) {
                     up = true;
-                    num +=58;
+                    num += 58;
                 }
             }
             referenceBank.addPoint(new DataLine(array));
@@ -110,6 +110,87 @@ public class FileGenerator {
 
     private DataBank referenceBank;
 
+    private void createCoolFile() throws IOException {
+        int[][] bands = {
+          { 2, 2, 2, 2, 10, 10, 8, 9, 9, 1, 5, 16, 16, 16, 20, 4 }, //1
+          { 2, 2, 2, 2, 10, 10, 8, 9, 9, 1, 5, 16, 16, 16, 20, 4 }, //2
+          { 2, 2, 2, 10, 10, 10, 8, 9, 1, 1, 5, 16, 16, 20, 20, 4 }, //3
+          { 2, 2, 2, 10, 8, 8, 8, 9, 1, 5, 5, 16, 16, 20, 20, 4 }, //4
+          { 2, 2, 10, 10, 8, 9, 9, 9, 1, 5, 16, 16, 16, 20, 4, 4 }, //5
+          { 2, 10, 10, 8, 8, 9, 9, 9, 1, 5, 16, 16, 20, 20, 4, 4 },  //6
+          { 10, 10, 8, 8, 8, 9, 9, 1, 1, 5, 16, 16, 20, 20, 4, 4, }, //7
+          { 10, 10, 8, 8, 8, 9, 9, 1, 5, 5, 16, 20, 20, 4, 4, 4 }, //8
+          { 10, 8, 8, 8, 9, 9, 1, 1, 5, 16, 16, 20, 20, 4, 4, 4 }, //9
+          { 10, 8, 8, 9, 9, 1, 1, 1, 5, 16, 20, 20, 4, 4, 4, 4 }, //10
+          { 8, 8, 9, 9, 1, 1, 1, 1, 5, 16, 20, 20, 4, 4, 4, 4 }, //11
+          { 8, 8, 9, 1, 1, 1, 1, 5, 5, 16, 20, 4, 4, 4, 4, 4 }, //12
+          { 8, 9, 9, 1, 1, 1, 1, 5, 16, 16, 20, 4, 4, 4, 4, 4 }, //13
+          { 8, 9, 9, 1, 1, 1, 1, 5, 16, 20, 20, 4, 4, 4, 4, 4 }, //14
+          { 8, 9, 9, 1, 1, 1, 1, 5, 16, 20, 20, 4, 4, 4, 4, 4 }, //15
+          { 8, 9, 9, 1, 1, 1, 1, 5, 16, 20, 20, 4, 4, 4, 4, 4 } //16
+        };
+
+        for (int ii = 0; ii < 16; ii++){
+            for (int jj = 0; jj < 16; jj++) {
+                bands[ii][jj] = bands[ii][jj]<<10;
+            }
+        }
+
+        int [][] array = new int[16][16];
+        for (int ii = 0; ii < 16; ii++){
+            for (int jj = 0; jj < 16; jj++) {
+                array[ii][jj] = ((ii+jj % 9)<<5) & 0x0000FFFF;
+            }
+        }
+        boolean [][] up = new boolean[16][16];
+        for (int ii = 0; ii < 16; ii++){
+
+            for (int jj = 0; jj < 16; jj++) {
+                up[ii][jj] = true;
+            }
+        }
+
+
+        FileOutputStream output2 = new FileOutputStream(fileName);
+
+        byte bytes[] = new byte[2];
+        for (int kk = 0; kk < NUMBER_OF_POINTS; kk++) {
+            for (int ii = 0; ii < 16; ii++){
+                for (int jj = 0; jj < 16; jj++) {
+                    int num = (bands[ii][jj] + array[ii][jj]) & 0x0000FFFF;
+                    bytes[0] = (byte) ((num & 0x0000FF00) >> 8);
+                    bytes[1] = (byte) (num & 0x000000FF);
+                    output2.write(bytes, 0, 2);
+                    if (up[ii][jj]) {
+                        array[ii][jj] += 32;
+                    } else {
+                        array[ii][jj] -= 32;
+                    }
+                    if (array[ii][jj] >= 1010) {
+                        up[ii][jj] = false;
+                        array[ii][jj] -=40;
+                    } else if (array[ii][jj] < 128) {
+                        up[ii][jj] = true;
+                        array[ii][jj] += 40;
+                    }
+//                    int num = ((bands[ii][jj]) & 0x0000FFFF) + 512;
+//                    bytes[0] = (byte) ((num & 0x0000FF00) >> 8);
+//                    bytes[1] = (byte) (num & 0x000000FF);
+//                    output2.write(bytes, 0, 2);
+
+                }
+
+            }
+            if (kk % 1000 == 0)
+                System.out.println(kk);
+
+        }
+
+        output2.close();
+
+
+    }
+
     @BeforeMethod
     void setup() {
         bank = new StaticDataBank();
@@ -120,6 +201,12 @@ public class FileGenerator {
     public void makeFile() throws IOException {
         createDataFile();
     }
+
+    @Test
+    public void makeCoolFile() throws IOException {
+        createCoolFile();
+    }
+
     @Test
     public void testRead() throws IOException {
         createFile();
@@ -158,7 +245,7 @@ public class FileGenerator {
             bank.addPoint(new DataLine(array));
         }
         reader.close();
-        
+
         for (int ii = 0; ii < 100; ii++) {
             DataLine line = bank.getNextPoint();
             System.out.println(line.getDataAt(0));
@@ -176,10 +263,10 @@ public class FileGenerator {
         int count = 0;
         while (count++ < NUMBER_OF_POINTS + 10000) {
 
-                for (int jj = 0; jj < 256; jj++) {
-                    array[jj] = reader.readNextInt();
-                }
-            if(count % 1000 == 0) logger.info(String.valueOf(count));
+            for (int jj = 0; jj < 256; jj++) {
+                array[jj] = reader.readNextInt();
+            }
+            if (count % 1000 == 0) logger.info(String.valueOf(count));
         }
 
         System.out.println(count);
