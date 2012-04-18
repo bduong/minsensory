@@ -8,6 +8,7 @@ import data.playback.StaticDataBank;
 import data.realtime.COMReader;
 import data.realtime.DataCollector;
 import data.realtime.DynamicDataBank;
+import gnu.io.NoSuchPortException;
 import gui.MacOS.MacOSEventHandler;
 
 import javax.swing.*;
@@ -100,6 +101,11 @@ public class UI {
     private File saveDataFile;
 
     private GroupLayout layout;
+    
+    private String port;
+    private Thread dataCollectorThread;
+
+    boolean firstStart = true;
 
     /** Set names for the UI components in order to test. */
     private void setUIComponentNames() {
@@ -325,6 +331,7 @@ public class UI {
         startRealTimeData.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                operatingMode = OperatingMode.FROM_COM_PORT;
                 int returnVal = fileChooser.showSaveDialog(application);
 
                 if(returnVal == JFileChooser.APPROVE_OPTION) {
@@ -352,15 +359,29 @@ public class UI {
 
         startRealTimeData.setVisible(false);
 
+
+
         startDataRead = new JButton("Start Data Stream");
         startDataRead.setPreferredSize(new Dimension(buttonLength, buttonWidth));
         startDataRead.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                if(firstStart){
+                    try {
+                        startDataCollection();
+                        firstStart = false;
+                        dataCollector.execute();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    dataCollector.resume();
+                }
                 startDataRead.setEnabled(false);
                 stopDataRead.setEnabled(true);
                 disconnect.setEnabled(false);
                 selectPort.setEnabled(false);
+                SwingUtilities.invokeLater(dataCollector);
             }
         });
 
@@ -368,6 +389,7 @@ public class UI {
         stopDataRead.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                dataCollector.pause();
                 startDataRead.setEnabled(true);
                 stopDataRead.setEnabled(false);
                 disconnect.setEnabled(true);
@@ -382,6 +404,7 @@ public class UI {
                 stopDataRead.setEnabled(false);
                 disconnect.setEnabled(false);
                 selectPort.setEnabled(true);
+                dataCollectorThread = null;
             }
         });
 
@@ -389,9 +412,24 @@ public class UI {
         selectPort.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                startDataRead.setEnabled(true);
-                disconnect.setEnabled(true);
-                selectPort.setEnabled(false);
+                try {
+                    Object [] ports = COMReader.listPorts().toArray();
+                    Object selectedValue = JOptionPane.showInputDialog(null,
+                            "Select Port", "Input",
+                            JOptionPane.INFORMATION_MESSAGE, null,
+                            ports, ports[0]);
+                    if (selectedValue != null) {
+                        port = selectedValue.toString();
+                        startDataRead.setEnabled(true);
+                        disconnect.setEnabled(true);
+                        selectPort.setEnabled(false);
+                        System.out.println(port);
+                    }
+                } catch (NoSuchPortException e) {
+                    e.printStackTrace();  
+                }
+
+
             }
         });
 
@@ -402,6 +440,7 @@ public class UI {
         playBackSelect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                operatingMode = OperatingMode.FROM_FILE;
                 realTimeSelect.setEnabled(true);
                 playBackSelect.setEnabled(false);
                 startRealTimeData.setVisible(false);
@@ -581,6 +620,8 @@ public class UI {
                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                     } catch (IOException e) {
                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    } catch (Exception e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                     }
                 }
             }
@@ -621,7 +662,7 @@ public class UI {
      * @throws URISyntaxException if the file cannot be found
      * @throws IOException if the file cannot be read
      */
-    private void startDataCollection() throws URISyntaxException, IOException {
+    private void startDataCollection() throws Exception, IOException {
         switch (operatingMode) {
         case FROM_FILE:
             dataBank = new StaticDataBank();
@@ -630,8 +671,9 @@ public class UI {
             break;
         case FROM_COM_PORT:
             dataBank = new DynamicDataBank();
-            dataCollector = new DataCollector(dataBank, new COMReader(), saveDataFile);
-            dataCollector.execute();
+            COMReader comReader = new COMReader();
+            comReader.connectTo(port);
+            dataCollector = new DataCollector(dataBank, comReader , saveDataFile);
             break;
         }
         testBank();

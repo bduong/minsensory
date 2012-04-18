@@ -15,20 +15,23 @@ public class DataCollector extends SwingWorker<Void, DataLine>{
 
     private int numberOfLinesSince = 0;
     private DataBank dataBank;
-    private boolean stop;
+    private boolean pause;
     private COMReader dataReader;
     private BufferedOutputStream outputStream;
     private byte [] bytes;
+    private boolean stop;
 
     public DataCollector(DataBank dataBank, COMReader reader) throws URISyntaxException, IOException {
       this.dataBank = dataBank;
       dataReader = reader;
-      stop = false;
+      pause = false;
+        stop = false;
     }
 
     public DataCollector(DataBank dataBank, COMReader reader, File file) throws URISyntaxException, IOException {
         this.dataBank = dataBank;
         dataReader = reader;
+        pause = false;
         stop = false;
         outputStream = new BufferedOutputStream(new FileOutputStream(file));
         bytes = new byte[2];
@@ -40,8 +43,10 @@ public class DataCollector extends SwingWorker<Void, DataLine>{
     
     @Override
     protected Void doInBackground() throws Exception {
-        numberOfLinesSince++;
+        dataReader.startStream();
         while (!stop) {
+            while(pause) {Thread.sleep(1000);}
+            numberOfLinesSince++;
             int [] dataLine = new int[256];
             for (int ii = 0; ii < 256; ii++) {
                 dataLine[ii] = dataReader.readNextInt();
@@ -58,6 +63,18 @@ public class DataCollector extends SwingWorker<Void, DataLine>{
         int lower = i & 0x000000FF;
         bytes[0] = (byte) (upper >> 8);
         bytes[1] = (byte) lower;
+    }
+
+    public void pause() {
+        pause = true;
+    }
+
+    public void resume(){
+        pause = false;
+    }
+
+    public void stop() {
+        stop = true;
     }
 
     @Override

@@ -25,8 +25,6 @@ public class UpdateTimer implements ActionListener{
 
     private UI ui;
 
-    private final int NUMBER_OF_POINTS = 10000;
-    
     private JSlider slider;
 
     public UpdateTimer() {
