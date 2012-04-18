@@ -8,18 +8,21 @@ import data.DataLine;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Image to hold color grid
  */
 public class ColorMappedImage extends JPanel {
-    
+
     private BufferedImage image;
     private int width = 16;
     private int height = 16;
 
     private DataType dataType;
-    
+
     public ColorMappedImage() {
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     }
@@ -34,7 +37,7 @@ public class ColorMappedImage extends JPanel {
     public void setDataType(DataType type) {
         dataType = type;
     }
-    
+
     public void setColors(int [] rgb) {
         if (rgb.length == width*height) {
             image.setRGB(0,0,width,height,rgb,0,width);
@@ -42,11 +45,12 @@ public class ColorMappedImage extends JPanel {
             throw new IllegalArgumentException("Array must be length" + width*height);
         }
     }
-    
+
+    List<Integer> spikes = new ArrayList<Integer>();
     /**
      * Update
-     * 
-     * @param line 
+     *
+     * @param line
      */
     public void updateImage(DataLine line){
         if (dataType == DataType.PROCESSED) {
@@ -56,16 +60,28 @@ public class ColorMappedImage extends JPanel {
         }
         repaint();
     }
-    
+
+    public List<Integer> updateImage(DataLine line, Set<Integer> spikeNodes){
+        spikes.clear();
+        if (dataType == DataType.PROCESSED) {
+            image.setRGB(0, 0, width, height, translateToRGB(line.getLine(), spikeNodes), 0, width);
+        } else {
+            image.setRGB(0, 0, width, height, translateToGrayscale(line.getLine()), 0, width);
+        }
+        repaint();
+        return spikes;
+    }
+
+
     private int[] convertDataToColors(int[] data) {
-        
-        
+
+
         return data;
     }
-    
+
     @Override
     public void paintComponent(Graphics g) {
-       g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), this);
+        g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), this);
     }
 
     public int [] translateToGrayscale(int[] points){
@@ -95,10 +111,37 @@ public class ColorMappedImage extends JPanel {
         return newPoints;
     }
 
+    public int [] translateToRGB(int[] points, Set<Integer> spikeNodes){
+        int [] newPoints = new int[points.length];
+        for( int ii = 0; ii < points.length; ii++) {
+            if (spikeNodes.contains(ii)) {
+                newPoints[ii] = Color.white.getRGB();
+            } else {
+                int number = points[ii];
+                int rgb = number & 0x0000FC00;
+                rgb = rgb >> 10;
+                int value = (number & 0x000003F0);
+                value = value>>6;
+                Color color = getBand(rgb, value);
+
+                newPoints[ii] = color.getRGB();
+                if (color == Color.white) {
+                    spikes.add(ii);
+                }
+            }
+        }
+        return newPoints;
+    }
+
+
     private Color getBand(int num, int value) {
         int r = 0;
         int b = 0;
         int g = 0;
+
+        if ( (num & 0x20) != 0) { //Spike exists
+            return Color.white;
+        }
 
         if( num == 0) {
             r = 1;
@@ -123,10 +166,7 @@ public class ColorMappedImage extends JPanel {
                 r += 1;
                 g += 2;
             }
-//            if ( (num & 0x20) != 0) { //Spike exists
-//                g = true;
-//                b = true;
-//            }
+
         }
         r *= value;
         g *= value;

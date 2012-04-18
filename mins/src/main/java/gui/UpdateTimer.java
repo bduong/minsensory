@@ -6,6 +6,12 @@ import data.DataLine;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class UpdateTimer implements ActionListener{
 
@@ -14,7 +20,8 @@ public class UpdateTimer implements ActionListener{
     private ColorMappedImage image;
     private PlotPanel plotPanel;
     private DataBank dataBank;
-    private int count;
+    private Set<Integer> spikeNodes;
+    private Map<Integer, Integer> spikeTime;
 
     private UI ui;
 
@@ -40,6 +47,7 @@ public class UpdateTimer implements ActionListener{
         this.plotPanel = plotPanel;
         this.dataBank = dataBank;
         setupTimer();
+        initMap();
     }
 
     public void setApplication(UI ui){
@@ -47,7 +55,7 @@ public class UpdateTimer implements ActionListener{
     }
 
     private void setupTimer() {
-        count = 0;
+        spikeNodes = new HashSet<Integer>();
         timer = new Timer(delay, this);
     }
 
@@ -67,12 +75,39 @@ public class UpdateTimer implements ActionListener{
         this.slider = slider;
     }
 
+    private void initMap() {
+        spikeTime = new HashMap<Integer, Integer>();
+        for (int ii = 0; ii < 256; ii++){
+            spikeTime.put(ii, 0);
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!dataBank.isAtEnd()){
             DataLine data = dataBank.getNextPoint();
             plotPanel.updatePlots(data);
-            image.updateImage(data);
+            List<Integer> spikes = image.updateImage(data, spikeNodes);
+            spikeNodes.addAll(spikes);
+
+            for (int key : spikeTime.keySet()) {
+                int time = spikeTime.get(key);
+                if (time > 0) {
+                    spikeTime.put(key, time-1);
+                }
+            }
+
+            for (int node : spikes) {
+                spikeTime.put(node, 30);
+            }
+
+            for (int node : spikeNodes) {
+                if (spikeTime.get(node) <= 0) {
+                    spikeNodes.remove(node);
+                }
+            }
+
+
 
             if(slider != null) {
                 ui.setUserSeek(false);

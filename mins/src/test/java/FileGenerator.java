@@ -2,13 +2,14 @@ import data.DataBank;
 import data.DataLine;
 import data.playback.FileReader;
 import data.playback.StaticDataBank;
+import org.apache.log4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.awt.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Random;
-import java.util.logging.Logger;
 
 import static org.testng.Assert.assertEquals;
 
@@ -21,7 +22,7 @@ public class FileGenerator {
     private static final String fileName = "pretty_data.bin";
     private static final int NUMBER_OF_POINTS = 10000;
 
-    Logger logger = Logger.getLogger("hello");
+    //Logger logger = Logger.getLogger(FileGenerator.class);
 //    public static void main(String [] args) throws IOException {
 //        createFile();
 //
@@ -154,10 +155,19 @@ public class FileGenerator {
         FileOutputStream output2 = new FileOutputStream(fileName);
 
         byte bytes[] = new byte[2];
+        Random random = new Random(4L);
+        System.out.println(Color.white.getRGB());
+        System.out.println((new Color(255, 255, 255)).getRGB());
         for (int kk = 0; kk < NUMBER_OF_POINTS; kk++) {
             for (int ii = 0; ii < 16; ii++){
                 for (int jj = 0; jj < 16; jj++) {
-                    int num = (bands[ii][jj] + array[ii][jj]) & 0x0000FFFF;
+                    int num;
+                    if (random.nextInt(Integer.MAX_VALUE) < 10000) {
+                        num = Integer.MAX_VALUE;
+                        System.out.println("Spike at " + kk + " : "+ ii + " " +jj);
+                    } else {
+                        num = (bands[ii][jj] + array[ii][jj]) & 0x0000FFFF;
+                    }
                     bytes[0] = (byte) ((num & 0x0000FF00) >> 8);
                     bytes[1] = (byte) (num & 0x000000FF);
                     output2.write(bytes, 0, 2);
@@ -257,7 +267,7 @@ public class FileGenerator {
     @Test(expectedExceptions = IOException.class)
     public void testReadAllPoints() throws IOException {
         createFile();
-        logger.info("created file");
+        //logger.info("created file");
         FileReader reader = new FileReader(fileName);
         int array[] = new int[256];
         int count = 0;
@@ -266,7 +276,7 @@ public class FileGenerator {
             for (int jj = 0; jj < 256; jj++) {
                 array[jj] = reader.readNextInt();
             }
-            if (count % 1000 == 0) logger.info(String.valueOf(count));
+           // if (count % 1000 == 0) logger.info(String.valueOf(count));
         }
 
         System.out.println(count);
