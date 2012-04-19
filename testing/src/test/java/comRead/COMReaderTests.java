@@ -1,6 +1,7 @@
 package comRead;
 
 import data.realtime.COMReader;
+import data.realtime.DataTimer;
 import gnu.io.NoSuchPortException;
 import org.apache.log4j.Logger;
 import org.testng.annotations.BeforeClass;
@@ -8,6 +9,7 @@ import org.testng.annotations.Test;
 import type.TestType;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -85,6 +87,18 @@ public class COMReaderTests {
         upper = upper >> 8;
 
         return "" + (char) upper + "-" + (char) value;
+    }
+
+    @Test
+    void testTimedCOM() throws Exception {
+        comReader.connectTo(COM_NAME);
+        File file = new File("test.bin");
+
+        DataTimer dataTimer = new DataTimer(comReader, file);
+        dataTimer.startTimer();
+
+        Thread.sleep(20000);
+
     }
 
 

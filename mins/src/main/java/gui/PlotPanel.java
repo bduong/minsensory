@@ -157,8 +157,12 @@ public class PlotPanel extends JPanel implements ActionListener{
             int dataPoint = data.getDataAt(plotNodes[plotNumber]-1);
             dataPoint = translatePoint(dataPoint);
             series.get(plotNumber).add(time, dataPoint);
-            if(time >= 50) series.get(plotNumber).remove(0);
+            if(series.get(plotNumber).getItemCount() >= 50) series.get(plotNumber).remove(0);
         }
+        time++;
+    }
+
+    public void advanceTime(){
         time++;
     }
 
