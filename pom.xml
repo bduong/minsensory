@@ -6,6 +6,7 @@
     <packaging>pom</packaging>
     <name>MINSensory Master</name>
 
+
     <groupId>minsensory</groupId>
     <artifactId>minsensory</artifactId>
     <version>1.0</version>
@@ -27,6 +28,10 @@
 
     <properties>
         <org.springframework.version>3.0.3.RELEASE</org.springframework.version>
+        <izpack.version>4.3.5</izpack.version>
+        <izpack.plugin.version>5.0.0-beta10</izpack.plugin.version>
+        <izpack.staging>${project.build.directory}/staging</izpack.staging>
+        <!--<root>${basedir}</root>-->
     </properties>
 
     <dependencyManagement>
@@ -71,6 +76,12 @@
                 <artifactId>UmlGraph</artifactId>
                 <version>4.6</version>
             </dependency>
+            <dependency>
+                <groupId>org.codehaus.izpack</groupId>
+                <artifactId>izpack-standalone-compiler</artifactId>
+                <version>${izpack.version}</version>
+            </dependency>
+
             <!-- Shared version number properties -->
 
             <!--Spring FrameWork-->
@@ -262,6 +273,17 @@
             <modules>
                 <module>mins</module>
                 <module>testing</module>
+                <module>installer</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>installWindows</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>mins</module>
+                <module>installer</module>
             </modules>
         </profile>
     </profiles>

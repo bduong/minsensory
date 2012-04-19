@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>minsensory</artifactId>
+        <groupId>minsensory</groupId>
+        <version>1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>installer</artifactId>
+    <name>MINSensory Installer</name>
+
+    <dependencies>
+        <!--<dependency>-->
+            <!--<groupId>minsensory</groupId>-->
+            <!--<artifactId>mins</artifactId>-->
+        <!--</dependency>-->
+      <!--<dependency>-->
+          <!--<groupId>org.codehaus.izpack</groupId>-->
+          <!--<artifactId>izpack-standalone-compiler</artifactId>-->
+      <!--</dependency>-->
+      </dependencies>
+
+
+
+    <build>
+
+        <plugins>
+
+            <!-- this makes maven to compile and package your related izpack sources into a predictable name and location
+                     ie your target directory's ${project.artifactId}.jar, to that you can configure your izpack descriptor
+                     to merge it to finally installer via <jar> tag
+            -->
+                <!-- use the helps from other Maven plugin to produce a staging area prior to package phase, example target/staging -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>create-staging-area</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy todir="${izpack.staging}">
+                                    <fileset dir="${basedir}/src/izpack"/>
+                                </copy>
+                                <copy todir="${izpack.staging}" file="${project.parent.basedir}/mins/target/mins-1.0-jar-with-dependencies.jar"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--<plugin>-->
+                <!--<artifactId>maven-dependency-plugin</artifactId>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--&lt;!&ndash; copy *application* jars to izpack staging lib &ndash;&gt;-->
+                        <!--<id>copy-product-dependencies</id>-->
+                        <!--<phase>prepare-package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>copy-dependencies</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<outputDirectory>${izpack.staging}/lib</outputDirectory>-->
+                            <!--<excludeTransitive>false</excludeTransitive>-->
+                            <!--<stripVersion>true</stripVersion>-->
+                            <!--<overWriteReleases>true</overWriteReleases>-->
+                            <!--<overWriteSnapshots>true</overWriteSnapshots>-->
+                            <!--<overWriteIfNewer>true</overWriteIfNewer>-->
+                            <!--<excludeScope>system</excludeScope> &lt;!&ndash; this excludes tools.jar, e.g. &ndash;&gt;-->
+                            <!--<excludeArtifactIds>mycustompanels</excludeArtifactIds> &lt;!&ndash; IMPORTANT: don't copy custom panels where our application jars live &ndash;&gt;-->
+
+                            <!--<excludeGroupIds>org.codehaus.izpack</excludeGroupIds> &lt;!&ndash; IMPORTANT: we don't want to copy the izpack dependency where our application jars live &ndash;&gt;-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+
+                <!--</executions>-->
+            <!--</plugin>-->
+
+
+            <plugin>
+                <groupId>org.codehaus.izpack</groupId>
+                <artifactId>izpack-maven-plugin</artifactId>
+                <version>${izpack.plugin.version}</version>
+
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>izpack</goal></goals>
+                        <configuration>
+                            <!-- base for relative paths in izpack descriptor -->
+                            <baseDir>${izpack.staging}</baseDir>
+                            <installFile>${basedir}/src/izpack/install.xml</installFile>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                </dependencies>
+            </plugin>
+
+
+
+        </plugins>
+
+    </build>
+</project>
