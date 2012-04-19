@@ -123,31 +123,28 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.bluestemsoftware.open.maven.plugin </groupId>
-                        <artifactId>launch4j-plugin</artifactId>
-                        <version>1.5.0.0</version>
+                        <groupId>com.akathist.maven.plugins.launch4j </groupId>
+                        <artifactId>launch4j-maven-plugin</artifactId>
+                        <version>1.5.1</version>
                         <executions>
                             <execution>
                                 <id>launch4j</id>
-                                <phase>verify</phase>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>launch4j</goal>
                                 </goals>
                                 <configuration>
-                                    <dontwrapjar>false</dontwrapjar>
                                     <headerType>gui</headerType>
                                     <outfile>${basedir}${file.separator}target${file.separator}${project.name}-${project.version}.exe</outfile>
-                                    <jar>${basedir}${file.separator}target${file.separator}mins-1.0.jar</jar>
-                                    <errtitle>MINSensory</errtitle>
+                                    <jar>${basedir}${file.separator}target${file.separator}mins-1.0-jar-with-dependencies.jar</jar>
+                                    <errTitle>MINSensory</errTitle>
                                     <jre>
                                         <minVersion>1.6.0</minVersion>
                                     </jre>
-                                    <classpath>
-                                        <mainclass>frontend.MINSensory</mainclass>
-                                        <adddependencies>false</adddependencies>
-                                        <precp>anything</precp>
-                                    </classpath>
-                                    <icon>${basedir}/src/main/resources/MINSIcon.ico</icon>
+                                    <classPath>
+                                        <mainClass>frontend.MINSensory</mainClass>
+                                    </classPath>
+                                    <icon>${basedir}/src/main/resources/WindowsIcon.ico</icon>
                                     <versionInfo>
                                         <fileVersion>1.0.0.0</fileVersion>
                                         <txtFileVersion>1.0</txtFileVersion>

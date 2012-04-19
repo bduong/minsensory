@@ -134,24 +134,24 @@
                             </goals>
                         </execution>
                     </executions>
-                    <configuration>
-                        <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
-                        <docletArtifact>
-                            <groupId>org.umlgraph</groupId>
-                            <artifactId>doclet</artifactId>
-                            <version>5.1</version>
-                        </docletArtifact>
-                        <show>private</show>
-                        <additionalparam>
-                            -all -inferrel -inferdep -quiet -hide java.*
-                            -collpackages java.util.* -qualify
-                            -postfixpackage -nodefontsize 9
-                            -nodefontpackagesize 7 -outputencoding utf8
-                            -collapsible
-                        </additionalparam>
-                        <destDir>target/apidoc</destDir>
-                        <useStandardDocletOptions>false</useStandardDocletOptions>
-                    </configuration>
+                    <!--<configuration>-->
+                        <!--<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>-->
+                        <!--<docletArtifact>-->
+                            <!--<groupId>org.umlgraph</groupId>-->
+                            <!--<artifactId>doclet</artifactId>-->
+                            <!--<version>5.1</version>-->
+                        <!--</docletArtifact>-->
+                        <!--<show>private</show>-->
+                        <!--<additionalparam>-->
+                            <!---all -inferrel -inferdep -quiet -hide java.*-->
+                            <!---collpackages java.util.* -qualify-->
+                            <!---postfixpackage -nodefontsize 9-->
+                            <!---nodefontpackagesize 7 -outputencoding utf8-->
+                            <!---collapsible-->
+                        <!--</additionalparam>-->
+                        <!--<destDir>target/apidoc</destDir>-->
+                        <!--<useStandardDocletOptions>false</useStandardDocletOptions>-->
+                    <!--</configuration>-->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

@@ -7,7 +7,7 @@ import data.playback.FileReader;
 import data.playback.StaticDataBank;
 import data.realtime.COMReader;
 import data.realtime.DataCollector;
-import data.realtime.DynamicDataBank;
+import data.realtime.DataTimer;
 import gnu.io.NoSuchPortException;
 import gui.MacOS.MacOSEventHandler;
 
@@ -53,7 +53,6 @@ public class UI {
 
     private JMenuBar menuBar;
     private JMenu file;
-    private JMenuItem load;
     private JMenuItem exit;
     private JMenu help;
     private JMenuItem about;
@@ -104,6 +103,7 @@ public class UI {
     
     private String port;
     private Thread dataCollectorThread;
+    private DataTimer dataTimer;
 
     boolean firstStart = true;
 
@@ -124,6 +124,8 @@ public class UI {
         started = false;
 
         application = new JFrame("System For Sensing Neural Response");
+        ImageIcon icon = new ImageIcon(this.getClass().getResource("/TaskbarIcon.png"));
+        application.setIconImage(icon.getImage());
         application.setSize(windowWidth, windowHeight);
         application.setMinimumSize(new Dimension(windowWidth, windowHeight));
 
@@ -353,6 +355,9 @@ public class UI {
                     stopDataRead.setEnabled(false);
                     disconnect.setEnabled(false);
                     selectPort.setEnabled(true);
+
+                    plotPanel.setDataType(DataType.PROCESSED);
+                    colorMap.setDataType(DataType.PROCESSED);
                 }
             }
         });
@@ -370,18 +375,19 @@ public class UI {
                     try {
                         startDataCollection();
                         firstStart = false;
-                        dataCollector.execute();
+                        dataTimer.startTimer();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else {
-                    dataCollector.resume();
+                    dataTimer.resumeUI();
+                    //dataCollector.resume();
                 }
                 startDataRead.setEnabled(false);
                 stopDataRead.setEnabled(true);
                 disconnect.setEnabled(false);
                 selectPort.setEnabled(false);
-                SwingUtilities.invokeLater(dataCollector);
+
             }
         });
 
@@ -389,7 +395,8 @@ public class UI {
         stopDataRead.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                dataCollector.pause();
+                //dataCollector.pause();
+                dataTimer.pauseUI();
                 startDataRead.setEnabled(true);
                 stopDataRead.setEnabled(false);
                 disconnect.setEnabled(true);
@@ -400,6 +407,7 @@ public class UI {
         disconnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                dataTimer.stopTimer();
                 startDataRead.setEnabled(false);
                 stopDataRead.setEnabled(false);
                 disconnect.setEnabled(false);
@@ -423,7 +431,7 @@ public class UI {
                         startDataRead.setEnabled(true);
                         disconnect.setEnabled(true);
                         selectPort.setEnabled(false);
-                        System.out.println(port);
+                        firstStart = true;
                     }
                 } catch (NoSuchPortException e) {
                     e.printStackTrace();  
@@ -605,27 +613,7 @@ public class UI {
         menuBar = new JMenuBar();
         file = new JMenu("File");
         file.setMnemonic('F');
-        load = new JMenuItem("Load");
-        load.setMnemonic('L');
-        load.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                int returnVal = fileChooser.showOpenDialog(application);
 
-                if(returnVal == JFileChooser.APPROVE_OPTION) {
-                    dataFile = fileChooser.getSelectedFile();
-                    try {
-                        startDataCollection();
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    } catch (IOException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    } catch (Exception e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    }
-                }
-            }
-        });
         exit = new JMenuItem("Exit");
         exit.setMnemonic('E');
         exit.addActionListener(new ActionListener() {
@@ -639,6 +627,12 @@ public class UI {
         help.setMnemonic('H');
         about = new JMenuItem("About");
         about.setMnemonic('A');
+        about.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new AboutDialog();
+            }
+        });
 
 
 
@@ -648,7 +642,6 @@ public class UI {
             file.add(exit);
             help.add(about);
         }
-        file.add(load);
 
         menuBar.add(file);
         menuBar.add(help);
@@ -670,13 +663,16 @@ public class UI {
             populator.execute();
             break;
         case FROM_COM_PORT:
-            dataBank = new DynamicDataBank();
+           // dataBank = new DynamicDataBank();
             COMReader comReader = new COMReader();
             comReader.connectTo(port);
-            dataCollector = new DataCollector(dataBank, comReader , saveDataFile);
+            //dataCollector = new DataCollector(dataBank, comReader , saveDataFile);
+            dataTimer = new DataTimer(comReader, saveDataFile);
+            dataTimer.setPlotPanel(plotPanel);
+            dataTimer.setImage(colorMap);
             break;
         }
-        testBank();
+        //testBank();
     }
 
     private void testBank() {
