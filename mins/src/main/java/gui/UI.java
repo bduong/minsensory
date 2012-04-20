@@ -120,11 +120,11 @@ public class UI {
 
     private JLabel readingStatus;
     private JButton chooseSaveFile;
-    private JComboBox<String> comBox;
-    private JComboBox<Integer> baudBox;
-    private JComboBox<Integer> dataBox;
-    private JComboBox<String> stopBitsBox;
-    private JComboBox<String> parityBitBox;
+    private JComboBox comBox;
+    private JComboBox baudBox;
+    private JComboBox dataBox;
+    private JComboBox stopBitsBox;
+    private JComboBox parityBitBox;
 
     private String comPortName;
     private int baud;
@@ -528,12 +528,12 @@ public class UI {
             List<String> ports = COMReader.listPorts();
             String [] portNames = new String[ports.size()];
             ports.toArray(portNames);
-            if(portNames.length <= 0) comBox = new JComboBox<String>(new String[] {"None"});
+            if(portNames.length <= 0) comBox = new JComboBox(new String[] {"None"});
             else comBox = new JComboBox<String>(portNames);
         } catch (NoSuchPortException e) {
             comBox = new JComboBox<String>(new String[] {"None"});
         }
-        baudBox = new JComboBox<Integer>(new Integer[] {300, 600, 1200, 1800, 2400, 4800, 7200, 9600, 14400, 19200, 38400, 57600, 115200, 230400, 460800, 921600});
+        baudBox = new JComboBox(new Integer[] {300, 600, 1200, 1800, 2400, 4800, 7200, 9600, 14400, 19200, 38400, 57600, 115200, 230400, 460800, 921600});
         baudBox.setEditable(true);
         baudBox.setSelectedItem(9600);
         baudBox.addActionListener(new ActionListener() {
@@ -542,7 +542,7 @@ public class UI {
                 baud = (Integer)baudBox.getSelectedItem();
             }
         });
-        dataBox = new JComboBox<Integer>(new Integer[] {5, 6, 7, 8});
+        dataBox = new JComboBox(new Integer[] {5, 6, 7, 8});
         dataBox.setSelectedItem(8);
         dataBox.addActionListener(new ActionListener() {
             @Override
@@ -556,7 +556,7 @@ public class UI {
                 }
             }
         });
-        stopBitsBox = new JComboBox<String>( new String[] {"1", "2", "1.5"});
+        stopBitsBox = new JComboBox( new String[] {"1", "2", "1.5"});
         stopBitsBox.setSelectedItem("1");
         stopBitsBox.addActionListener(new ActionListener() {
             @Override
@@ -569,7 +569,7 @@ public class UI {
                 }
             }
         });
-        parityBitBox = new JComboBox<String>( new String[] {"NONE", "ODD", "EVEN", "MARK", "SPACE"});
+        parityBitBox = new JComboBox( new String[] {"NONE", "ODD", "EVEN", "MARK", "SPACE"});
         parityBitBox.setSelectedItem("NONE");
         parityBitBox.addActionListener(new ActionListener() {
             @Override

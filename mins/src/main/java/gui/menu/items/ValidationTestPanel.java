@@ -41,7 +41,7 @@ public class ValidationTestPanel extends JPanel {
 
 
         vrefLabel = new JLabel("Reference Voltage");
-        vrefBox = new JComboBox<String>(new String[]{"2.5", "3.3", "5"});
+        vrefBox = new JComboBox(new String[]{"2.5", "3.3", "5"});
         vrefBox.setEditable(true);
         vrefBox.addActionListener(new ActionListener() {
             @Override
@@ -54,11 +54,11 @@ public class ValidationTestPanel extends JPanel {
         try {
             List<String> ports = COMReader.listPorts();
             if (ports.size() <= 0) {
-                comBox = new JComboBox<String>(new String[]{""});
+                comBox = new JComboBox(new String[]{""});
             } else {
                 String[] portNames = new String[ports.size()];
                 ports.toArray(portNames);
-                comBox = new JComboBox<String>(portNames);
+                comBox = new JComboBox(portNames);
             }
         } catch (NoSuchPortException e) {
             comBox = new JComboBox<String>(new String[]{""});
