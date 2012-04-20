@@ -34,7 +34,7 @@ public class COMReader implements DataReader {
         }
         return ports;
     }
-                                        int count =0;
+    int count =0;
     public void connectTo(String portName) throws Exception
     {
         CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
@@ -58,13 +58,13 @@ public class COMReader implements DataReader {
                     @Override
                     public void serialEvent(SerialPortEvent serialPortEvent) {
                         if(serialPortEvent.getEventType() == SerialPortEvent.OE) {
-                                System.out.println("OVERRUN - " + ++count);
+                            System.out.println("OVERRUN - " + ++count);
                         }
                     }
                 });
 
                 in = new BufferedInputStream(serialPort.getInputStream());
-		        out = new BufferedOutputStream(serialPort.getOutputStream());
+                out = new BufferedOutputStream(serialPort.getOutputStream());
                 //(new Thread(new SerialWriter(out))).start();
 
 //                serialPort.addEventListener(new SerialReader(in));
@@ -132,7 +132,7 @@ public class COMReader implements DataReader {
     }
 
     public BufferedOutputStream getOutputStream() {
-	return out;
+        return out;
     }
 
     @Override
@@ -141,16 +141,16 @@ public class COMReader implements DataReader {
         int value = bytes[0] << 8;
         return (0x0000FFFF & ((value) | (bytes[1] & 0x000000FF)));
     }
-    
+
     public int[] readAllInts(BufferedOutputStream out) throws IOException {
-       int [] numbers = new int[256];
-       int num = in.read(allBytes, 0, 512);
-       out.write(allBytes, 0, 512);
-       for (int jj = 0; jj< allBytes.length; jj+=2){
-           int value = allBytes[jj] << 8;
-           numbers[jj/2] =  (0x0000FFFF & ((value) | (allBytes[jj+1] & 0x000000FF)));
-       }
-       return numbers;
+        int [] numbers = new int[256];
+        int num = in.read(allBytes, 0, 512);
+        out.write(allBytes, 0, 512);
+        for (int jj = 0; jj< allBytes.length; jj+=2){
+            int value = allBytes[jj] << 8;
+            numbers[jj/2] =  (0x0000FFFF & ((value) | (allBytes[jj+1] & 0x000000FF)));
+        }
+        return numbers;
     }
 
     public void startStream() throws IOException, InterruptedException {
@@ -158,5 +158,18 @@ public class COMReader implements DataReader {
         out.close();
         out = null;
         Thread.sleep(100);
+    }
+
+    public void closeStreams(){
+        try {
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        try{
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 }

@@ -11,6 +11,7 @@ import data.realtime.DataTimer;
 import gnu.io.NoSuchPortException;
 import gnu.io.SerialPort;
 import gui.MacOS.MacOSEventHandler;
+import gui.menu.items.ValidationTestPanel;
 
 import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -197,11 +198,7 @@ public class UI {
         comReader = new COMReader();
 
         popupMenu = new JPopupMenu();
-//        popupMenu.add(new JMenuItem("Show in Plot 1"));
-//        popupMenu.add(new JMenuItem("Show in Plot 2"));
-//        popupMenu.add(new JMenuItem("Show in Plot 3"));
-//        popupMenu.add(new JMenuItem("Show in Plot 4"));
-//        popupMenu.add(new JMenuItem("Show in Plot 5"));
+
 
         for (int ii = 0; ii < 5; ii++) {
             JMenuItem menuItem = new JMenuItem("Show in Plot" + (ii+1));
@@ -210,7 +207,7 @@ public class UI {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     plotPanel.changePlot(index, rightClickY, rightClickX);
-                    colorMap.unclickNode();
+                    colorMap.flashNode();
                 }
             });
 
@@ -866,6 +863,10 @@ public class UI {
         colorMap.updateImage(dataBank.getPoint(value));
     }
 
+    private JMenu tools;
+    private JMenu setup;
+    private JMenuItem validate;
+    
     /**
      * Add the Menu Bar to the Application.
      */
@@ -877,6 +878,36 @@ public class UI {
         menuBar = new JMenuBar();
         file = new JMenu("File");
         file.setMnemonic('F');
+        
+        tools = new JMenu("Tools");
+        tools.setMnemonic('T');
+
+        setup = new JMenu("Setup");
+        setup.setMnemonic('S');
+
+        validate = new JMenuItem("System Validation Test");
+        validate.setMnemonic('V');
+        validate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("System Validation Test");
+                final ValidationTestPanel validationTest = new ValidationTestPanel();
+                frame.add(validationTest, BorderLayout.CENTER);
+
+                frame.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        validationTest.shutdownClean();
+                        super.windowClosing(e);
+                    }
+                });
+
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
+
 
         exit = new JMenuItem("Exit");
         exit.setMnemonic('E');
@@ -898,8 +929,6 @@ public class UI {
             }
         });
 
-
-
         if( onMac() ){
             new MacOSEventHandler();
         } else {
@@ -907,7 +936,11 @@ public class UI {
             help.add(about);
         }
 
+        tools.add(setup);
+        setup.add(validate);
+
         menuBar.add(file);
+        menuBar.add(tools);
         menuBar.add(help);
 
         application.setJMenuBar(menuBar);

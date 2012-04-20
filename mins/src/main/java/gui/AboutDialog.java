@@ -27,7 +27,7 @@ public class AboutDialog extends JFrame {
         textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
         JLabel title = new JLabel("MINSensory", JLabel.CENTER);
         JLabel version = new JLabel("Version 1.0", JLabel.CENTER);
-        String about = "Created by \n\n Ben Duong \n Nima Haghighi-Mood \n Mike Kasparian \n\n ECE @ BU 2012";
+        String about = "Created by \n\n Ben Duong \n Nima Haghighi-Mood \n Michael Kasparian \n\n ECE @ BU 2012";
         JTextArea aboutText = new JTextArea(about);
         aboutText.setEditable(false);
         Font font = new Font("Arial", Font.BOLD, 12);

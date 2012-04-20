@@ -1,7 +1,7 @@
 package ui;
 
 
-import gui.SelectionPanel;
+import gui.menu.items.ValidationTestPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,8 +15,8 @@ public class UITests {
 
         //Add content to the window.
 //        frame.add(new SelectionPanel().getPlayOptions(), BorderLayout.CENTER);
-        frame.add(new SelectionPanel(), BorderLayout.CENTER);
-
+        frame.add(new ValidationTestPanel(), BorderLayout.CENTER);
+        frame.setLocationRelativeTo(null);
         //Display the window.
         frame.pack();
         frame.setVisible(true);
