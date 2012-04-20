@@ -4,6 +4,7 @@ import data.realtime.COMReader;
 import gnu.io.NoSuchPortException;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -29,6 +30,8 @@ public class ValidationTestPanel extends JPanel {
     private Timer timer;
     private double vref;
 
+    private int displayCount =0;
+
     public ValidationTestPanel() {
         init();
     }
@@ -46,7 +49,7 @@ public class ValidationTestPanel extends JPanel {
         vrefBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                vref = (Double) vrefBox.getSelectedItem();
+                vref = Double.valueOf((String) vrefBox.getSelectedItem());
             }
         });
 
@@ -64,25 +67,34 @@ public class ValidationTestPanel extends JPanel {
             comBox = new JComboBox(new String[]{""});
         }
 
+
+
         timer = new Timer(1000/30, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
+
                     int value = comReader.readNextInt();
                     value = value & 0x00000FFF;
-                    double voltage = vref/4906*value;
-                    if( voltage < .99)
-                        voltageReading.setText(String.format("%.2f mV", voltage*1000));
-                    else
-                        voltageReading.setText(String.format("%.2f V", voltage));
+                    if(displayCount % 30 == 0) {
+                        displayCount = 0;
+                        double voltage = vref/4906*value;
 
+
+                        if( voltage < .99)
+                            voltageReading.setText(String.format("%.2f mV", voltage*1000));
+                        else
+                            voltageReading.setText(String.format("%.2f V", voltage));
+
+                    }
                 } catch (IOException e1) {
                     e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
             }
         });
 
-        textArea = new JTextArea("Testing at: \n\n Baud: \n Data Bits: \n Stop Bits: \n Parity: \n");
+        textArea = new JTextArea("Testing at: \n\n Baud:     \n Data Bits:      \n Stop Bits:     \n Parity:      \n");
+        textArea.setPreferredSize(new Dimension(50, 50));
 
         test = new JButton("Test");
         test.addActionListener(new ActionListener() {
@@ -91,15 +103,15 @@ public class ValidationTestPanel extends JPanel {
                 if(!comBox.getSelectedItem().equals("")) {
                     comReader = new COMReader();
                     try {
-                        comReader.connectTo((String) comBox.getSelectedItem());
-                        timer.start();
+                        //comReader.connectTo((String) comBox.getSelectedItem());
+                        //timer.start();
                     } catch (Exception e1) {
                         e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                     }
                     test.setEnabled(false);
                     comBox.setEnabled(false);
-                    disconnect.setEnabled(false);
-                    textArea.setText("Testing at: " + comBox.getSelectedItem() + " Baud: 9600 \n Data Bits: 8 \n Stop Bits: 1 \n Parity: None \n");
+                    disconnect.setEnabled(true);
+                    textArea.setText("Testing Port:"+ "\n" +comBox.getSelectedItem() + "\n\n" + " Baud: 9600 \n Data Bits: 8 \n Stop Bits: 1 \n Parity: None \n");
                 }
             }
         }
@@ -117,58 +129,61 @@ public class ValidationTestPanel extends JPanel {
         voltageReading = new JLabel("");
 
         layout.setVerticalGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(5, 10, 20)
-                                .addComponent(vrefLabel)
-                                .addComponent(vrefBox)
-                                .addGap(5, 10, 20)
-                                .addComponent(comLabel)
-                                .addComponent(comBox)
-                                .addGap(5, 10, 20)
-                        )
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(5, 10, 20)
-                                .addComponent(voltageReadingLabel)
-                                .addComponent(voltageReading)
-                                .addGap(5, 10, 20)
-                        )
-                )
-                .addGap(5, 10, 20)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                        .addGroup(layout.createSequentialGroup()
-                                .addComponent(test)
-                                .addComponent(disconnect)
-                        )
-                        .addComponent(textArea)
-                )
+          .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+            .addGroup(layout.createSequentialGroup()
+              .addGap(5, 10, 20)
+              .addComponent(vrefLabel)
+              .addComponent(vrefBox)
+              .addGap(5, 10, 20)
+              .addComponent(comLabel)
+              .addComponent(comBox)
+              .addGap(5, 10, 20)
+            )
+            .addGroup(layout.createSequentialGroup()
+              .addGap(5, 10, 20)
+              .addComponent(voltageReadingLabel)
+              .addComponent(voltageReading)
+              .addGap(5, 10, 20)
+            )
+          )
+          .addGap(5, 10, 20)
+          .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+            .addGroup(layout.createSequentialGroup()
+              .addComponent(test)
+              .addComponent(disconnect)
+            )
+            .addComponent(textArea)
+          )
         );
 
         layout.setHorizontalGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                        .addComponent(vrefLabel)
-                        .addComponent(vrefBox)
-                        .addComponent(comLabel)
-                        .addComponent(comBox)
-                        .addComponent(test)
-                        .addComponent(disconnect)
-                )
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                        .addComponent(voltageReadingLabel)
-                        .addComponent(voltageReading)
-                        .addComponent(textArea)
-                )
+          .addGap(0, 0, 10)
+          .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+            .addComponent(vrefLabel)
+            .addComponent(vrefBox)
+            .addComponent(comLabel)
+            .addComponent(comBox)
+            .addComponent(test)
+            .addComponent(disconnect)
+          )
+          .addGap(0, 10, 20)
+          .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+            .addComponent(voltageReadingLabel)
+            .addComponent(voltageReading)
+            .addComponent(textArea)
+          )
+          .addGap(0, 0, 10)
         );
 
-        layout.linkSize(SwingConstants.HORIZONTAL, textArea, vrefLabel, comLabel);
+        layout.linkSize(SwingConstants.HORIZONTAL, textArea, vrefBox, comBox, vrefLabel, voltageReadingLabel, comLabel);
         layout.linkSize(SwingConstants.HORIZONTAL, test, disconnect);
     }
 
     public void shutdownClean() {
         if(timer != null)
-        timer.stop();
+            timer.stop();
         if(comReader != null)
-        comReader.closeStreams();
+            comReader.closeStreams();
     }
 
 }

@@ -898,7 +898,6 @@ public class UI {
                     @Override
                     public void windowClosing(WindowEvent e) {
                         validationTest.shutdownClean();
-                        super.windowClosing(e);
                     }
                 });
 

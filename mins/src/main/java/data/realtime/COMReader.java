@@ -163,13 +163,13 @@ public class COMReader implements DataReader {
     public void closeStreams(){
         try {
             out.close();
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (Exception e) {
+            //e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         try{
             in.close();
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (Exception e) {
+            //e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 }
