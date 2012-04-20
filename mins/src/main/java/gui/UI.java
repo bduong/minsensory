@@ -529,9 +529,9 @@ public class UI {
             String [] portNames = new String[ports.size()];
             ports.toArray(portNames);
             if(portNames.length <= 0) comBox = new JComboBox(new String[] {"None"});
-            else comBox = new JComboBox<String>(portNames);
+            else comBox = new JComboBox(portNames);
         } catch (NoSuchPortException e) {
-            comBox = new JComboBox<String>(new String[] {"None"});
+            comBox = new JComboBox(new String[] {"None"});
         }
         baudBox = new JComboBox(new Integer[] {300, 600, 1200, 1800, 2400, 4800, 7200, 9600, 14400, 19200, 38400, 57600, 115200, 230400, 460800, 921600});
         baudBox.setEditable(true);
