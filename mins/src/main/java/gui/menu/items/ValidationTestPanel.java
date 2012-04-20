@@ -61,7 +61,7 @@ public class ValidationTestPanel extends JPanel {
                 comBox = new JComboBox(portNames);
             }
         } catch (NoSuchPortException e) {
-            comBox = new JComboBox<String>(new String[]{""});
+            comBox = new JComboBox(new String[]{""});
         }
 
         timer = new Timer(1000/30, new ActionListener() {
