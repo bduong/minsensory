@@ -59,6 +59,9 @@ public class SelectionPanel extends JTabbedPane{
     private JComboBox parityComboBox;
 
     public SelectionPanel() {
+        playOptions = new JPanel(false);
+        comOptions = new JPanel(false);
+
         comLabel = new JLabel("COM");
         baudLabel = new JLabel("BAUD");
         dataLabel = new JLabel("DataBits");
@@ -229,17 +232,17 @@ public class SelectionPanel extends JTabbedPane{
 
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                 .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 10, 100)
+                        .addGap(0, 0, 100)
                         .addComponent(startCOM)
                         .addComponent(stopCOM)
-                        .addGap(25, 100, 200)
+                        .addGap(25, 400, 1000)
                         .addComponent(save)
                         .addGap(0, 10, 100)
                 )
                 .addGroup(layout.createSequentialGroup()
                         .addGap(0, 10, 100)
                         .addComponent(readingStatus)
-                        .addGap(50, 150, 300)
+                        .addGap(50, 500, 1500)
                         .addComponent(fileNameSave)
                         .addGap(0, 10, 100)
                 )
@@ -254,27 +257,27 @@ public class SelectionPanel extends JTabbedPane{
                                 .addComponent(comLabel)
                                 .addComponent(comBox)
                         )
-                        .addGap(0, 5, 20)
+                        .addGap(0, 10, 40)
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                                 .addComponent(baudLabel)
                                 .addComponent(baudComboBox)
                         )
-                        .addGap(0, 5, 20)
+                        .addGap(0, 10, 40)
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                                 .addComponent(dataLabel)
                                 .addComponent(dataComboBox)
                         )
-                        .addGap(0, 5, 20)
+                        .addGap(0, 10, 40)
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                                 .addComponent(stopBitsLabel)
                                 .addComponent(stopBitsComboBox)
                         )
-                        .addGap(0, 5, 20)
+                        .addGap(0, 10, 40)
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                                 .addComponent(parityLabel)
                                 .addComponent(parityComboBox)
                         )
-                        .addGap(0, 5, 100)
+                        .addGap(0, 10, 1000)
 
                 )
 
@@ -295,7 +298,9 @@ public class SelectionPanel extends JTabbedPane{
 
     }
 
-    public void setSlider(JSlider slider) {}
+    public void setSlider(JSlider slider) {
+        this.slider = slider;
+    }
 
     public void setBack(JButton back) {
         this.back = back;

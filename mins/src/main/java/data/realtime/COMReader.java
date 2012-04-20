@@ -80,6 +80,53 @@ public class COMReader implements DataReader {
 
     }
 
+    public void connectTo(String portName, int baud, int dataBits , int stopBits, int parity) throws Exception
+    {
+        CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
+        if ( portIdentifier.isCurrentlyOwned() )
+        {
+            System.out.println("Error: Port is currently in use");
+        }
+        else
+        {
+            CommPort commPort = portIdentifier.open(COMReader.class.getName(),2000);
+
+            if ( commPort instanceof SerialPort)
+            {
+                SerialPort serialPort = (SerialPort) commPort;
+                serialPort.setSerialPortParams(baud,dataBits,stopBits,parity);
+                serialPort.notifyOnOutputEmpty(true);
+                serialPort.notifyOnOverrunError(true);
+                serialPort.notifyOnOutputEmpty(true);
+                serialPort.notifyOnDataAvailable(true);
+                serialPort.addEventListener(new SerialPortEventListener() {
+                    @Override
+                    public void serialEvent(SerialPortEvent serialPortEvent) {
+                        if(serialPortEvent.getEventType() == SerialPortEvent.OE) {
+                            System.out.println("OVERRUN - " + ++count);
+                        }
+                    }
+                });
+
+                if(in != null) in.close();
+                if(out != null) out.close();
+                in = new BufferedInputStream(serialPort.getInputStream());
+                out = new BufferedOutputStream(serialPort.getOutputStream());
+                //(new Thread(new SerialWriter(out))).start();
+
+//                serialPort.addEventListener(new SerialReader(in));
+//                serialPort.notifyOnDataAvailable(true);
+
+
+            }
+            else
+            {
+                System.out.println("Error: Only serial ports are handled by this example.");
+            }
+        }
+
+    }
+
     public BufferedInputStream getInputStream() {
         return in;
     }
@@ -109,6 +156,7 @@ public class COMReader implements DataReader {
     public void startStream() throws IOException, InterruptedException {
         out.write("5".getBytes());
         out.close();
+        out = null;
         Thread.sleep(100);
     }
 }

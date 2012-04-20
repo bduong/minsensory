@@ -34,6 +34,17 @@ public class DataTimer implements ActionListener{
         setupTimer();
     }
 
+    public DataTimer( COMReader comReader, BufferedOutputStream saveFileStream) {
+        delay = 1000/30;
+        paused = false;
+        reader = comReader;
+
+        bytes = new byte[2];
+        outputStream = saveFileStream;
+
+        setupTimer();
+    }
+
     public void setPlotPanel(PlotPanel plotPanel) {
         this.plotPanel = plotPanel;
     }
@@ -42,6 +53,9 @@ public class DataTimer implements ActionListener{
         image = colorMappedImage;
     }
 
+    public void setSaveFileOutputStream(BufferedOutputStream outputStream) {
+        this.outputStream = outputStream;
+    }
 
     private void setupTimer() {
         timer = new Timer(delay, this);

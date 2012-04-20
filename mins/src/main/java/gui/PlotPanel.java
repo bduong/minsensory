@@ -141,6 +141,15 @@ public class PlotPanel extends JPanel implements ActionListener{
         radioButtons.get(node).setSelected(true);
     }
 
+    public void changePlot(int index, int rowNode, int colNode){
+        radioButtons.get(node).setSelected(false);
+        node = index;
+        JFreeChart chart = plots.get(node);
+        chart.setTitle("Node " + rowNode +"-"+ nodes[colNode]);
+        plotNodes[node] = rowNode + colNode*16;
+        radioButtons.get(node).setSelected(true);
+    }
+
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         node = Integer.parseInt(actionEvent.getActionCommand());

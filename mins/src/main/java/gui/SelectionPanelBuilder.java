@@ -35,7 +35,7 @@ public class SelectionPanelBuilder {
         return this;
     }
 
-    public SelectionPanelBuilder withLoadFileNameLabel(JLabel fileNameLabel) {
+    public SelectionPanelBuilder withFileLoadNameLabel(JLabel fileNameLabel) {
         selectionPanel.setFileNameLoad(fileNameLabel);
         return this;
     }
@@ -132,6 +132,11 @@ public class SelectionPanelBuilder {
 
     public SelectionPanelBuilder withParityBox(JComboBox parityBox) {
         selectionPanel.setParityComboBox(parityBox);
+        return this;
+    }
+    
+    public SelectionPanelBuilder withButtonGroup(ButtonGroup buttonGroup){
+        selectionPanel.setButtonGroup(buttonGroup);
         return this;
     }
 

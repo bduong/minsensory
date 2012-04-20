@@ -76,6 +76,10 @@ public class UpdateTimer implements ActionListener{
         }
     }
 
+    public void setDataBank(DataBank dataBank) {
+        this.dataBank = dataBank;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!dataBank.isAtEnd()){

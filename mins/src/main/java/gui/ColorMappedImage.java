@@ -98,6 +98,10 @@ public class ColorMappedImage extends JPanel {
         flashRow = -1;
     }
 
+    public boolean isANodeHighlighted(int row, int col) {
+        return flashCol == col && flashRow == row;
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         int width = this.getWidth();
