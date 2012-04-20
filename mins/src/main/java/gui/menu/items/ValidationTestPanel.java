@@ -76,9 +76,9 @@ public class ValidationTestPanel extends JPanel {
 
                     int value = comReader.readNextInt();
                     value = value & 0x00000FFF;
-                    if(displayCount % 30 == 0) {
+                    if(++displayCount % 30 == 0) {
                         displayCount = 0;
-                        double voltage = vref/4906*value;
+                        double voltage = vref*value;
 
 
                         if( voltage < .99)
@@ -103,8 +103,9 @@ public class ValidationTestPanel extends JPanel {
                 if(!comBox.getSelectedItem().equals("")) {
                     comReader = new COMReader();
                     try {
-                        //comReader.connectTo((String) comBox.getSelectedItem());
-                        //timer.start();
+                        comReader.connectTo((String) comBox.getSelectedItem());
+                        comReader.startStream();
+                        timer.start();
                     } catch (Exception e1) {
                         e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                     }
@@ -121,6 +122,8 @@ public class ValidationTestPanel extends JPanel {
         disconnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                disconnect.setEnabled(false);
+                test.setEnabled(true);
                 timer.stop();
             }
         });

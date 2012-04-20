@@ -391,7 +391,8 @@ public class UI {
 
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1) {
+                System.out.println(e.getModifiers());
+                if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
                     int xScale = (int)Math.round(colorMap.getWidth()/16.0);
                     int yScale = (int)Math.round(colorMap.getHeight()/16.0);
                     int x = e.getX()/xScale;
