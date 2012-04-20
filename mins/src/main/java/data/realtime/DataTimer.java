@@ -69,16 +69,20 @@ public class DataTimer implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
             int [] dataLine = new int[256];
-            for (int ii = 0; ii < 256; ii++) {
-                try {
-                    dataLine[ii] = reader.readNextInt();
-                    createWritableBytes(dataLine[ii]);
-                    outputStream.write(bytes);
-                } catch (IOException e1) {
-                    System.out.println("IO Exception");
-                    timer.stop();
-                }
-            }
+//            for (int ii = 0; ii < 256; ii++) {
+//                try {
+//                    dataLine[ii] = reader.readNextInt();
+//                    createWritableBytes(dataLine[ii]);
+//                    outputStream.write(bytes);
+//                } catch (IOException e1) {
+//                    System.out.println("IO Exception");
+//                    timer.stop();
+//                }
+//            }
+        try{
+            dataLine = reader.readAllInts(outputStream);
+        } catch (IOException e1){}
+
         if(!paused) {
             System.out.println(count++);
             DataLine data = new DataLine(dataLine);

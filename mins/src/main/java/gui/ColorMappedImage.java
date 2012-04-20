@@ -22,6 +22,10 @@ public class ColorMappedImage extends JPanel {
     private int height = 16;
 
     private DataType dataType;
+    private int flash = -1;
+    private int flashRow = -1;
+    private int flashCol = -1;
+    private int flashCount = -1;
 
     public ColorMappedImage() {
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -58,7 +62,7 @@ public class ColorMappedImage extends JPanel {
         } else {
             image.setRGB(0, 0, width, height, translateToGrayscale(line.getLine()), 0, width);
         }
-        repaint();
+        repaint();        
     }
 
     public List<Integer> updateImage(DataLine line, Set<Integer> spikeNodes){
@@ -73,20 +77,56 @@ public class ColorMappedImage extends JPanel {
     }
 
 
-    private int[] convertDataToColors(int[] data) {
+    public void clickNode(int row, int col) {
+        flash = col + row*16;        
+        flashRow = row;
+        flashCol = col;
+        flashCount = -1;
+        
+    }
 
-
-        return data;
+    public void unclickNode() {
+        flash = -1;
+        flashRow = -1;
+        flashCol = -1;
+        flashCount = -1;
+    }
+    
+    public void flashNode(){
+        flashCount = 16;
+        flashCol = -1;
+        flashRow = -1;
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), this);
+        int width = this.getWidth();
+        int height = this.getHeight();
+        g.drawImage(image, 0, 0, width, height, this);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke((float) (width*.0625*.1)));
+        for (int ii = 0; ii< 17; ii++) {
+            g2.drawLine(0, height*ii/16, width, height*ii/16);
+            g2.drawLine(width*ii/16, 0, width*ii/16, height);
+        }
+        if(flash >= 0 && flashCol >=0 && flashRow >=0) {
+            g2.setColor(Color.white);
+            g2.setStroke(new BasicStroke((float) (width*.0625*.2)));
+            g2.drawLine(width*flashCol/16, height*flashRow/16 ,width*(flashCol+1)/16, height*flashRow/16);
+            g2.drawLine(width*flashCol/16, height*flashRow/16 ,width*flashCol/16, height*(flashRow+1)/16);
+            g2.drawLine(width*flashCol/16, height*(flashRow+1)/16 ,width*(flashCol+1)/16, height*(flashRow+1)/16);
+            g2.drawLine(width*(flashCol+1)/16, height*flashRow/16 ,width*(flashCol+1)/16, height*(flashRow+1)/16);
+        }
+
     }
 
     public int [] translateToGrayscale(int[] points){
         int [] newPoints = new int[points.length];
         for( int ii = 0; ii < points.length; ii++) {
+            if (checkFlash(ii)) {
+                newPoints[ii] = Color.cyan.getRGB();
+                continue;
+            }
             int number = points[ii];
             int value = (number & 0x00000FF0);
             value = value>>4;
@@ -96,9 +136,22 @@ public class ColorMappedImage extends JPanel {
         return newPoints;
     }
 
+    private boolean checkFlash(int ii) {
+        boolean shouldFlash = (ii == flash && flashCount > 0 && flashCount-- % 4 == 0);
+        if (flashCount == 0) {
+            flash = -1;
+        }
+        return shouldFlash;
+
+    }
+
     public int [] translateToRGB(int[] points){
         int [] newPoints = new int[points.length];
         for( int ii = 0; ii < points.length; ii++) {
+            if (checkFlash(ii)) {
+                newPoints[ii] = Color.cyan.getRGB();
+                continue;
+            }
             int number = points[ii];
             int rgb = number & 0x0000FC00;
             rgb = rgb >> 10;
@@ -114,6 +167,10 @@ public class ColorMappedImage extends JPanel {
     public int [] translateToRGB(int[] points, Set<Integer> spikeNodes){
         int [] newPoints = new int[points.length];
         for( int ii = 0; ii < points.length; ii++) {
+            if (checkFlash(ii)) {
+                newPoints[ii] = Color.cyan.getRGB();
+                continue;
+            }
             if (spikeNodes.contains(ii)) {
                 newPoints[ii] = Color.white.getRGB();
             } else {
