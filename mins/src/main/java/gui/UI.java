@@ -513,10 +513,9 @@ public class UI {
                     try {
                         if (fileSaveStream != null) fileSaveStream.close();
                         fileSaveStream = new BufferedOutputStream(new FileOutputStream(saveDataFile));
-                        dataTimer.setSaveFileOutputStream(fileSaveStream);
                         saveFileLabel.setText("Saving To: " + saveDataFile.getName());
                         saveFileLabel.setBackground(Color.GREEN);
-                    } catch(Exception ex) {}
+                    } catch(Exception ex) {ex.printStackTrace();}
 
                     if(!connect.isEnabled()) {
                         startDataRead.setEnabled(true);
@@ -529,11 +528,13 @@ public class UI {
             List<String> ports = COMReader.listPorts();
             String [] portNames = new String[ports.size()];
             ports.toArray(portNames);
+
+            comPortName = ports.get(0);
             if(portNames.length <= 0) comBox = new JComboBox(new String[] {"None"});
             else comBox = new JComboBox(portNames);
         } catch (NoSuchPortException e) {
             comBox = new JComboBox(new String[] {"None"});
-        }
+        };
         baudBox = new JComboBox(new Integer[] {300, 600, 1200, 1800, 2400, 4800, 7200, 9600, 14400, 19200, 38400, 57600, 115200, 230400, 460800, 921600});
         baudBox.setEditable(true);
         baudBox.setSelectedItem(9600);
@@ -543,6 +544,7 @@ public class UI {
                 baud = (Integer)baudBox.getSelectedItem();
             }
         });
+        baud = 9600;
         dataBox = new JComboBox(new Integer[] {5, 6, 7, 8});
         dataBox.setSelectedItem(8);
         dataBox.addActionListener(new ActionListener() {
@@ -557,6 +559,7 @@ public class UI {
                 }
             }
         });
+        dataBits = SerialPort.DATABITS_8;
         stopBitsBox = new JComboBox( new String[] {"1", "2", "1.5"});
         stopBitsBox.setSelectedItem("1");
         stopBitsBox.addActionListener(new ActionListener() {
@@ -570,6 +573,7 @@ public class UI {
                 }
             }
         });
+        stopBits = SerialPort.STOPBITS_1;
         parityBitBox = new JComboBox( new String[] {"NONE", "ODD", "EVEN", "MARK", "SPACE"});
         parityBitBox.setSelectedItem("NONE");
         parityBitBox.addActionListener(new ActionListener() {
@@ -584,6 +588,7 @@ public class UI {
                     case 4: parity = SerialPort.PARITY_SPACE;
                 }
             }});
+        parity = SerialPort.PARITY_NONE;
 
 
 
@@ -594,6 +599,7 @@ public class UI {
                 if(firstStart){
                     try {
                         startDataCollection();
+                        dataTimer.setSaveFileOutputStream(fileSaveStream);
                         firstStart = false;
                         dataTimer.startTimer();
                     } catch (Exception e) {
@@ -658,6 +664,7 @@ public class UI {
                 if(saveDataFile != null) startPlayBack.setEnabled(true);
                 try {
                     comReader.connectTo(comPortName, baud, dataBits, stopBits, parity);
+                    //comReader.connectTo(comPortName);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
