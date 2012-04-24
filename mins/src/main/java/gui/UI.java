@@ -613,6 +613,7 @@ public class UI {
                 disconnect.setEnabled(false);
                 connect.setEnabled(false);
                 readingStatus.setText("Reading Status: Reading from " + comPortName);
+                readingStatus.setBackground(Color.GREEN);
 
             }
         });
@@ -661,7 +662,7 @@ public class UI {
                 setEnabledForCOMObjects(false);
                 disconnect.setEnabled(true);
                 chooseSaveFile.setEnabled(true);
-                if(saveDataFile != null) startPlayBack.setEnabled(true);
+                if(saveDataFile != null) startDataRead.setEnabled(true);
                 try {
                     comReader.connectTo(comPortName, baud, dataBits, stopBits, parity);
                     //comReader.connectTo(comPortName);
