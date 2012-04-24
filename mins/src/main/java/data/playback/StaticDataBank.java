@@ -55,4 +55,9 @@ public class StaticDataBank implements DataBank {
     public boolean isAtEnd() {
         return count >= data.size()-1;
     }
+
+    @Override
+    public void clear() {
+        data.clear();
+    }
 }

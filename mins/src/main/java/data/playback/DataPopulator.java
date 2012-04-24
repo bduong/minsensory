@@ -25,7 +25,7 @@ public class DataPopulator {
     //TODO Change 10000 hard count to length of file
 
     public void execute() throws IOException {
-        //int count = 0;
+        int count = 0;
         outer:
         while (true) {
             int array[] = new int[lineSize];
@@ -42,6 +42,15 @@ public class DataPopulator {
             }
             bank.addPoint(new DataLine(array));
         }
+    }
+
+    private String numToString(int num){
+
+        int value = num & 0x000000FF;
+        int upper = num & 0x0000FF00;
+        upper = upper >> 8;
+
+        return "" +  upper + "-" +  value;
     }
 
 

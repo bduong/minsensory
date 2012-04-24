@@ -4,14 +4,10 @@ import data.DataBank;
 import data.DataLine;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class UpdateTimer implements ActionListener{
 
@@ -80,6 +76,10 @@ public class UpdateTimer implements ActionListener{
         }
     }
 
+    public void setDataBank(DataBank dataBank) {
+        this.dataBank = dataBank;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!dataBank.isAtEnd()){
@@ -104,8 +104,6 @@ public class UpdateTimer implements ActionListener{
                     spikeNodes.remove(node);
                 }
             }
-
-
 
             if(slider != null) {
                 ui.setUserSeek(false);

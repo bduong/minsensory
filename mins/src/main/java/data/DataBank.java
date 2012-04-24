@@ -19,4 +19,6 @@ public interface DataBank {
    public int getPosition();
 
    public boolean isAtEnd();
+
+   public void clear();
 }

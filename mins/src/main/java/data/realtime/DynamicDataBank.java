@@ -78,4 +78,9 @@ public class DynamicDataBank implements DataBank {
     public boolean isAtEnd() {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    @Override
+    public void clear() {
+        data.clear();
+    }
 }
