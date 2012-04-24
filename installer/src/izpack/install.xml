@@ -32,6 +32,7 @@
 
     <panels>
         <panel classname="TargetPanel"/>
+        <panel classname="UserInputPanel"/>
         <panel classname="PacksPanel"/>
         <panel classname="InstallPanel"/>
         <panel classname="FinishPanel"/>
