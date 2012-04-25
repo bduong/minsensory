@@ -5,6 +5,8 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -29,6 +31,10 @@ public class PlotPanel extends JPanel implements ActionListener{
     private int node;
     private int time;
 
+    private static Color colors[] = {Color.RED, Color.BLUE, Color.GREEN, Color.BLACK, Color.MAGENTA};
+
+    private static char [] nodes ="ABCDEFGHIJKLMNOP".toCharArray();
+
     private DataType dataType;
 
     public PlotPanel() {
@@ -39,10 +45,7 @@ public class PlotPanel extends JPanel implements ActionListener{
         node = 0;
         time = 0;
         init();
-        //setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
-
-    private static Color colors[] = {Color.RED, Color.BLUE, Color.GREEN, Color.BLACK, Color.MAGENTA};
 
     /**
      * Initialize the Charts and Plots
@@ -67,7 +70,10 @@ public class PlotPanel extends JPanel implements ActionListener{
             button.setHorizontalAlignment(JRadioButton.LEFT);
             button.setActionCommand("" + chartNumber++);
             button.addActionListener(this);
-            chart.getXYPlot().getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+            NumberAxis rangeAxis = (NumberAxis) chart.getXYPlot().getRangeAxis();
+            rangeAxis.setRange(0, 2.5);
+            rangeAxis.setTickUnit(new NumberTickUnit(.5));
+            //rangeAxis.setStandardTickUnits(NumberAxis.createStandardTickUnits());
             ChartPanel thisChart = new ChartPanel(chart);
             radioButtons.add(button);
             buttonGroup.add(button);
@@ -82,17 +88,6 @@ public class PlotPanel extends JPanel implements ActionListener{
 
         add(buttonPanel);
         add(chartPanel);
-
-//        layout.setHorizontalGroup(layout.createSequentialGroup()
-//          .addComponent(buttonPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
-//          .addGap(50)
-//          .addComponent(chartPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
-//        );
-//
-//        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-//          .addComponent(buttonPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
-//        .addComponent(chartPanel, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE));
-
     }
 
     private JFreeChart createSeriesAndChart(String title) {
@@ -114,15 +109,10 @@ public class PlotPanel extends JPanel implements ActionListener{
         );
     }
 
-    public void run(){
-        setVisible(true);
-    }
-
     public void setDataType(DataType type){
         dataType = type;
     }
 
-    private static char [] nodes ="ABCDEFGHIJKLMNOP".toCharArray();
 
     /**
      * Change the plot of the currently selected chart.
@@ -134,7 +124,7 @@ public class PlotPanel extends JPanel implements ActionListener{
         JFreeChart chart = plots.get(node);
         chart.setTitle("Node " + rowNode +"-"+ nodes[colNode]);
         radioButtons.get(node).setSelected(false);
-        plotNodes[node] = rowNode + colNode*16;
+        plotNodes[node] = rowNode*16 + colNode;
         if(++node > 4) {
             node = 0;
         }
@@ -164,8 +154,8 @@ public class PlotPanel extends JPanel implements ActionListener{
     public void updatePlots(DataLine data){
         for (int plotNumber = 0; plotNumber < 5; plotNumber++){
             int dataPoint = data.getDataAt(plotNodes[plotNumber]-1);
-            dataPoint = translatePoint(dataPoint);
-            series.get(plotNumber).add(time, dataPoint);
+            double point = translatePoint(dataPoint);
+            series.get(plotNumber).add(time, point);
             if(series.get(plotNumber).getItemCount() >= 50) series.get(plotNumber).remove(0);
         }
         time++;
@@ -174,7 +164,6 @@ public class PlotPanel extends JPanel implements ActionListener{
     public void advanceTime(){
         time++;
     }
-
 
     public void resetPlotsTo(List<DataLine> data, int newTime) {
         int begin = newTime - data.size();
@@ -188,19 +177,19 @@ public class PlotPanel extends JPanel implements ActionListener{
             DataLine line = data.get(timeNumber);
             for (int plotNumber = 0; plotNumber < 5; plotNumber++){
                 int dataPoint = line.getDataAt(plotNodes[plotNumber]-1);
-                dataPoint = translatePoint(dataPoint);
-                series.get(plotNumber).add(resetTime, dataPoint);
+                double point = translatePoint(dataPoint);
+                series.get(plotNumber).add(resetTime, point);
             }
             resetTime++;
         }
     }
 
-    private int translatePoint(int point) {
+    private double translatePoint(int point) {
         switch (dataType) {
         case RAW:
-            return point & 0x00000FFF;
+            return (double)(point & 0x00000FFF) / 4096 * 2.5 ;
         case PROCESSED:
-            return point & 0x000003FF;
+            return (double)(point & 0x000003FF) / 1024 * 2.5;
         }
         return 0;
     }

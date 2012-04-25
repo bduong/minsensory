@@ -528,8 +528,8 @@ public class UI {
             List<String> ports = COMReader.listPorts();
             String [] portNames = new String[ports.size()];
             ports.toArray(portNames);
-
-            comPortName = ports.get(0);
+            if (ports.size() > 0) comPortName = ports.get(0);
+            else comPortName="";
             if(portNames.length <= 0) comBox = new JComboBox(new String[] {"None"});
             else comBox = new JComboBox(portNames);
         } catch (NoSuchPortException e) {
@@ -755,7 +755,7 @@ public class UI {
                         seekSlider.setLabelTable(labelTable);
                         loadFileLabel.setBackground(Color.GREEN);
                         setEnabledForCOMObjects(false);
-                    } catch (Exception e) {loadFileLabel.setBackground(Color.RED);}
+                    } catch (Exception e) {e.printStackTrace();loadFileLabel.setBackground(Color.RED);}
 
                     seekField.setEnabled(true);
                     seekGoTo.setEnabled(true);

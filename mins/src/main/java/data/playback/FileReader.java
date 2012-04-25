@@ -3,6 +3,7 @@ package data.playback;
 import data.DataReader;
 
 import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,13 +17,11 @@ public class FileReader implements DataReader {
 
     public FileReader(String fileName) throws IOException {
         this.fileName = fileName;
-        //reader = new ObjectInputStream(new FileInputStream(fileName));
         reader = new BufferedInputStream(new FileInputStream(fileName), 1024*1024);
         bytes = new byte[2];
     }
 
     public FileReader(File file) throws IOException {
-        //reader = new ObjectInputStream(new FileInputStream(file));
         reader = new BufferedInputStream(new FileInputStream(file), 1024*1024);
         fileName = file.getName();
         bytes = new byte[2];

@@ -5,10 +5,6 @@ import data.DataLine;
 
 import java.io.IOException;
 
-/**
- * Created by IntelliJ IDEA. User: bduong Date: 3/21/12 Time: 10:01 PM To change
- * this template use File | Settings | File Templates.
- */
 public class DataPopulator {
 
     private DataBank bank;
@@ -25,7 +21,6 @@ public class DataPopulator {
     //TODO Change 10000 hard count to length of file
 
     public void execute() throws IOException {
-        int count = 0;
         outer:
         while (true) {
             int array[] = new int[lineSize];

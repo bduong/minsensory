@@ -97,7 +97,7 @@ public class DataTimer implements ActionListener{
             dataLine = reader.readAllInts(outputStream);
         } catch (IOException e1){}
 
-        if(!paused) {
+        if(!paused && dataLine != null) {
             System.out.println(count++);
             DataLine data = new DataLine(dataLine);
             plotPanel.updatePlots(data);

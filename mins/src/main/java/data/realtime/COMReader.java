@@ -5,6 +5,7 @@ import gnu.io.*;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -15,10 +16,11 @@ public class COMReader implements DataReader {
 
     BufferedInputStream in = null;
     BufferedOutputStream out = null;
+    DataInputStream dataIn = null;
     private byte [] bytes;
     private byte [] allBytes;
     public COMReader() {
-        bytes = new byte[2];
+        bytes = new byte[1];
         allBytes = new byte[512];
     }
 
@@ -63,8 +65,9 @@ public class COMReader implements DataReader {
                     }
                 });
 
-                in = new BufferedInputStream(serialPort.getInputStream());
-                out = new BufferedOutputStream(serialPort.getOutputStream());
+                //in = new BufferedInputStream(serialPort.getInputStream(), 1024);
+                dataIn = new DataInputStream(serialPort.getInputStream());
+                out = new BufferedOutputStream(serialPort.getOutputStream(), 1024);
                 //(new Thread(new SerialWriter(out))).start();
 
 //                serialPort.addEventListener(new SerialReader(in));
@@ -102,12 +105,18 @@ public class COMReader implements DataReader {
                 serialPort.addEventListener(new SerialPortEventListener() {
                     @Override
                     public void serialEvent(SerialPortEvent serialPortEvent) {
-                        if(serialPortEvent.getEventType() == SerialPortEvent.OE) {
+                        switch(serialPortEvent.getEventType()) {
+                        case SerialPortEvent.OE:
                             System.out.println("OVERRUN - " + ++count);
+                            break;
+                        case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
+                            System.out.println("Empty - " + ++count);
+                            break;
                         }
                     }
                 });
 
+                serialPort.setInputBufferSize(1024);
                 if(in != null) in.close();
                 if(out != null) out.close();
                 in = new BufferedInputStream(serialPort.getInputStream());
@@ -142,14 +151,35 @@ public class COMReader implements DataReader {
         return (0x0000FFFF & ((value) | (bytes[1] & 0x000000FF)));
     }
 
+//    public int[] readAllInts(BufferedOutputStream out) throws IOException {
+//        int [] numbers = {0};
+//        //in.read(bytes,0,1);
+//        //if (bytes[0] != 0) {
+//        if(in.available() >= 512) {
+//            numbers = new int[256];
+//            int num = in.read(allBytes, 0, 512);
+//            System.out.println(num);
+//            out.write(allBytes, 0, 512);
+//            for (int jj = 0; jj< allBytes.length; jj+=2){
+//                int value = allBytes[jj] << 8;
+//                numbers[jj/2] =  (0x0000FFFF & ((value) | (allBytes[jj+1] & 0x000000FF)));
+//            }
+//        }
+//        return numbers;
+//    }
+
     public int[] readAllInts(BufferedOutputStream out) throws IOException {
-        int [] numbers = new int[256];
-        int num = in.read(allBytes, 0, 512);
-        out.write(allBytes, 0, 512);
-        for (int jj = 0; jj< allBytes.length; jj+=2){
-            int value = allBytes[jj] << 8;
-            numbers[jj/2] =  (0x0000FFFF & ((value) | (allBytes[jj+1] & 0x000000FF)));
-        }
+        int [] numbers = new int[256]; //= {0};
+
+            dataIn.readFully(allBytes, 0,512);
+            //int num = in.read(allBytes, 0, 512);
+           // System.out.println(num);
+            out.write(allBytes, 0, 512);
+            for (int jj = 0; jj< allBytes.length; jj+=2){
+                int value = allBytes[jj] << 8;
+                numbers[jj/2] =  (0x0000FFFF & ((value) | (allBytes[jj+1] & 0x000000FF)));
+            }
+        //}
         return numbers;
     }
 
