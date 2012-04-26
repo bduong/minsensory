@@ -6,8 +6,8 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
-import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYDataItem;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -15,8 +15,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 /**
  * Panel to display five graphs.
@@ -26,6 +29,7 @@ public class PlotPanel extends JPanel implements ActionListener{
     private List<JFreeChart> plots;
     private List<XYSeries> series;
     private List<JRadioButton> radioButtons;
+    private List<LinkedList<Double>> dataSeries;
     private ButtonGroup buttonGroup = new ButtonGroup();
     private int [] plotNodes;
     private int node;
@@ -42,6 +46,8 @@ public class PlotPanel extends JPanel implements ActionListener{
         series = new ArrayList<XYSeries>();
         radioButtons = new ArrayList<JRadioButton>();
         plotNodes = new int[]{1, 2, 3, 4, 5};
+        dataSeries = new ArrayList<LinkedList<Double>>(5);
+
         node = 0;
         time = 0;
         init();
@@ -92,9 +98,14 @@ public class PlotPanel extends JPanel implements ActionListener{
 
     private JFreeChart createSeriesAndChart(String title) {
         XYSeries xySeries = new XYSeries(title);
-        for (int ii = -49; ii <= 0; ii++ ) {
+        LinkedList<Double> data = new LinkedList<Double>() ;
+        for (int ii = -25; ii <= 25; ii++ ) {
             xySeries.add(ii, 0);
+            data.add((double)0);
         }
+        dataSeries.add(data);
+
+
         series.add(xySeries);
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection(xySeries);
         return ChartFactory.createXYLineChart(
@@ -155,10 +166,20 @@ public class PlotPanel extends JPanel implements ActionListener{
         for (int plotNumber = 0; plotNumber < 5; plotNumber++){
             int dataPoint = data.getDataAt(plotNodes[plotNumber]-1);
             double point = translatePoint(dataPoint);
-            series.get(plotNumber).add(time, point);
-            if(series.get(plotNumber).getItemCount() >= 50) series.get(plotNumber).remove(0);
+            LinkedList<Double> points = dataSeries.get(plotNumber);
+            points.add(point);
+            if (points.size() > 50) points.removeFirst();
+            ListIterator<Double> listIterator = points.listIterator();
+            XYSeries chartSeries = series.get(plotNumber);
+            chartSeries.clear();
+            for (int ii=-1*points.size()/2; ii < points.size()/2-1; ii++) {
+                chartSeries.add(new XYDataItem((double) ii, listIterator.next().doubleValue()), false);
+            }
+            chartSeries.add(new XYDataItem((double) points.size()/2, listIterator.next().doubleValue()), true);
+
+            //if(series.get(plotNumber).getItemCount() >= 50) series.get(plotNumber).remove(0);
         }
-        time++;
+        //time++;
     }
 
     public void advanceTime(){
