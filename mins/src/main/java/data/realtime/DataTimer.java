@@ -106,7 +106,7 @@ public class DataTimer implements ActionListener{
         System.out.println(thisTime-time + " ms");
         time = thisTime;
 
-        if(!paused) {
+        if(!paused && dataLine != null) {
             //System.out.println(count++);
             DataLine data = new DataLine(dataLine);
             plotPanel.updatePlots(data);

@@ -157,7 +157,7 @@ public class COMReader implements DataReader {
         int [] numbers = new int[256];
         //in.read(bytes,0,1);
         //if (bytes[0] != 0) {
-      //  if(in.available() >= 512) {
+        if(in.available() >= 512) {
             int num = in.read(allBytes, 0, 512);
             //System.out.println(num);
             //out.write(allBytes, 0, 512);
@@ -165,8 +165,9 @@ public class COMReader implements DataReader {
                 int value = allBytes[jj] << 8;
                 numbers[jj/2] =  (0x0000FFFF & ((value) | (allBytes[jj+1] & 0x000000FF)));
             }
-//        }
-        return numbers;
+            return numbers;
+        }
+        return null;
     }
 
 //    public int[] readAllInts(BufferedOutputStream out) throws IOException {
