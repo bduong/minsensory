@@ -17,18 +17,22 @@
     </locale>
 
     <guiprefs width="800" height="600" resizable="no">
-        <!--=<splash>images/peas_load.gif</splash>-->
-        <!--<laf name="substance">-->
-            <!--<os family="windows" />-->
-            <!--<os family="unix" />-->
-            <!--<param name="variant" value="mist-silver" />-->
-        <!--</laf>-->
-        <!--<laf name="substance">-->
-            <!--<os family="mac" />-->
-            <!--<param name="variant" value="mist-aqua" />-->
-        <!--</laf>-->
+        =<splash>images/peas_load.gif</splash>
+        <laf name="substance">
+            <os family="windows" />
+            <os family="unix" />
+            <param name="variant" value="mist-silver" />
+        </laf>
+        <laf name="substance">
+            <os family="mac" />
+            <param name="variant" value="mist-aqua" />
+        </laf>
         <modifier key="useHeadingPanel" value="yes" />
     </guiprefs>
+
+    <resources>
+        <res id="userInputSpec.xml" src="userInputSpec.xml" />
+    </resources>
 
     <panels>
         <panel classname="TargetPanel"/>
@@ -43,18 +47,18 @@
             <description>The core application</description>
             <file src="mins-1.0-jar-with-dependencies.jar" targetdir="${INSTALL_PATH}"/>
         </pack>
-        <!--<pack name="COM" required="no">-->
-            <!--<description>The dlls needed to communicate with serial port</description>-->
-            <!--<file src="RXTXcomm.jar" targetdir="${JAVA_HOME}\lib\ext"/>-->
-            <!--<file src="rxtxParallel.dll" targetdir="${JAVA_HOME}\bin"/>-->
-            <!--<file src="rxtxSerial.dll" targetdir="${JAVA_HOME}\bin"/>-->
-        <!--</pack>-->
-        <pack name="COM-test" required="no">
+        <pack name="Java USB Communications" required="no">
             <description>The dlls needed to communicate with serial port</description>
-            <file src="RXTXcomm.jar" targetdir="/tmp"/>
-            <file src="rxtxParallel.dll" targetdir="/tmp"/>
-            <file src="rxtxSerial.dll" targetdir="/tmp"/>
+            <file src="RXTXcomm.jar" targetdir="${jre.path}\lib\ext"/>
+            <file src="rxtxParallel.dll" targetdir="${jre.path}\bin"/>
+            <file src="rxtxSerial.dll" targetdir="${jre.path}\bin"/>
         </pack>
+        <!--<pack name="COM-test" required="no">-->
+            <!--<description>The dlls needed to communicate with serial port</description>-->
+            <!--<file src="RXTXcomm.jar" targetdir="/tmp"/>-->
+            <!--<file src="rxtxParallel.dll" targetdir="/tmp"/>-->
+            <!--<file src="rxtxSerial.dll" targetdir="/tmp"/>-->
+        <!--</pack>-->
     </packs>
 
     <!--<native type="izpack" name="ShellLink.dll"/>-->

@@ -635,6 +635,8 @@ public class UI {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 dataTimer.stopTimer();
+                comReader.closeStreams();
+                comReader = null;
                 setEnabledForCOMObjects(true);
                 setEnabledForPlaybackObjects(true);
                 startDataRead.setEnabled(false);
@@ -644,8 +646,6 @@ public class UI {
                 chooseSaveFile.setEnabled(true);
                 readingStatus.setText("Reading Status: Disconnected");
                 readingStatus.setBackground(Color.RED);
-
-
             }
         });
 

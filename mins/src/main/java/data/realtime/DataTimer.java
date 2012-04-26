@@ -22,6 +22,7 @@ public class DataTimer implements ActionListener{
 
     private byte [] bytes;
     private BufferedOutputStream outputStream;
+    private long time = 0;
 
     public DataTimer( COMReader comReader, File saveFile) throws FileNotFoundException {
         delay = 1000/30;
@@ -59,6 +60,7 @@ public class DataTimer implements ActionListener{
 
     private void setupTimer() {
         timer = new Timer(delay, this);
+        time = System.currentTimeMillis();
     }
 
     public void startTimer() throws IOException, InterruptedException {
@@ -86,19 +88,26 @@ public class DataTimer implements ActionListener{
 //            for (int ii = 0; ii < 256; ii++) {
 //                try {
 //                    dataLine[ii] = reader.readNextInt();
-//                    createWritableBytes(dataLine[ii]);
-//                    outputStream.write(bytes);
+//                    //System.out.print(dataLine[ii] + " ");
+//                    //createWritableBytes(dataLine[ii]);
+//                    //outputStream.write(bytes);
 //                } catch (IOException e1) {
 //                    System.out.println("IO Exception");
 //                    timer.stop();
 //                }
 //            }
-        try{
-            dataLine = reader.readAllInts(outputStream);
-        } catch (IOException e1){}
 
-        if(!paused && dataLine != null) {
-            System.out.println(count++);
+        try{
+
+            dataLine = reader.readAllInts(outputStream);
+        } catch (IOException e1){ }
+
+        long thisTime = System.currentTimeMillis();
+        System.out.println(thisTime-time + " ms");
+        time = thisTime;
+
+        if(!paused) {
+            //System.out.println(count++);
             DataLine data = new DataLine(dataLine);
             plotPanel.updatePlots(data);
             image.updateImage(data);
