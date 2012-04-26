@@ -122,6 +122,7 @@ public class ValidationTestPanel extends JPanel {
         disconnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                comReader.closeStreams();
                 disconnect.setEnabled(false);
                 test.setEnabled(true);
                 timer.stop();

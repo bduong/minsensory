@@ -5,14 +5,20 @@ import data.DataLine;
 
 import java.io.IOException;
 
+/**
+ * Used to fill a <code>StaticDataBank</code> with data from a given file.
+ */
 public class DataPopulator {
 
     private DataBank bank;
     private FileReader reader;
     private int lineSize = 256;
-    
-    private final int NUMBER_OF_POINTS = 10000;
-    
+
+    /**
+     *
+     * @param dataBank the databank to fill
+     * @param fileReader the file reader used to fill the data bank
+     */
     public DataPopulator(DataBank dataBank, FileReader fileReader) {
         bank = dataBank;
         reader = fileReader;
@@ -20,7 +26,13 @@ public class DataPopulator {
 
     //TODO Change 10000 hard count to length of file
 
+    /**
+     * Populates the data bank with the data from file.
+     *
+     * @throws IOException If the file cannot be read.
+     */
     public void execute() throws IOException {
+        bank.clear();
         outer:
         while (true) {
             int array[] = new int[lineSize];
@@ -38,15 +50,4 @@ public class DataPopulator {
             bank.addPoint(new DataLine(array));
         }
     }
-
-    private String numToString(int num){
-
-        int value = num & 0x000000FF;
-        int upper = num & 0x0000FF00;
-        upper = upper >> 8;
-
-        return "" +  upper + "-" +  value;
-    }
-
-
 }

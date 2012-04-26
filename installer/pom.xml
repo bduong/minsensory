@@ -12,82 +12,43 @@
     <artifactId>installer</artifactId>
     <name>MINSensory Installer</name>
 
-    <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>minsensory</groupId>-->
-            <!--<artifactId>mins</artifactId>-->
-        <!--</dependency>-->
-      <!--<dependency>-->
-          <!--<groupId>org.codehaus.izpack</groupId>-->
-          <!--<artifactId>izpack-standalone-compiler</artifactId>-->
-      <!--</dependency>-->
-      </dependencies>
-
-
-
-    <build>
-
-        <plugins>
-
-            <!-- this makes maven to compile and package your related izpack sources into a predictable name and location
-                     ie your target directory's ${project.artifactId}.jar, to that you can configure your izpack descriptor
-                     to merge it to finally installer via <jar> tag
-            -->
-                <!-- use the helps from other Maven plugin to produce a staging area prior to package phase, example target/staging -->
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>create-staging-area</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <copy todir="${izpack.staging}">
-                                    <fileset dir="${basedir}/src/izpack"/>
-                                </copy>
-                                <copy todir="${izpack.staging}" file="${project.parent.basedir}/mins/target/mins-1.0-jar-with-dependencies.jar"/>
-                            </tasks>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.izpack</groupId>
-                <artifactId>izpack-maven-plugin</artifactId>
-                <version>${izpack.plugin.version}</version>
-
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals><goal>izpack</goal></goals>
-                        <configuration>
-                            <!-- base for relative paths in izpack descriptor -->
-                            <baseDir>${izpack.staging}</baseDir>
-                            <installFile>${basedir}/src/izpack/install.xml</installFile>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                </dependencies>
-            </plugin>
-        </plugins>
-
-    </build>
-
     <profiles>
         <profile>
             <id>windows-install</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
                 <os>
                     <family>Windows</family>
                 </os>
             </activation>
             <build>
                 <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>create-staging-area</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <copy todir="${izpack.staging}">
+                                            <fileset dir="${basedir}/src/izpack"/>
+                                        </copy>
+                                        <copy todir="${izpack.staging}">
+                                            <fileset dir="${basedir}/src/izpack/windows"/>
+                                        </copy>
+                                        <copy todir="${izpack.staging}" file="${project.parent.basedir}/mins/target/MINSensory Application-1.0-exe"/>
+                                        <copy todir="${izpack.staging}" file="${project.parent.basedir}/mins/target/MINSensory-javadoc.jar"/>
+
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+
                     <plugin>
                         <groupId>com.akathist.maven.plugins.launch4j </groupId>
                         <artifactId>launch4j-maven-plugin</artifactId>
@@ -117,8 +78,73 @@
 
         </profile>
 
+        <profile>
+            <id>osx-install</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>create-staging-area</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <copy todir="${izpack.staging}">
+                                            <fileset dir="${basedir}/src/izpack"/>
+                                        </copy>
+                                        <copy todir="${izpack.staging}">
+                                            <fileset dir="${basedir}/src/izpack/osx"/>
+                                        </copy>
+                                        <!--<copy todir="${izpack.staging}">-->
+                                            <!--<fileset dir="${project.parent.basedir}/mins/target/mins-1.0.app"/>-->
+                                        <!--</copy>-->
+                                        <!--<copy todir="${izpack.staging}" file="${project.parent.basedir}/mins/target/mins-1.0-javadoc.jar"/>-->
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
+
 
     </profiles>
+
+    <build>
+        <finalName>MINSensory</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.izpack</groupId>
+                <artifactId>izpack-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>izpack</goal></goals>
+                        <configuration>
+                            <!-- base for relative paths in izpack descriptor -->
+                            <baseDir>${izpack.staging}</baseDir>
+                            <installFile>${izpack.staging}/install.xml</installFile>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                </dependencies>
+            </plugin>
+        </plugins>
+
+    </build>
+
 
 
 </project>

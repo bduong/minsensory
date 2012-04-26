@@ -1,0 +1,52 @@
+<installation version="1.0">
+
+    <info>
+        <appname>MINSensory</appname>
+        <appversion>1.0</appversion>
+        <javaversion>1.6</javaversion>
+        <authors>
+            <author name="Ben Duong" email="bduong@bu.edu"/>
+
+        </authors>
+        <uninstaller write="yes" name="uninstall-mins.jar" path="${INSTALL_PATH}/uninstaller"/>
+
+    </info>
+
+    <locale>
+        <langpack iso3="eng"/>
+    </locale>
+
+    <guiprefs width="800" height="600" resizable="no">
+        <!--<splash>images/peas_load.gif</splash>-->
+        <laf name="substance">
+            <os family="mac" />
+            <param name="variant" value="mist-aqua" />
+        </laf>
+        <modifier key="useHeadingPanel" value="yes" />
+    </guiprefs>
+
+    <panels>
+        <panel classname="TargetPanel"/>
+        <panel classname="PacksPanel"/>
+        <panel classname="InstallPanel"/>
+        <panel classname="FinishPanel"/>
+    </panels>
+
+    <packs>
+        <!--<pack name="JavaDoc - Mac OSX" required="no">-->
+            <!--<description>The core application</description>-->
+            <!--<file src="mins-1.0-javadoc.jar" targetdir="${INSTALL_PATH}"/>-->
+        <!--</pack>-->
+        <pack name="Java USB Communications - Mac OSX" required="no">
+            <description>The libraries needed to communicate with serial port</description>
+            <file src="RXTXcomm.jar" targetdir="/Library/Java/Extensions"/>
+            <file src="librxtxSerial.jnilib" targetdir="$/Library/Java/Extensions"/>
+        </pack>
+        <!--<pack name="COM-test" required="no">-->
+            <!--<description>The dlls needed to communicate with serial port</description>-->
+            <!--<file src="RXTXcomm.jar" targetdir="/tmp"/>-->
+            <!--<file src="rxtxParallel.dll" targetdir="/tmp"/>-->
+            <!--<file src="rxtxSerial.dll" targetdir="/tmp"/>-->
+        <!--</pack>-->
+    </packs>
+</installation>

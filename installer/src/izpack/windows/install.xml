@@ -17,15 +17,11 @@
     </locale>
 
     <guiprefs width="800" height="600" resizable="no">
-        =<splash>images/peas_load.gif</splash>
+        <!--<splash>images/peas_load.gif</splash>-->
         <laf name="substance">
             <os family="windows" />
             <os family="unix" />
             <param name="variant" value="mist-silver" />
-        </laf>
-        <laf name="substance">
-            <os family="mac" />
-            <param name="variant" value="mist-aqua" />
         </laf>
         <modifier key="useHeadingPanel" value="yes" />
     </guiprefs>
@@ -43,28 +39,16 @@
     </panels>
 
     <packs>
-        <pack name="Core" required="yes">
+        <pack name="Core - Windows" required="yes">
             <description>The core application</description>
-            <file src="mins-1.0-jar-with-dependencies.jar" targetdir="${INSTALL_PATH}"/>
+            <file src="MINSensory Application-1.0.exe" targetdir="${INSTALL_PATH}"/>
+            <file src="mins-1.0-javadoc.jar" targetdir="${INSTALL_PATH}"/>
         </pack>
-        <pack name="Java USB Communications" required="no">
+        <pack name="Java USB Communications - Windows" required="no">
             <description>The dlls needed to communicate with serial port</description>
             <file src="RXTXcomm.jar" targetdir="${jre.path}\lib\ext"/>
             <file src="rxtxParallel.dll" targetdir="${jre.path}\bin"/>
             <file src="rxtxSerial.dll" targetdir="${jre.path}\bin"/>
         </pack>
-        <!--<pack name="COM-test" required="no">-->
-            <!--<description>The dlls needed to communicate with serial port</description>-->
-            <!--<file src="RXTXcomm.jar" targetdir="/tmp"/>-->
-            <!--<file src="rxtxParallel.dll" targetdir="/tmp"/>-->
-            <!--<file src="rxtxSerial.dll" targetdir="/tmp"/>-->
-        <!--</pack>-->
     </packs>
-
-    <!--<native type="izpack" name="ShellLink.dll"/>-->
-    <!--<native type="izpack" name="ShellLink_x64.dll"/>-->
-    <!--<native type="3rdparty" name="COIOSHelper.dll" stage="both">-->
-        <!--<os family="windows"/>-->
-    <!--</native>-->
-
 </installation>

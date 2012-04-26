@@ -1,7 +1,10 @@
-package gui;
+package data.playback;
 
 import data.DataBank;
 import data.DataLine;
+import gui.ColorMappedImage;
+import gui.PlotPanel;
+import gui.UI;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -18,20 +21,8 @@ public class UpdateTimer implements ActionListener{
     private DataBank dataBank;
     private Set<Integer> spikeNodes;
     private Map<Integer, Integer> spikeTime;
-
     private UI ui;
-
     private JSlider slider;
-
-    public UpdateTimer() {
-        delay = 1000/30;
-        setupTimer();
-    }
-
-    public UpdateTimer(int delay){
-        this.delay = delay;
-        setupTimer();
-    }
 
     public UpdateTimer(int delay, ColorMappedImage image, PlotPanel plotPanel, DataBank dataBank) {
         slider = null;
@@ -74,10 +65,6 @@ public class UpdateTimer implements ActionListener{
         for (int ii = 0; ii < 256; ii++){
             spikeTime.put(ii, 0);
         }
-    }
-
-    public void setDataBank(DataBank dataBank) {
-        this.dataBank = dataBank;
     }
 
     @Override

@@ -5,8 +5,8 @@ import data.DataLine;
 import data.playback.DataPopulator;
 import data.playback.FileReader;
 import data.playback.StaticDataBank;
+import data.playback.UpdateTimer;
 import data.realtime.COMReader;
-import data.realtime.DataCollector;
 import data.realtime.DataTimer;
 import gnu.io.NoSuchPortException;
 import gnu.io.SerialPort;
@@ -49,7 +49,6 @@ public class UI {
     }
 
     private DataBank dataBank;
-    private DataCollector dataCollector;
 
     private JFrame application;
 
@@ -221,8 +220,6 @@ public class UI {
 
 
         fileChooser = new JFileChooser("Choose Data File") {
-
-            Object[] options = {"Raw Data", "Signal Processed Data"};
             @Override
             public void approveSelection(){
                 File f = getSelectedFile();

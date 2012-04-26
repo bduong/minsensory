@@ -36,7 +36,9 @@
         </dependency>
     </dependencies>
 
+
     <build>
+        <finalName>MINSensory</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -81,24 +83,65 @@
     <!-- Profiles For Application Bundling On Windows and Mac OS X-->
     <profiles>
         <profile>
-            <id>osx-deploy</id>
+            <id>installOSX</id>
             <activation>
+                <!--<file>-->
+                    <!--<exists>-->
+                        <!--${basedir}/target/installer-1.0-installer.jar-->
+                    <!--</exists>-->
+                <!--</file>-->
                 <os>
-                    <family>mac</family>
+                <family>mac</family>
                 </os>
             </activation>
             <build>
                 <plugins>
                     <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>create-staging-area</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <copy toFile="${basedir}/target/.DS_Store" file="${basedir}/src/main/resources/.Custom_DS_Store"/>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>osxappbundle-maven-plugin</artifactId>
-                        <version>1.0-alpha-1</version>
+                        <version>1.0-alpha-2</version>
                         <configuration>
                             <bundleName>MINSensory</bundleName>
                             <mainClass>frontend.MINSensory</mainClass>
                             <iconFile>
                                 ${basedir}/src/main/resources/MINSIcon.icns
                             </iconFile>
+                            <diskImageFile>
+                                ${project.build.directory}/${project.build.finalName}.dmg
+                            </diskImageFile>
+
+                            <additionalResources>
+                                <fileSet>
+                                    <directory>${project.parent.basedir}/installer/target</directory>
+                                    <includes>
+                                        <include>MINSensory-installer.jar</include>
+                                    </includes>
+                                </fileSet>
+                                <fileSet>
+                                    <directory>${basedir}/target</directory>
+                                    <includes>
+                                        <include>.DS_Store</include>
+                                        <include>MINSensory-javadoc.jar</include>
+                                    </includes>
+                                </fileSet>
+                            </additionalResources>
                         </configuration>
                         <executions>
                             <execution>
@@ -112,6 +155,53 @@
                 </plugins>
             </build>
         </profile>
+
+        <!--<profile>-->
+            <!--<id>osx-deploy</id>-->
+            <!--<activation>-->
+                <!--<activeByDefault>false</activeByDefault>-->
+                <!--<property>-->
+                    <!--<name>osx.install</name>-->
+                    <!--<value>true</value>-->
+                <!--</property>-->
+                <!--&lt;!&ndash;<os>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<family>mac</family>&ndash;&gt;-->
+                <!--&lt;!&ndash;</os>&ndash;&gt;-->
+                <!--&lt;!&ndash;<file>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<missing>&ndash;&gt;-->
+                        <!--&lt;!&ndash;${basedir}/target/installer-1.0-installer.jar&ndash;&gt;-->
+                    <!--&lt;!&ndash;</missing>&ndash;&gt;-->
+                <!--&lt;!&ndash;</file>&ndash;&gt;-->
+            <!--</activation>-->
+            <!--<build>-->
+                <!--<plugins>-->
+                    <!--<plugin>-->
+                        <!--<groupId>org.codehaus.mojo</groupId>-->
+                        <!--<artifactId>osxappbundle-maven-plugin</artifactId>-->
+                        <!--<version>1.0-alpha-2</version>-->
+                        <!--<configuration>-->
+                            <!--<bundleName>MINSensory</bundleName>-->
+                            <!--<mainClass>frontend.MINSensory</mainClass>-->
+                            <!--<iconFile>-->
+                                <!--${basedir}/src/main/resources/MINSIcon.icns-->
+                            <!--</iconFile>-->
+                            <!--<diskImageFile>-->
+                                <!--${project.build.directory}/${project.build.finalName}.dmg-->
+                            <!--</diskImageFile>-->
+
+                        <!--</configuration>-->
+                        <!--<executions>-->
+                            <!--<execution>-->
+                                <!--<phase>package</phase>-->
+                                <!--<goals>-->
+                                    <!--<goal>bundle</goal>-->
+                                <!--</goals>-->
+                            <!--</execution>-->
+                        <!--</executions>-->
+                    <!--</plugin>-->
+                <!--</plugins>-->
+            <!--</build>-->
+        <!--</profile>-->
 
         <profile>
             <id>windows-deploy</id>

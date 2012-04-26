@@ -31,6 +31,7 @@
         <izpack.version>4.3.5</izpack.version>
         <izpack.plugin.version>5.0.0-beta10</izpack.plugin.version>
         <izpack.staging>${project.build.directory}/staging</izpack.staging>
+        <osx.install>false</osx.install>
         <!--<root>${basedir}</root>-->
     </properties>
 
@@ -212,6 +213,11 @@
                         </properties>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.codehaus.izpack</groupId>
+                    <artifactId>izpack-maven-plugin</artifactId>
+                    <version>${izpack.plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -285,6 +291,17 @@
                 <module>mins</module>
                 <module>installer</module>
             </modules>
+        </profile>
+        <profile>
+            <id>installOSX</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>installer</module>
+                <module>mins</module>
+            </modules>
+
         </profile>
     </profiles>
 

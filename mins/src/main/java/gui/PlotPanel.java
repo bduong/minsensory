@@ -33,7 +33,8 @@ public class PlotPanel extends JPanel implements ActionListener{
     private ButtonGroup buttonGroup = new ButtonGroup();
     private int [] plotNodes;
     private int node;
-    private int time;
+    private int flashCount;
+    private int flashPlot;
 
     private static Color colors[] = {Color.RED, Color.BLUE, Color.GREEN, Color.BLACK, Color.MAGENTA};
 
@@ -47,9 +48,9 @@ public class PlotPanel extends JPanel implements ActionListener{
         radioButtons = new ArrayList<JRadioButton>();
         plotNodes = new int[]{1, 2, 3, 4, 5};
         dataSeries = new ArrayList<LinkedList<Double>>(5);
-
+        flashCount = 0;
+        flashPlot = -1;
         node = 0;
-        time = 0;
         init();
     }
 
@@ -134,7 +135,9 @@ public class PlotPanel extends JPanel implements ActionListener{
     public void changePlot(int rowNode, int colNode){
         JFreeChart chart = plots.get(node);
         chart.setTitle("Node " + rowNode +"-"+ nodes[colNode]);
-        radioButtons.get(node).setSelected(false);
+//        radioButtons.get(node).setSelected(false);
+        flashPlot = node;
+        flashCount = 25;
         plotNodes[node] = (rowNode-1)*16 + colNode+1;
         if(++node > 4) {
             node = 0;
@@ -143,8 +146,10 @@ public class PlotPanel extends JPanel implements ActionListener{
     }
 
     public void changePlot(int index, int rowNode, int colNode){
-        radioButtons.get(node).setSelected(false);
+//        radioButtons.get(node).setSelected(false);
         node = index;
+        flashPlot = node;
+        flashCount = 25;
         JFreeChart chart = plots.get(node);
         chart.setTitle("Node " + rowNode +"-"+ nodes[colNode]);
         plotNodes[node] = (rowNode-1)*16 + colNode+1;
@@ -163,6 +168,18 @@ public class PlotPanel extends JPanel implements ActionListener{
      * @param data the data to update with
      */
     public void updatePlots(DataLine data){
+        if (flashPlot >= 0) {
+            if (flashCount > 0 && flashCount-- % 5 == 0)
+            {
+                plots.get(flashPlot).setBackgroundPaint(Color.white);
+            } else {
+                plots.get(flashPlot).setBackgroundPaint(Color.green);
+            }
+            if (flashCount == 0){
+                plots.get(flashPlot).setBackgroundPaint(Color.white);
+                flashPlot = -1;
+            }
+        }
         for (int plotNumber = 0; plotNumber < 5; plotNumber++){
             int dataPoint = data.getDataAt(plotNodes[plotNumber]-1);
             double point = translatePoint(dataPoint);
@@ -177,31 +194,25 @@ public class PlotPanel extends JPanel implements ActionListener{
             }
             chartSeries.add(new XYDataItem((double) points.size()/2, listIterator.next().doubleValue()), true);
 
-            //if(series.get(plotNumber).getItemCount() >= 50) series.get(plotNumber).remove(0);
         }
-        //time++;
     }
 
     public void advanceTime(){
-        time++;
     }
 
     public void resetPlotsTo(List<DataLine> data, int newTime) {
-        int begin = newTime - data.size();
-        this.time = newTime;
-
         for (int plotNumber = 0; plotNumber < 5; plotNumber++){
             series.get(plotNumber).clear();
+            dataSeries.get(plotNumber).clear();
         }
-        int resetTime = begin;
         for (int timeNumber = 0; timeNumber < data.size(); timeNumber++) {
             DataLine line = data.get(timeNumber);
             for (int plotNumber = 0; plotNumber < 5; plotNumber++){
                 int dataPoint = line.getDataAt(plotNodes[plotNumber]-1);
                 double point = translatePoint(dataPoint);
-                series.get(plotNumber).add(resetTime, point);
+                dataSeries.get(plotNumber).add(point);
+                series.get(plotNumber).add(timeNumber-(data.size()/2), point);
             }
-            resetTime++;
         }
     }
 

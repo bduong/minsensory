@@ -14,9 +14,6 @@ public class DataTimer implements ActionListener{
 
     private int delay;
     private Timer timer;
-
-
-
     private COMReader reader;
     private boolean paused;
 

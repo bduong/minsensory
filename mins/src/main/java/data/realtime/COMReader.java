@@ -12,7 +12,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 
-public class COMReader implements DataReader {
+public class COMReader {
 
     BufferedInputStream in = null;
     BufferedOutputStream out = null;
@@ -20,6 +20,8 @@ public class COMReader implements DataReader {
     private byte [] bytes;
     private byte [] allBytes;
     private SerialPort serialPort;
+    int count =0;
+
     public COMReader() {
         bytes = new byte[2];
         allBytes = new byte[512];
@@ -37,7 +39,7 @@ public class COMReader implements DataReader {
         }
         return ports;
     }
-    int count =0;
+
     public void connectTo(String portName) throws Exception
     {
         CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
@@ -148,7 +150,6 @@ public class COMReader implements DataReader {
         return out;
     }
 
-    @Override
     public int readNextInt() throws IOException {
         int num = in.read(bytes, 0, 2);
         int value = bytes[0] << 8;
