@@ -636,7 +636,6 @@ public class UI {
             public void actionPerformed(ActionEvent actionEvent) {
                 dataTimer.stopTimer();
                 comReader.closeStreams();
-                comReader = null;
                 setEnabledForCOMObjects(true);
                 setEnabledForPlaybackObjects(true);
                 startDataRead.setEnabled(false);

@@ -19,6 +19,7 @@ public class COMReader implements DataReader {
     DataInputStream dataIn = null;
     private byte [] bytes;
     private byte [] allBytes;
+    private SerialPort serialPort;
     public COMReader() {
         bytes = new byte[2];
         allBytes = new byte[512];
@@ -50,7 +51,7 @@ public class COMReader implements DataReader {
 
             if ( commPort instanceof SerialPort)
             {
-                SerialPort serialPort = (SerialPort) commPort;
+                serialPort = (SerialPort) commPort;
                 serialPort.setSerialPortParams(9600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
                 //serialPort.notifyOnOutputEmpty(true);
                 //serialPort.notifyOnOverrunError(true);
@@ -96,7 +97,7 @@ public class COMReader implements DataReader {
 
             if ( commPort instanceof SerialPort)
             {
-                SerialPort serialPort = (SerialPort) commPort;
+                serialPort = (SerialPort) commPort;
                 serialPort.setSerialPortParams(baud,dataBits,stopBits,parity);
                 //serialPort.notifyOnOutputEmpty(true);
                 serialPort.notifyOnOverrunError(true);
@@ -115,6 +116,7 @@ public class COMReader implements DataReader {
                         }
                     }
                 });
+
 
                 serialPort.setInputBufferSize(1024);
                 if(in != null) in.close();
@@ -160,7 +162,7 @@ public class COMReader implements DataReader {
         if(in.available() >= 512) {
             int num = in.read(allBytes, 0, 512);
             //System.out.println(num);
-            //out.write(allBytes, 0, 512);
+            out.write(allBytes, 0, 512);
             for (int jj = 0; jj< allBytes.length; jj+=2){
                 int value = allBytes[jj] << 8;
                 numbers[jj/2] =  (0x0000FFFF & ((value) | (allBytes[jj+1] & 0x000000FF)));
@@ -203,5 +205,6 @@ public class COMReader implements DataReader {
         } catch (Exception e) {
             //e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+        serialPort.close();
     }
 }

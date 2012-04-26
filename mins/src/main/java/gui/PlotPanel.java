@@ -124,7 +124,7 @@ public class PlotPanel extends JPanel implements ActionListener{
         JFreeChart chart = plots.get(node);
         chart.setTitle("Node " + rowNode +"-"+ nodes[colNode]);
         radioButtons.get(node).setSelected(false);
-        plotNodes[node] = rowNode*16 + colNode;
+        plotNodes[node] = (rowNode-1)*16 + colNode+1;
         if(++node > 4) {
             node = 0;
         }
@@ -136,7 +136,7 @@ public class PlotPanel extends JPanel implements ActionListener{
         node = index;
         JFreeChart chart = plots.get(node);
         chart.setTitle("Node " + rowNode +"-"+ nodes[colNode]);
-        plotNodes[node] = rowNode + colNode*16;
+        plotNodes[node] = (rowNode-1)*16 + colNode+1;
         radioButtons.get(node).setSelected(true);
     }
 

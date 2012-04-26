@@ -14,6 +14,9 @@ public class DataTimer implements ActionListener{
 
     private int delay;
     private Timer timer;
+
+
+
     private COMReader reader;
     private boolean paused;
 
@@ -54,6 +57,10 @@ public class DataTimer implements ActionListener{
         image = colorMappedImage;
     }
 
+    public void setReader(COMReader reader) {
+        this.reader = reader;
+    }
+
     public void setSaveFileOutputStream(BufferedOutputStream outputStream) {
         this.outputStream = outputStream;
     }
@@ -73,6 +80,7 @@ public class DataTimer implements ActionListener{
     }
 
     public void resumeUI() {
+        if (!timer.isRunning()) timer.start();
         paused = false;
     }
 
@@ -99,7 +107,7 @@ public class DataTimer implements ActionListener{
 
         try{
 
-            dataLine = reader.readAllInts(outputStream);
+          dataLine = reader.readAllInts(outputStream);
         } catch (IOException e1){ }
 
         long thisTime = System.currentTimeMillis();
@@ -108,9 +116,9 @@ public class DataTimer implements ActionListener{
 
         if(!paused && dataLine != null) {
             //System.out.println(count++);
-            DataLine data = new DataLine(dataLine);
-            plotPanel.updatePlots(data);
-            image.updateImage(data);
+//            DataLine data = new DataLine(dataLine);
+            plotPanel.updatePlots(new DataLine(dataLine));
+            image.updateImage(new DataLine(dataLine));
         } else {
             plotPanel.advanceTime();
         }
