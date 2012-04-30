@@ -68,7 +68,7 @@
                                     <jre>
                                         <minVersion>1.6.0</minVersion>
                                     </jre>
-                                    <!--<icon>${basedir}/src/main/resources/WindowsIcon.ico</icon>-->
+                                    <icon>${project.parent.basedir}/mins/src/main/resources/WindowsIcon.ico</icon>
                                 </configuration>
                             </execution>
                         </executions>

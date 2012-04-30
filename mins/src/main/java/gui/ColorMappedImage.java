@@ -181,7 +181,7 @@ public class ColorMappedImage extends JPanel {
                 int number = points[ii];
                 int rgb = number & 0x0000FC00;
                 rgb = rgb >> 10;
-                int value = (number & 0x000003F0);
+                int value = (number & 0x000003C0);
                 value = value>>6;
                 Color color = getBand(rgb, value);
 
@@ -205,9 +205,9 @@ public class ColorMappedImage extends JPanel {
         }
 
         if( num == 0) {
-            r = 1;
-            g = 1;
-            b = 1;
+            r = Color.WHITE.getRed()-value;
+            g = Color.white.getGreen()-value;
+            b = Color.white.getBlue()-value;
         } else {
 
             if( (num & 0x1) != 0) { //Alpha exists
@@ -228,10 +228,11 @@ public class ColorMappedImage extends JPanel {
                 g += 2;
             }
 
+            r *= value;
+            g *= value;
+            b *= value;
         }
-        r *= value;
-        g *= value;
-        b *= value;
+
 
         r = r<<2;
         b = b<<2;
@@ -241,7 +242,6 @@ public class ColorMappedImage extends JPanel {
         if (b > 255) b = 255;
         if (g > 255) g = 255;
 
-        //System.out.println("R: " + r + " G: " + g + " B: " + b);
         return new Color(r, g, b);
 
     }

@@ -85,11 +85,6 @@
         <profile>
             <id>installOSX</id>
             <activation>
-                <!--<file>-->
-                    <!--<exists>-->
-                        <!--${basedir}/target/installer-1.0-installer.jar-->
-                    <!--</exists>-->
-                <!--</file>-->
                 <os>
                 <family>mac</family>
                 </os>
@@ -156,52 +151,7 @@
             </build>
         </profile>
 
-        <!--<profile>-->
-            <!--<id>osx-deploy</id>-->
-            <!--<activation>-->
-                <!--<activeByDefault>false</activeByDefault>-->
-                <!--<property>-->
-                    <!--<name>osx.install</name>-->
-                    <!--<value>true</value>-->
-                <!--</property>-->
-                <!--&lt;!&ndash;<os>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<family>mac</family>&ndash;&gt;-->
-                <!--&lt;!&ndash;</os>&ndash;&gt;-->
-                <!--&lt;!&ndash;<file>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<missing>&ndash;&gt;-->
-                        <!--&lt;!&ndash;${basedir}/target/installer-1.0-installer.jar&ndash;&gt;-->
-                    <!--&lt;!&ndash;</missing>&ndash;&gt;-->
-                <!--&lt;!&ndash;</file>&ndash;&gt;-->
-            <!--</activation>-->
-            <!--<build>-->
-                <!--<plugins>-->
-                    <!--<plugin>-->
-                        <!--<groupId>org.codehaus.mojo</groupId>-->
-                        <!--<artifactId>osxappbundle-maven-plugin</artifactId>-->
-                        <!--<version>1.0-alpha-2</version>-->
-                        <!--<configuration>-->
-                            <!--<bundleName>MINSensory</bundleName>-->
-                            <!--<mainClass>frontend.MINSensory</mainClass>-->
-                            <!--<iconFile>-->
-                                <!--${basedir}/src/main/resources/MINSIcon.icns-->
-                            <!--</iconFile>-->
-                            <!--<diskImageFile>-->
-                                <!--${project.build.directory}/${project.build.finalName}.dmg-->
-                            <!--</diskImageFile>-->
 
-                        <!--</configuration>-->
-                        <!--<executions>-->
-                            <!--<execution>-->
-                                <!--<phase>package</phase>-->
-                                <!--<goals>-->
-                                    <!--<goal>bundle</goal>-->
-                                <!--</goals>-->
-                            <!--</execution>-->
-                        <!--</executions>-->
-                    <!--</plugin>-->
-                <!--</plugins>-->
-            <!--</build>-->
-        <!--</profile>-->
 
         <profile>
             <id>windows-deploy</id>

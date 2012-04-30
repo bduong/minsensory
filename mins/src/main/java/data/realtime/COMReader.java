@@ -19,12 +19,14 @@ public class COMReader {
     DataInputStream dataIn = null;
     private byte [] bytes;
     private byte [] allBytes;
+    private byte [] startByte;
     private SerialPort serialPort;
     int count =0;
 
     public COMReader() {
         bytes = new byte[2];
         allBytes = new byte[512];
+        startByte = new byte[1];
     }
 
     public static List<String> listPorts() throws NoSuchPortException {
@@ -55,10 +57,7 @@ public class COMReader {
             {
                 serialPort = (SerialPort) commPort;
                 serialPort.setSerialPortParams(9600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
-                //serialPort.notifyOnOutputEmpty(true);
-                //serialPort.notifyOnOverrunError(true);
-                //serialPort.notifyOnOutputEmpty(true);
-                //serialPort.notifyOnDataAvailable(true);
+
                 serialPort.addEventListener(new SerialPortEventListener() {
                     @Override
                     public void serialEvent(SerialPortEvent serialPortEvent) {
@@ -71,10 +70,7 @@ public class COMReader {
                 //in = new BufferedInputStream(serialPort.getInputStream(), 1024);
                 dataIn = new DataInputStream(serialPort.getInputStream());
                 out = new BufferedOutputStream(serialPort.getOutputStream(), 1024);
-                //(new Thread(new SerialWriter(out))).start();
 
-//                serialPort.addEventListener(new SerialReader(in));
-//                serialPort.notifyOnDataAvailable(true);
 
 
             }
@@ -101,10 +97,7 @@ public class COMReader {
             {
                 serialPort = (SerialPort) commPort;
                 serialPort.setSerialPortParams(baud,dataBits,stopBits,parity);
-                //serialPort.notifyOnOutputEmpty(true);
                 serialPort.notifyOnOverrunError(true);
-                //serialPort.notifyOnOutputEmpty(true);
-                //serialPort.notifyOnDataAvailable(true);
                 serialPort.addEventListener(new SerialPortEventListener() {
                     @Override
                     public void serialEvent(SerialPortEvent serialPortEvent) {
@@ -160,17 +153,18 @@ public class COMReader {
         int [] numbers = new int[256];
         //in.read(bytes,0,1);
         //if (bytes[0] != 0) {
-        if(in.available() >= 512) {
-            int num = in.read(allBytes, 0, 512);
-            //System.out.println(num);
-            out.write(allBytes, 0, 512);
-            for (int jj = 0; jj< allBytes.length; jj+=2){
-                int value = allBytes[jj] << 8;
-                numbers[jj/2] =  (0x0000FFFF & ((value) | (allBytes[jj+1] & 0x000000FF)));
-            }
-            return numbers;
+//        in.read(startByte, 0, 1);
+//        while(startByte[0] != 0) {in.read(startByte, 0, 1) };
+        int num = in.read(allBytes, 0, 512);
+
+        out.write(allBytes, 0, 512);
+        for (int jj = 0; jj< allBytes.length; jj+=2){
+            int value = allBytes[jj] << 8;
+            numbers[jj/2] =  (0x0000FFFF & ((value) | (allBytes[jj+1] & 0x000000FF)));
         }
-        return null;
+        return numbers;
+
+        //return null;
     }
 
 //    public int[] readAllInts(BufferedOutputStream out) throws IOException {

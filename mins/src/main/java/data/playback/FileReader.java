@@ -6,35 +6,32 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
- * Reads data from a file.
+ * The <code>FileReader</code> object reads short values from a given file.
  */
 public class FileReader {
 
     private BufferedInputStream reader;
-    private String fileName;
     private byte [] bytes;
 
     /**
-     * Creates a new <code>FileReader</code>
+     * Creates a new <code>FileReader</code> with a file with the given file name.
      *
      * @param fileName the name of the file
      * @throws IOException If we cannot open the file.
      */
     public FileReader(String fileName) throws IOException {
-        this.fileName = fileName;
         reader = new BufferedInputStream(new FileInputStream(fileName), 1024*1024);
         bytes = new byte[2];
     }
 
     /**
-     * Creates a new <code>FileReader</code>
+     * Creates a new <code>FileReader</code> with the given file.
      *
      * @param file the file to open
      * @throws IOException If we cannot open the file.
      */
     public FileReader(File file) throws IOException {
         reader = new BufferedInputStream(new FileInputStream(file), 1024*1024);
-        fileName = file.getName();
         bytes = new byte[2];
     }
 
