@@ -2,6 +2,13 @@ package gui;
 
 import javax.swing.*;
 
+/**
+ * The <code>SelectionPanelBuilder</code> is a builder utility class that allows for
+ * quick assembly of the SelectionPanel.
+ *
+ * It is used to build the selection panel in the user interface while keeping the setter calls
+ * organized.
+ */
 public class SelectionPanelBuilder {
     
     private SelectionPanel selectionPanel;
@@ -25,6 +32,7 @@ public class SelectionPanelBuilder {
         selectionPanel.setNext(next);
         return this;
     }
+
     public SelectionPanelBuilder withBack(JButton back){
         selectionPanel.setBack(back);
         return this;
@@ -70,11 +78,9 @@ public class SelectionPanelBuilder {
         return this;
     }
 
-
     /**
      * COM Options
      */
-
     public SelectionPanelBuilder withCOMStartButton(JButton comStartButton) {
         selectionPanel.setStartCOM(comStartButton);
         return this;

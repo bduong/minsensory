@@ -7,6 +7,13 @@ import com.apple.eawt.QuitHandler;
 import com.apple.eawt.QuitResponse;
 import gui.AboutDialog;
 
+/**
+ * The <code>MacOSEventHandler</code> is use to handle the changes to the menubar
+ * when running the application on a OSX platform.
+ *
+ * The handler provides overrides to Apple functions for when the user clicks
+ * the about application or quit application options.
+ */
 public class MacOSEventHandler extends Application{
 
     public MacOSEventHandler() {

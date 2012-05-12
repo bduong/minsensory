@@ -7,6 +7,8 @@ import java.io.IOException;
 
 /**
  * The <code>FileReader</code> object reads short values from a given file.
+ * It takes a binary file and reads each 2-byte short in one at a time through
+ * an input stream.
  */
 public class FileReader {
 

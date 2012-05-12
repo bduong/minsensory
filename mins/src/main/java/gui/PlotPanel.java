@@ -22,7 +22,14 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 /**
- * Panel to display five graphs.
+ * The <code>PlotPanel</code> object is used to display the 5 voltage-time plots
+ * in the user interface.
+ *
+ * It uses JFreeChart to render the charts.
+ *
+ * It keeps track of each series independently and periodically data is passed to the <code>PlotPanel</code>
+ * to do an update. During an update, we take the data from the nodes that we want to display and add
+ * them to the series. Then we rebuild the plots and display them.
  */
 public class PlotPanel extends JPanel implements ActionListener{
 
@@ -61,7 +68,7 @@ public class PlotPanel extends JPanel implements ActionListener{
 
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         int colorNum = 0;
-        for (String title : new String[] {"Node 1-A", "Node 2-A", "Node 3-A", "Node 4-A", "Node 5-A"})    {
+        for (String title : new String[] {"Node 1-A", "Node 1-B", "Node 1-C", "Node 1-D", "Node 1-E"})    {
             JFreeChart chart = createSeriesAndChart(title);
             chart.getXYPlot().getRenderer().setSeriesPaint(0, colors[colorNum++]);
             plots.add(chart);
@@ -135,9 +142,10 @@ public class PlotPanel extends JPanel implements ActionListener{
     public void changePlot(int rowNode, int colNode){
         JFreeChart chart = plots.get(node);
         chart.setTitle("Node " + rowNode +"-"+ nodes[colNode]);
+        if (flashPlot > 0)
         plots.get(flashPlot).setBackgroundPaint(Color.white);
         flashPlot = node;
-        flashCount = 20;
+        flashCount = 15;
         plotNodes[node] = (rowNode-1)*16 + colNode+1;
         if(++node > 4) {
             node = 0;
@@ -147,9 +155,10 @@ public class PlotPanel extends JPanel implements ActionListener{
 
     public void changePlot(int index, int rowNode, int colNode){
         node = index;
+        if (flashPlot > 0)
         plots.get(flashPlot).setBackgroundPaint(Color.white);
         flashPlot = node;
-        flashCount = 20;
+        flashCount = 15;
         JFreeChart chart = plots.get(node);
         chart.setTitle("Node " + rowNode +"-"+ nodes[colNode]);
         plotNodes[node] = (rowNode-1)*16 + colNode+1;

@@ -6,7 +6,7 @@ import gnu.io.NoSuchPortException;
 import org.apache.log4j.Logger;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import type.TestType;
+
 
 import java.io.*;
 import java.util.LinkedList;
@@ -14,7 +14,9 @@ import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 
-@Test(groups = TestType.ALL)
+/**
+ * Test for the COMReader
+ */
 public class COMReaderTests {
 
     private Logger logger = Logger.getLogger(this.getClass());

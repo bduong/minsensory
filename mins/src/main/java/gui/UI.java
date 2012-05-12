@@ -28,18 +28,26 @@ import java.util.Hashtable;
 import java.util.List;
 
 /**
- * User Interface
+ * The <code>UI</code> object represents the user interface the user will see
+ * when running the application.
+ *
+ * It is the container for all of the UI objects and their ActionListeners. The
+ * <code>UI</code> sets the layout for all container panels like the
+ * <code>ColorGrid</code>, <code>PlotPanel</code>, and <code>SelectionPanel</code>.
+ *
+ * It also does all of the calculations for when the user clicks on the UI
+ * either in the plots or the colored image.
  */
 public class UI {
     private int windowWidth;
     private int windowHeight;
     private OperatingMode operatingMode;
 
-    public UI(OperatingMode mode) {
+    public UI() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        windowWidth = screenSize.width/2;
-        windowHeight = screenSize.height/2;
-        operatingMode = mode;
+        windowWidth = screenSize.width / 2;
+        windowHeight = screenSize.height / 2;
+        operatingMode = OperatingMode.FROM_FILE;
     }
 
     public UI(int width, int height, OperatingMode mode) {
@@ -74,18 +82,14 @@ public class UI {
 
     private JButton startRealTimeData;
     private JButton loadData;
-    /**
-     * buttons for real time data read
-     */
+    /** buttons for real time data read */
 
     private JButton startDataRead;
     private JButton stopDataRead;
     private JButton disconnect;
     private JButton connect;
 
-    /**
-     * buttons for playback
-     */
+    /** buttons for playback */
     private JButton startPlayBack;
     private JButton stopPlayBack;
 
@@ -139,9 +143,13 @@ public class UI {
     private int rightClickX;
     private int rightClickY;
 
-
     boolean firstStart = true;
 
+    /**
+     * Enabled or Disabled all of the configuration buttons for real time mode.
+     *
+     * @param enabled enable
+     */
     private void setEnabledForCOMObjects(boolean enabled) {
         startDataRead.setEnabled(enabled);
         stopDataRead.setEnabled(enabled);
@@ -155,6 +163,11 @@ public class UI {
         parityBitBox.setEnabled(enabled);
     }
 
+    /**
+     * Enabled or Disabled all of the configuration buttons for the play mode.
+     *
+     * @param enabled
+     */
     private void setEnabledForPlaybackObjects(boolean enabled) {
         seekField.setEnabled(enabled);
         seekGoTo.setEnabled(enabled);
@@ -178,15 +191,14 @@ public class UI {
         about.setName("about");
     }
 
-    /**
-     * Initializes the UI window
-     */
+    /** Initializes the UI window */
     public void init() {
         changeLookAndFeel();
         started = false;
 
         application = new JFrame("System For Sensing Neural Response");
-        ImageIcon icon = new ImageIcon(this.getClass().getResource("/TaskbarIcon.png"));
+        ImageIcon icon = new ImageIcon(
+          this.getClass().getResource("/TaskbarIcon.png"));
         application.setIconImage(icon.getImage());
         application.setSize(windowWidth, windowHeight);
         application.setMinimumSize(new Dimension(windowWidth, windowHeight));
@@ -198,9 +210,8 @@ public class UI {
 
         popupMenu = new JPopupMenu();
 
-
         for (int ii = 0; ii < 5; ii++) {
-            JMenuItem menuItem = new JMenuItem("Show in Plot" + (ii+1));
+            JMenuItem menuItem = new JMenuItem("Show in Plot" + (ii + 1));
             final int index = ii;
             menuItem.addActionListener(new ActionListener() {
                 @Override
@@ -212,31 +223,29 @@ public class UI {
 
             popupMenu.add(menuItem);
         }
-                
 
         layout = new GroupLayout(application.getContentPane());
         application.setLayout(layout);
 
-
-
         fileChooser = new JFileChooser("Choose Data File") {
             @Override
-            public void approveSelection(){
+            public void approveSelection() {
                 File f = getSelectedFile();
-                if(f.exists() && getDialogType() == SAVE_DIALOG){
-                    int result = JOptionPane.showConfirmDialog(this,"The file exists, overwrite?","Existing file",JOptionPane.YES_NO_CANCEL_OPTION);
-                    switch(result){
-                        case JOptionPane.YES_OPTION:
-                            super.approveSelection();
-                            return;
-                        case JOptionPane.NO_OPTION:
-                            return;
-                        case JOptionPane.CANCEL_OPTION:
-                            cancelSelection();
-                            return;
+                if (f.exists() && getDialogType() == SAVE_DIALOG) {
+                    int result = JOptionPane
+                      .showConfirmDialog(this, "The file exists, overwrite?",
+                        "Existing file", JOptionPane.YES_NO_CANCEL_OPTION);
+                    switch (result) {
+                    case JOptionPane.YES_OPTION:
+                        super.approveSelection();
+                        return;
+                    case JOptionPane.NO_OPTION:
+                        return;
+                    case JOptionPane.CANCEL_OPTION:
+                        cancelSelection();
+                        return;
                     }
                 }
-
 
                 super.approveSelection();
             }
@@ -270,36 +279,32 @@ public class UI {
         processedDataRadioButton.setSelected(true);
 
         selectionPanel = new SelectionPanelBuilder().aSelectionPanel()
-                .withGoToButton(seekGoTo)
-                .withSeekEditField(seekField)
-                .withBack(back)
-                .withNext(next)
-                .withSlider(seekSlider)
-                .withLoadButton(loadData)
-                .withFileLoadNameLabel(loadFileLabel)
-                .withButtonGroup(dataTypeButtonGroup)
-                .withProcessedDataRadioButton(processedDataRadioButton)
-                .withRawDataRadioButton(rawDataRadioButton)
-                .withPlayStartButton(startPlayBack)
-                .withPlayStopButton(stopPlayBack)
+          .withGoToButton(seekGoTo)
+          .withSeekEditField(seekField)
+          .withBack(back)
+          .withNext(next)
+          .withSlider(seekSlider)
+          .withLoadButton(loadData)
+          .withFileLoadNameLabel(loadFileLabel)
+          .withButtonGroup(dataTypeButtonGroup)
+          .withProcessedDataRadioButton(processedDataRadioButton)
+          .withRawDataRadioButton(rawDataRadioButton)
+          .withPlayStartButton(startPlayBack)
+          .withPlayStopButton(stopPlayBack)
 
-                .withCOMStartButton(startDataRead)
-                .withCOMStopButton(stopDataRead)
-                .withReadingStatusLabel(readingStatus)
-                .withSaveButton(chooseSaveFile)
-                .withFileSaveNameLabel(saveFileLabel)
-                .withConnectButton(connect)
-                .withDisconnectButton(disconnect)
-                .withCOMBox(comBox)
-                .withBaudBox(baudBox)
-                .withDataBox(dataBox)
-                .withStopBitsBox(stopBitsBox)
-                .withParityBox(parityBitBox)
-                .build();
-
-
-
-
+          .withCOMStartButton(startDataRead)
+          .withCOMStopButton(stopDataRead)
+          .withReadingStatusLabel(readingStatus)
+          .withSaveButton(chooseSaveFile)
+          .withFileSaveNameLabel(saveFileLabel)
+          .withConnectButton(connect)
+          .withDisconnectButton(disconnect)
+          .withCOMBox(comBox)
+          .withBaudBox(baudBox)
+          .withDataBox(dataBox)
+          .withStopBitsBox(stopBitsBox)
+          .withParityBox(parityBitBox)
+          .build();
 
         addMenuBar();
 
@@ -307,62 +312,62 @@ public class UI {
         layout.setAutoCreateContainerGaps(true);
 
         plotPanel = new PlotPanel();
-        plotPanel.setPreferredSize(new Dimension(windowWidth / 4, windowHeight));
-        colorMap = new ColorMappedImage(16,16);
+        plotPanel
+          .setPreferredSize(new Dimension(windowWidth / 4, windowHeight));
+        colorMap = new ColorMappedImage(16, 16);
         final double boarderSize = .05;
         colorMap.addMouseListener(new MouseAdapter() {
 
             @Override
-            public void mousePressed(MouseEvent e) {                
-                int xScale = (int)Math.round(colorMap.getWidth()/16.0);
-                int yScale = (int)Math.round(colorMap.getHeight()/16.0);
-                int x = e.getX()/xScale;
-                int y = e.getY()/yScale;
+            public void mousePressed(MouseEvent e) {
+                int xScale = (int) Math.round(colorMap.getWidth() / 16.0);
+                int yScale = (int) Math.round(colorMap.getHeight() / 16.0);
+                int x = e.getX() / xScale;
+                int y = e.getY() / yScale;
                 int xBorder = e.getX() % xScale;
                 int yBorder = e.getY() % yScale;
 
-                if ((xBorder > xScale * boarderSize && xBorder < xScale *(1-boarderSize) && yBorder > yScale * boarderSize && yBorder < yScale *(1-boarderSize))) {
+                if ((xBorder > xScale * boarderSize && xBorder < xScale * (1 - boarderSize) && yBorder > yScale * boarderSize && yBorder < yScale * (1 - boarderSize))) {
 
                     if (e.getButton() == MouseEvent.BUTTON1) {
                         colorMap.clickNode(y, x);
-                    }
-                    else if (e.getButton() == MouseEvent.BUTTON3) {
+                    } else if (e.getButton() == MouseEvent.BUTTON3) {
                         colorMap.clickNode(y, x);
                         rightClickX = x;
-                        rightClickY = y+1;
-                        if(!seekSlider.isEnabled())
-                        popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                        rightClickY = y + 1;
+                        if (!seekSlider.isEnabled())
+                            popupMenu
+                              .show(e.getComponent(), e.getX(), e.getY());
                     }
-
 
                 }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                int xScale = (int)Math.round(colorMap.getWidth()/16.0);
-                int yScale = (int)Math.round(colorMap.getHeight()/16.0);
-                int x = e.getX()/xScale;
-                int y = e.getY()/yScale + 1;
+                int xScale = (int) Math.round(colorMap.getWidth() / 16.0);
+                int yScale = (int) Math.round(colorMap.getHeight() / 16.0);
+                int x = e.getX() / xScale;
+                int y = e.getY() / yScale + 1;
                 if (y > 16) {
-                    y=16;
+                    y = 16;
                 }
                 popupMenu.setVisible(false);
-                if(e.getButton() == MouseEvent.BUTTON1) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
                     int xBorder = e.getX() % xScale;
                     int yBorder = e.getY() % yScale;
 
-                    if ((xBorder > xScale * boarderSize && xBorder < xScale *(1-boarderSize) && yBorder > yScale * boarderSize && yBorder < yScale *(1-boarderSize))) {
-                        plotPanel.changePlot(y,x);
+                    if ((xBorder > xScale * boarderSize && xBorder < xScale * (1 - boarderSize) && yBorder > yScale * boarderSize && yBorder < yScale * (1 - boarderSize))) {
+                        plotPanel.changePlot(y, x);
                         colorMap.flashNode();
                     }
                 } else if (e.getButton() == MouseEvent.BUTTON2) {
-                    if(colorMap.isANodeHighlighted(y-1, x)){
+                    if (colorMap.isANodeHighlighted(y - 1, x)) {
                         colorMap.unclickNode();
                     } else {
-                        colorMap.clickNode(y-1,x);
+                        colorMap.clickNode(y - 1, x);
                     }
-                } else if(e.getButton() == MouseEvent.BUTTON3) {
+                } else if (e.getButton() == MouseEvent.BUTTON3) {
                     colorMap.unclickNode();
                 }
             }
@@ -374,15 +379,16 @@ public class UI {
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                int xScale = (int)Math.round(colorMap.getWidth()/16.0);
-                int yScale = (int)Math.round(colorMap.getHeight()/16.0);
+                int xScale = (int) Math.round(colorMap.getWidth() / 16.0);
+                int yScale = (int) Math.round(colorMap.getHeight() / 16.0);
                 int xBorder = e.getX() % xScale;
                 int yBorder = e.getY() % yScale;
 
-                if ((xBorder < xScale * boarderSize || xBorder > xScale *(1-boarderSize) || yBorder < yScale * boarderSize || yBorder > yScale *(1-boarderSize))) {
+                if ((xBorder < xScale * boarderSize || xBorder > xScale * (1 - boarderSize) || yBorder < yScale * boarderSize || yBorder > yScale * (1 - boarderSize))) {
                     colorMap.setCursor(Cursor.getDefaultCursor());
                 } else {
-                    colorMap.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    colorMap.setCursor(
+                      Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 }
             }
 
@@ -390,15 +396,14 @@ public class UI {
             public void mouseDragged(MouseEvent e) {
                 System.out.println(e.getModifiers());
                 if (e.getModifiers() == MouseEvent.BUTTON1_MASK) {
-                    int xScale = (int)Math.round(colorMap.getWidth()/16.0);
-                    int yScale = (int)Math.round(colorMap.getHeight()/16.0);
-                    int x = e.getX()/xScale;
-                    int y = e.getY()/yScale;
+                    int xScale = (int) Math.round(colorMap.getWidth() / 16.0);
+                    int yScale = (int) Math.round(colorMap.getHeight() / 16.0);
+                    int x = e.getX() / xScale;
+                    int y = e.getY() / yScale;
                     int xBorder = e.getX() % xScale;
                     int yBorder = e.getY() % yScale;
 
-
-                    if ((xBorder > xScale * boarderSize && xBorder < xScale *(1-boarderSize) && yBorder > yScale * boarderSize && yBorder < yScale *(1-boarderSize))) {
+                    if ((xBorder > xScale * boarderSize && xBorder < xScale * (1 - boarderSize) && yBorder > yScale * boarderSize && yBorder < yScale * (1 - boarderSize))) {
                         if (x != col || y != row) {
                             colorMap.clickNode(y, x);
                             col = x;
@@ -413,22 +418,20 @@ public class UI {
         }
         );
 
-
-
         //Color Plot
-        int [] colors = new int[256];
-        for (int i = 0; i <256; i++) {
-            colors[i] = Integer.MAX_VALUE * ((i/16 % 2 + i) % 2);
+        int[] colors = new int[256];
+        for (int i = 0; i < 256; i++) {
+            colors[i] = Integer.MAX_VALUE * ((i / 16 % 2 + i) % 2);
         }
         colorMap.setColors(colors);
 
-
         final ColorGrid colorGrid = new ColorGrid(colorMap);
         colorGrid.setPreferredSize(new Dimension(windowWidth / 3,
-                windowWidth / 3));
+          windowWidth / 3));
 
         Dimension selectionDim = colorGrid.getMaximumSize();
-        selectionPanel.setMaximumSize(new Dimension(selectionDim.width, (int) (windowHeight * .3)));
+        selectionPanel.setMaximumSize(
+          new Dimension(selectionDim.width, (int) (windowHeight * .3)));
         selectionPanel.setBorder(BorderFactory.createEtchedBorder());
 
         colorMap.setDataType(DataType.PROCESSED);
@@ -437,47 +440,34 @@ public class UI {
          * Set Layouts
          */
         layout.setHonorsVisibility(false);
-//        layout.setHonorsVisibility(seekSlider, true);
-//        layout.setHonorsVisibility(back, true);
-//        layout.setHonorsVisibility(next, true);
 
         layout.setHorizontalGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 10)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                        .addComponent(colorGrid)
-                        .addComponent(selectionPanel)
-                )
-                .addGap(0, 0, 100)
-                .addComponent(plotPanel)
+          .addGap(0, 0, 10)
+          .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+            .addComponent(colorGrid)
+            .addComponent(selectionPanel)
+          )
+          .addGap(0, 0, 100)
+          .addComponent(plotPanel)
         );
 
         layout.setVerticalGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                        .addGroup(
-                                layout.createSequentialGroup()
-                                        .addComponent(colorGrid, 0, GroupLayout.PREFERRED_SIZE,
-                                                Short.MAX_VALUE)
-                                        .addGap(0, 10, 20)
-                                        .addComponent(selectionPanel)
-                                        .addGap(0, 0, 20)
-                        )
-                        .addComponent(plotPanel, 0, GroupLayout.PREFERRED_SIZE,
-                                Short.MAX_VALUE)));
-
-//        layout.linkSize(SwingConstants.HORIZONTAL, realTimeSelect, playBackSelect);
-//        layout.linkSize(SwingConstants.HORIZONTAL, realTimeSelect,
-//                startRealTimeData);
-//        layout.linkSize(SwingConstants.HORIZONTAL, realTimeSelect, loadData);
-//        layout.linkSize(SwingConstants.VERTICAL, realTimeSelect, playBackSelect);
-//        layout.linkSize(SwingConstants.VERTICAL, realTimeSelect,
-//                startRealTimeData);
-//        layout.linkSize(SwingConstants.VERTICAL, realTimeSelect, loadData);
-//        layout.linkSize(SwingConstants.VERTICAL, next, back);
-//        layout.linkSize(SwingConstants.HORIZONTAL, next, back);
+          .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+            .addGroup(
+              layout.createSequentialGroup()
+                .addComponent(colorGrid, 0, GroupLayout.PREFERRED_SIZE,
+                  Short.MAX_VALUE)
+                .addGap(0, 10, 20)
+                .addComponent(selectionPanel)
+                .addGap(0, 0, 20)
+            )
+            .addComponent(plotPanel, 0, GroupLayout.PREFERRED_SIZE,
+              Short.MAX_VALUE)));
 
         setUIComponentNames();
     }
 
+    /** Change the Look and Feel of the UI */
     private void changeLookAndFeel() {
         try {
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -491,7 +481,8 @@ public class UI {
         }
     }
 
-    private void initializeRealTimeButtons(){
+    /** Initialize the buttons for real time mode */
+    private void initializeRealTimeButtons() {
         saveFileLabel = new JLabel("Saving To: ");
         saveFileLabel.setOpaque(true);
 
@@ -505,16 +496,20 @@ public class UI {
             public void actionPerformed(ActionEvent e) {
                 int returnVal = fileChooser.showSaveDialog(application);
 
-                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
                     saveDataFile = fileChooser.getSelectedFile();
                     try {
                         if (fileSaveStream != null) fileSaveStream.close();
-                        fileSaveStream = new BufferedOutputStream(new FileOutputStream(saveDataFile));
-                        saveFileLabel.setText("Saving To: " + saveDataFile.getName());
+                        fileSaveStream = new BufferedOutputStream(
+                          new FileOutputStream(saveDataFile));
+                        saveFileLabel
+                          .setText("Saving To: " + saveDataFile.getName());
                         saveFileLabel.setBackground(Color.GREEN);
-                    } catch(Exception ex) {ex.printStackTrace();}
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
 
-                    if(!connect.isEnabled()) {
+                    if (!connect.isEnabled()) {
                         startDataRead.setEnabled(true);
                     }
                 }
@@ -523,77 +518,92 @@ public class UI {
 
         try {
             List<String> ports = COMReader.listPorts();
-            String [] portNames = new String[ports.size()];
+            String[] portNames = new String[ports.size()];
             ports.toArray(portNames);
             if (ports.size() > 0) comPortName = ports.get(0);
-            else comPortName="";
-            if(portNames.length <= 0) comBox = new JComboBox(new String[] {"None"});
+            else comPortName = "";
+            if (portNames.length <= 0)
+                comBox = new JComboBox(new String[] { "None" });
             else comBox = new JComboBox(portNames);
         } catch (NoSuchPortException e) {
-            comBox = new JComboBox(new String[] {"None"});
-        };
-        baudBox = new JComboBox(new Integer[] {300, 600, 1200, 1800, 2400, 4800, 7200, 9600, 14400, 19200, 38400, 57600, 115200, 230400, 460800, 921600});
+            comBox = new JComboBox(new String[] { "None" });
+        }
+        ;
+        baudBox = new JComboBox(
+          new Integer[] { 300, 600, 1200, 1800, 2400, 4800, 7200, 9600, 14400, 19200, 38400, 57600, 115200, 230400, 460800, 921600 });
         baudBox.setEditable(true);
         baudBox.setSelectedItem(9600);
         baudBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                baud = (Integer)baudBox.getSelectedItem();
+                baud = (Integer) baudBox.getSelectedItem();
             }
         });
         baud = 9600;
-        dataBox = new JComboBox(new Integer[] {5, 6, 7, 8});
+        dataBox = new JComboBox(new Integer[] { 5, 6, 7, 8 });
         dataBox.setSelectedItem(8);
         dataBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int bits = (Integer) dataBox.getSelectedItem();
                 switch (bits) {
-                    case 5: dataBits = SerialPort.DATABITS_5;
-                    case 6: dataBits = SerialPort.DATABITS_6;
-                    case 7: dataBits = SerialPort.DATABITS_7;
-                    case 8: dataBits = SerialPort.DATABITS_8;
+                case 5:
+                    dataBits = SerialPort.DATABITS_5;
+                case 6:
+                    dataBits = SerialPort.DATABITS_6;
+                case 7:
+                    dataBits = SerialPort.DATABITS_7;
+                case 8:
+                    dataBits = SerialPort.DATABITS_8;
                 }
             }
         });
         dataBits = SerialPort.DATABITS_8;
-        stopBitsBox = new JComboBox( new String[] {"1", "2", "1.5"});
+        stopBitsBox = new JComboBox(new String[] { "1", "2", "1.5" });
         stopBitsBox.setSelectedItem("1");
         stopBitsBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int index = stopBitsBox.getSelectedIndex();
                 switch (index) {
-                    case 0: stopBits = SerialPort.STOPBITS_1;
-                    case 1: stopBits = SerialPort.STOPBITS_2;
-                    case 2: stopBits = SerialPort.STOPBITS_1_5;
+                case 0:
+                    stopBits = SerialPort.STOPBITS_1;
+                case 1:
+                    stopBits = SerialPort.STOPBITS_2;
+                case 2:
+                    stopBits = SerialPort.STOPBITS_1_5;
                 }
             }
         });
         stopBits = SerialPort.STOPBITS_1;
-        parityBitBox = new JComboBox( new String[] {"NONE", "ODD", "EVEN", "MARK", "SPACE"});
+        parityBitBox = new JComboBox(
+          new String[] { "NONE", "ODD", "EVEN", "MARK", "SPACE" });
         parityBitBox.setSelectedItem("NONE");
         parityBitBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int index = stopBitsBox.getSelectedIndex();
                 switch (index) {
-                    case 0: parity = SerialPort.PARITY_NONE;
-                    case 1: parity = SerialPort.PARITY_ODD;
-                    case 2: parity = SerialPort.PARITY_EVEN;
-                    case 3: parity = SerialPort.PARITY_MARK;
-                    case 4: parity = SerialPort.PARITY_SPACE;
+                case 0:
+                    parity = SerialPort.PARITY_NONE;
+                case 1:
+                    parity = SerialPort.PARITY_ODD;
+                case 2:
+                    parity = SerialPort.PARITY_EVEN;
+                case 3:
+                    parity = SerialPort.PARITY_MARK;
+                case 4:
+                    parity = SerialPort.PARITY_SPACE;
                 }
-            }});
+            }
+        });
         parity = SerialPort.PARITY_NONE;
-
-
 
         startDataRead = new JButton("Start");
         startDataRead.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if(firstStart){
+                if (firstStart) {
                     try {
                         startDataCollection();
                         dataTimer.setSaveFileOutputStream(fileSaveStream);
@@ -609,7 +619,8 @@ public class UI {
                 stopDataRead.setEnabled(true);
                 disconnect.setEnabled(false);
                 connect.setEnabled(false);
-                readingStatus.setText("Reading Status: Reading from " + comPortName);
+                readingStatus
+                  .setText("Reading Status: Reading from " + comPortName);
                 readingStatus.setBackground(Color.GREEN);
 
             }
@@ -658,9 +669,10 @@ public class UI {
                 setEnabledForCOMObjects(false);
                 disconnect.setEnabled(true);
                 chooseSaveFile.setEnabled(true);
-                if(saveDataFile != null) startDataRead.setEnabled(true);
+                if (saveDataFile != null) startDataRead.setEnabled(true);
                 try {
-                    comReader.connectTo(comPortName, baud, dataBits, stopBits, parity);
+                    comReader
+                      .connectTo(comPortName, baud, dataBits, stopBits, parity);
                     //comReader.connectTo(comPortName);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -670,6 +682,7 @@ public class UI {
 
     }
 
+    /** Initialize the buttons for play back mode */
     private void initializePlayBackButtons() {
 
         seekGoTo = new JButton("Go To:");
@@ -678,12 +691,14 @@ public class UI {
             public void actionPerformed(ActionEvent e) {
                 try {
                     int value = Integer.valueOf(seekField.getText());
-                    if(value < seekSlider.getMaximum() && value > 0){
+                    if (value < seekSlider.getMaximum() && value > 0) {
                         userSeek = false;
                         seekSlider.setValue(value);
                         seekTime();
                     }
-                } catch (Exception ex) {seekField.setText("");}
+                } catch (Exception ex) {
+                    seekField.setText("");
+                }
             }
         });
         seekField = new JTextField(10);
@@ -728,30 +743,38 @@ public class UI {
             public void actionPerformed(ActionEvent actionEvent) {
                 int returnVal = fileChooser.showOpenDialog(application);
 
-                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
                     operatingMode = OperatingMode.FROM_FILE;
                     dataFile = fileChooser.getSelectedFile();
 
-                    if(dataBank != null) dataBank.clear();
+                    if (dataBank != null) dataBank.clear();
                     else dataBank = new StaticDataBank();
                     loadFileLabel.setText("Loaded: " + dataFile.getName());
                     loadFileLabel.setOpaque(true);
                     try {
-                        DataPopulator populator = new DataPopulator(dataBank, new FileReader(dataFile));
+                        DataPopulator populator = new DataPopulator(dataBank,
+                          new FileReader(dataFile));
                         populator.execute();
                         int dataBankSize = dataBank.getSize();
                         seekSlider.setMaximum(dataBankSize);
                         seekSlider.setMajorTickSpacing(dataBankSize / 20);
                         seekSlider.setMinorTickSpacing(dataBankSize / 200);
-                        int tickSize = (int)Math.ceil(Math.log10(dataBankSize/20));
+                        int tickSize = (int) Math
+                          .ceil(Math.log10(dataBankSize / 20));
                         Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
                         for (int ii = 0; ii <= 20; ii++) {
-                            labelTable.put(dataBankSize/20 * ii, new JLabel(String.format("%.1f",((float)dataBankSize)/20/(Math.pow(10, tickSize)) * ii) ));
+                            labelTable.put(dataBankSize / 20 * ii, new JLabel(
+                              String.format("%.1f",
+                                ((float) dataBankSize) / 20 / (Math
+                                  .pow(10, tickSize)) * ii)));
                         }   //@TODO put some sort of modifer here to length of data file
                         seekSlider.setLabelTable(labelTable);
                         loadFileLabel.setBackground(Color.GREEN);
                         setEnabledForCOMObjects(false);
-                    } catch (Exception e) {e.printStackTrace();loadFileLabel.setBackground(Color.RED);}
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        loadFileLabel.setBackground(Color.RED);
+                    }
 
                     seekField.setEnabled(true);
                     seekGoTo.setEnabled(true);
@@ -761,20 +784,18 @@ public class UI {
                     startPlayBack.setEnabled(true);
                     stopPlayBack.setEnabled(false);
 
-
                 }
             }
         }
         );
-
-//        loadData.setVisible(false);
 
         startPlayBack = new JButton("Start");
         startPlayBack.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 if (!started) {
-                    updater = new UpdateTimer(1000/30, colorMap, plotPanel, dataBank);
+                    updater = new UpdateTimer(1000 / 30, colorMap, plotPanel,
+                      dataBank);
                     updater.setSlider(seekSlider);
                     updater.setApplication(UI.this);
                     started = true;
@@ -814,7 +835,7 @@ public class UI {
         seekSlider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent changeEvent) {
-                if( userSeek) {
+                if (userSeek) {
                     int value = seekSlider.getValue();
                     if (value >= seekSlider.getMaximum()) {
                         seekSlider.setValue(value - 1);
@@ -832,10 +853,10 @@ public class UI {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 int value = seekSlider.getValue();
-                if (value < seekSlider.getMaximum()-1-moveAmount){
+                if (value < seekSlider.getMaximum() - 1 - moveAmount) {
                     seekSlider.setValue(value + moveAmount);
                 } else {
-                    seekSlider.setValue(seekSlider.getMaximum()-1);
+                    seekSlider.setValue(seekSlider.getMaximum() - 1);
                 }
                 userSeek = false;
                 seekTime();
@@ -857,11 +878,12 @@ public class UI {
         });
     }
 
+    /** Resets the plots and image to a certain time for playback mode */
     private void seekTime() {
         int value;
         value = seekSlider.getValue();
         int begin = value - 50;
-        if (begin < 0)  begin = 0;
+        if (begin < 0) begin = 0;
         dataBank.resetTo(value);
         List<DataLine> dataLineList = dataBank.getPoints(begin, value);
         plotPanel.resetPlotsTo(dataLineList, value);
@@ -871,19 +893,17 @@ public class UI {
     private JMenu tools;
     private JMenu setup;
     private JMenuItem validate;
-    
-    /**
-     * Add the Menu Bar to the Application.
-     */
+
+    /** Add the Menu Bar to the Application. */
     private void addMenuBar() {
-        if( onMac() ) {
+        if (onMac()) {
             System.setProperty("apple.laf.useScreenMenuBar", "true");
         }
 
         menuBar = new JMenuBar();
         file = new JMenu("File");
         file.setMnemonic('F');
-        
+
         tools = new JMenu("Tools");
         tools.setMnemonic('T');
 
@@ -912,7 +932,6 @@ public class UI {
             }
         });
 
-
         exit = new JMenuItem("Exit");
         exit.setMnemonic('E');
         exit.addActionListener(new ActionListener() {
@@ -933,7 +952,7 @@ public class UI {
             }
         });
 
-        if( onMac() ){
+        if (onMac()) {
             new MacOSEventHandler();
         } else {
             file.add(exit);
@@ -958,37 +977,26 @@ public class UI {
      */
     private void startDataCollection() throws Exception, IOException {
         switch (operatingMode) {
-            case FROM_FILE:
-                dataBank = new StaticDataBank();
-                DataPopulator populator = new DataPopulator(dataBank, new FileReader(dataFile));
-                populator.execute();
-                break;
-            case FROM_COM_PORT:
-                dataTimer = new DataTimer(comReader, fileSaveStream);
-                dataTimer.setPlotPanel(plotPanel);
-                dataTimer.setImage(colorMap);
-                break;
+        case FROM_FILE:
+            dataBank = new StaticDataBank();
+            DataPopulator populator = new DataPopulator(dataBank,
+              new FileReader(dataFile));
+            populator.execute();
+            break;
+        case FROM_COM_PORT:
+            dataTimer = new DataTimer(comReader, fileSaveStream);
+            dataTimer.setPlotPanel(plotPanel);
+            dataTimer.setImage(colorMap);
+            break;
         }
-        //testBank();
     }
 
-    private void testBank() {
-        System.out.print(dataBank.getSize());
-    }
-
-
-
-    /**
-     * Maximizes the windows and set the UI to be visible.
-     */
+    /** Maximizes the windows and set the UI to be visible. */
     public void run() {
         if (application != null) {
             application.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
             application.setVisible(true);
-            // application.setResizable(false);
-
-
         }
     }
 
@@ -1001,6 +1009,7 @@ public class UI {
         return (System.getProperty("mrj.version") != null);
     }
 
+    /** Reports that the data bank is out of data thus reenable some buttons */
     public void reportFinish() {
         startPlayBack.setEnabled(true);
         stopPlayBack.setEnabled(false);
@@ -1009,7 +1018,12 @@ public class UI {
         next.setEnabled(true);
     }
 
-    public void setUserSeek(boolean seek){
+    /**
+     * Set the user seek property.
+     *
+     * @param seek user seek
+     */
+    public void setUserSeek(boolean seek) {
         userSeek = seek;
     }
 }

@@ -10,6 +10,12 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The <code>ValidationTestPanel</code> object is used to verify that the user’s ADC values
+ * correspond properly with the desired reference voltage if using a different value than
+ * 2.5V.object is used to verify that the user’s ADC values correspond properly with the
+ * desired reference voltage if using a different value than 2.5V.
+ */
 public class ValidationTestPanel extends JPanel {
 
     private JLabel vrefLabel;

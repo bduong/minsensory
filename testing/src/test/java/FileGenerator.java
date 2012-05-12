@@ -14,21 +14,12 @@ import java.util.Random;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Created by IntelliJ IDEA. User: bduong Date: 3/20/12 Time: 8:54 PM To change
- * this template use File | Settings | File Templates.
+ *  Tests for file generator.
  */
 public class FileGenerator {
 
     private static final String fileName = "pretty_data.bin";
     private static final int NUMBER_OF_POINTS = 10000;
-
-    //Logger logger = Logger.getLogger(FileGenerator.class);
-//    public static void main(String [] args) throws IOException {
-//        createFile();
-//
-//
-//    }
-//
 
     private void createDataFile() throws IOException {
         FileOutputStream output2 = new FileOutputStream(fileName);

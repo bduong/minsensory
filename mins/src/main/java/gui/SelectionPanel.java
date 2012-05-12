@@ -2,7 +2,13 @@ package gui;
 
 import javax.swing.*;
 
-
+/**
+ * The <code>SelectionPanel</code> object is used to build the configuration panels for the user to select
+ * different options.
+ *
+ * The objects are not actually made in this object. They are simply put into a layout.
+ * The actually references to the object need to be set through the setters.
+ */
 public class SelectionPanel extends JTabbedPane{
 
     /**

@@ -1,7 +1,8 @@
 package data;
 
 /**
- * Wrapper class to hold the data values for one point.
+ * The <code>DataLine</code> object represents a set of 256 data points. Each
+ * point maps to one node in the 16x16 node array.
  */
 public class DataLine {
     private int [] line;

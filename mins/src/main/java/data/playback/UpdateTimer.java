@@ -12,6 +12,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 
+/**
+ * The <code>UpdateTimer</code> object is used to refresh the image and plots
+ * on the screen when in data play back mode.
+ *
+ * It calls into a given <code>ColorMappedImage</code> and <code>PlotPanel</code>
+ * every 1/30 of a second to pass on the next data point from the <code>DataBank</code>
+ *
+ */
 public class UpdateTimer implements ActionListener{
 
     private int delay;
@@ -24,6 +32,15 @@ public class UpdateTimer implements ActionListener{
     private UI ui;
     private JSlider slider;
 
+    /**
+     * Creates a new <code>UpdateTimer</code> linked to a given image, databank, and set of plots
+     * that updates at a given delay
+     *
+     * @param delay delay to update at in ms
+     * @param image color mapped image to update
+     * @param plotPanel plots to update
+     * @param dataBank data bank to get data from
+     */
     public UpdateTimer(int delay, ColorMappedImage image, PlotPanel plotPanel, DataBank dataBank) {
         slider = null;
 
@@ -35,15 +52,26 @@ public class UpdateTimer implements ActionListener{
         initMap();
     }
 
+    /**
+     * Set the application to update to.
+     *
+     * @param ui the ui
+     */
     public void setApplication(UI ui){
         this.ui = ui;
     }
 
+    /**
+     * Set up the timer.
+     */
     private void setupTimer() {
         spikeNodes = new HashSet<Integer>();
         timer = new Timer(delay, this);
     }
 
+    /**
+     * Start the timer if the databank is not at the end
+     */
     public void startTimer() {
         if (!dataBank.isAtEnd()){
             timer.start();
@@ -52,14 +80,24 @@ public class UpdateTimer implements ActionListener{
         }
     }
 
+    /**
+     * Stop the timer.
+     */
     public void stopTimer() {
         timer.stop();
     }
 
+    /**
+     * Set the Slider to update.
+     * @param slider
+     */
     public void setSlider(JSlider slider){
         this.slider = slider;
     }
 
+    /**
+     * Initialize the hash map to keep track to of the time to flash a spiking node white.
+     */
     private void initMap() {
         spikeTime = new HashMap<Integer, Integer>();
         for (int ii = 0; ii < 256; ii++){

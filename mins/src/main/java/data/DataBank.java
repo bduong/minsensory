@@ -2,6 +2,10 @@ package data;
 
 import java.util.List;
 
+/**
+ * The <code>DataBank</code> object provides an interface to create a bank of data points
+ * to update the UI with.
+ */
 public interface DataBank {
 
     /**

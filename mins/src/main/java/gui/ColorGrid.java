@@ -3,6 +3,13 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * The <code>ColorGrid</code> object applies tick markers for the <code>ColorMappedImage</code>.
+ *
+ * It creates two JPanels to serve as the tick axes. An layouts out the image and the two tick panels.
+ *
+ * The left panel is label 1-16 and the top panel is labeled A-P to represent 16 nodes in either direction.
+ */
 public class ColorGrid extends JPanel{
 
     private ColorMappedImage image;
@@ -15,11 +22,13 @@ public class ColorGrid extends JPanel{
         rowTicks = new JPanel(new GridLayout(16, 1, 0, 0));
         colTicks = new JPanel(new GridLayout(1, 16, 0, 0));
         init();
-        //setBorder(BorderFactory.createLineBorder(Color.RED));
     }
 
     private static char [] nodes ="ABCDEFGHIJKLMNOP".toCharArray();
 
+    /**
+     * Initialize and layout the image and tick markers.
+     */
     private void init() {
         Dimension imageSize = image.getPreferredSize();
         for (int ii = 0; ii < 16; ii++) {
@@ -37,8 +46,6 @@ public class ColorGrid extends JPanel{
         size = colTicks.getPreferredSize();
         size.setSize(imageSize.getWidth(), size.getHeight());
         colTicks.setPreferredSize(size);
-        //rowTicks.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        //colTicks.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -55,8 +62,6 @@ public class ColorGrid extends JPanel{
               .addComponent(image, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE))
         );
 
-        //layout.linkSize(SwingConstants.HORIZONTAL, image, colTicks);
-
         layout.setVerticalGroup(layout.createSequentialGroup()
           .addComponent(colTicks)
           .addGap(10)
@@ -66,8 +71,5 @@ public class ColorGrid extends JPanel{
             .addComponent(image, 0, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
           )
         );
-
-        //layout.linkSize(SwingConstants.VERTICAL, rowTicks, image);
-
     }
 }

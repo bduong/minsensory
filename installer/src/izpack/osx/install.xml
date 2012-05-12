@@ -18,12 +18,13 @@
 
     <guiprefs width="800" height="600" resizable="no">
         <!--<splash>images/peas_load.gif</splash>-->
-        <laf name="substance">
-            <os family="mac" />
-            <param name="variant" value="mist-aqua" />
-        </laf>
+        <!--<laf name="substance">-->
+            <!--<os family="mac" />-->
+            <!--<param name="variant" value="mist-aqua" />-->
+        <!--</laf>-->
         <modifier key="useHeadingPanel" value="yes" />
     </guiprefs>
+
 
     <panels>
         <panel classname="TargetPanel"/>

@@ -1,6 +1,5 @@
 package data.realtime;
 
-import data.DataReader;
 import gnu.io.*;
 
 import java.io.BufferedInputStream;
@@ -11,15 +10,20 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-
+/**
+ * The <code>COMReader</code> object is used to read data from the serial
+ * communication port.
+ *
+ * It connects to a serial port with a set of parameters and then reads either
+ * one 2-byte short at a time, or an array of 256 shorts at a time.
+ */
 public class COMReader {
 
     BufferedInputStream in = null;
     BufferedOutputStream out = null;
-    DataInputStream dataIn = null;
     private byte [] bytes;
     private byte [] allBytes;
-    private byte [] startByte;
+    private byte [] startByte;     //used to read start byte
     private SerialPort serialPort;
     int count =0;
 
@@ -29,6 +33,12 @@ public class COMReader {
         startByte = new byte[1];
     }
 
+    /**
+     * List the Serial Ports connected
+     *
+     * @return A list of the serial ports.
+     * @throws NoSuchPortException If there are no ports.
+     */
     public static List<String> listPorts() throws NoSuchPortException {
         List<String> ports = new ArrayList<String>();
         Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
@@ -42,6 +52,12 @@ public class COMReader {
         return ports;
     }
 
+    /**
+     * Connect to a specific serial port by name
+     *
+     * @param portName the name of the port
+     * @throws Exception If we are not able to connect to the port.
+     */
     public void connectTo(String portName) throws Exception
     {
         CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
@@ -67,8 +83,7 @@ public class COMReader {
                     }
                 });
 
-                //in = new BufferedInputStream(serialPort.getInputStream(), 1024);
-                dataIn = new DataInputStream(serialPort.getInputStream());
+                in = new BufferedInputStream(serialPort.getInputStream(), 1024);
                 out = new BufferedOutputStream(serialPort.getOutputStream(), 1024);
 
 
@@ -82,6 +97,16 @@ public class COMReader {
 
     }
 
+    /**
+     * Connect to a specific serial port by name with given parameters.
+     *
+     * @param portName  the name of the port
+     * @param baud the baud rate
+     * @param dataBits the number of data bits
+     * @param stopBits the number of stop bits
+     * @param parity the number of parity bits
+     * @throws Exception If we are not able to connect to the port.
+     */
     public void connectTo(String portName, int baud, int dataBits , int stopBits, int parity) throws Exception
     {
         CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
@@ -115,16 +140,9 @@ public class COMReader {
 
                 serialPort.setInputBufferSize(1024);
                 if(in != null) in.close();
-                if(dataIn != null) dataIn.close();
                 if(out != null) out.close();
                 in = new BufferedInputStream(serialPort.getInputStream());
-                //dataIn = new DataInputStream(serialPort.getInputStream());
                 out = new BufferedOutputStream(serialPort.getOutputStream());
-                //(new Thread(new SerialWriter(out))).start();
-
-//                serialPort.addEventListener(new SerialReader(in));
-//                serialPort.notifyOnDataAvailable(true);
-
 
             }
             else
@@ -135,53 +153,67 @@ public class COMReader {
 
     }
 
+    /**
+     * Get the input stream to the serial port.
+     *
+     * @return The input stream.
+     */
     public BufferedInputStream getInputStream() {
         return in;
     }
 
+    /**
+     * Get the output stream to the serial port.
+     *
+     * @return The output stream.
+     */
     public BufferedOutputStream getOutputStream() {
         return out;
     }
 
+    /**
+     * Read the next short integer from the stream.
+     *
+     * @return the next short int
+     * @throws IOException If the stream cannot be read
+     */
     public int readNextInt() throws IOException {
         int num = in.read(bytes, 0, 2);
         int value = bytes[0] << 8;
         return (0x0000FFFF & ((value) | (bytes[1] & 0x000000FF)));
     }
 
+    /**
+     * Read the next 256 short integers from the stream
+     *
+     * @param out the file output stream to write the integers to
+     * @return an array of the 256 short integers
+     * @throws IOException If the stream cannot be read.
+     */
     public int[] readAllInts(BufferedOutputStream out) throws IOException {
         int [] numbers = new int[256];
-        //in.read(bytes,0,1);
-        //if (bytes[0] != 0) {
-//        in.read(startByte, 0, 1);
-//        while(startByte[0] != 0) {in.read(startByte, 0, 1) };
-        int num = in.read(allBytes, 0, 512);
 
-        out.write(allBytes, 0, 512);
-        for (int jj = 0; jj< allBytes.length; jj+=2){
-            int value = allBytes[jj] << 8;
-            numbers[jj/2] =  (0x0000FFFF & ((value) | (allBytes[jj+1] & 0x000000FF)));
+        in.read(startByte, 0, 1);
+        while(startByte[0] != 0x10) {in.read(startByte, 0, 1); };
+        if (in.available() >= 512){
+            int num = in.read(allBytes, 0, 512);
+
+            out.write(allBytes, 0, 512);
+            for (int jj = 0; jj< allBytes.length; jj+=2){
+                int value = allBytes[jj] << 8;
+                numbers[jj/2] =  (0x0000FFFF & ((value) | (allBytes[jj+1] & 0x000000FF)));
+            }
+            return numbers;
         }
-        return numbers;
-
-        //return null;
+        return null;
     }
 
-//    public int[] readAllInts(BufferedOutputStream out) throws IOException {
-//        int [] numbers = new int[256]; //= {0};
-//
-//            dataIn.readFully(allBytes, 0,512);
-//            //int num = in.read(allBytes, 0, 512);
-//           // System.out.println(num);
-//            out.write(allBytes, 0, 512);
-//            for (int jj = 0; jj< allBytes.length; jj+=2){
-//                int value = allBytes[jj] << 8;
-//                numbers[jj/2] =  (0x0000FFFF & ((value) | (allBytes[jj+1] & 0x000000FF)));
-//            }
-//        //}
-//        return numbers;
-//    }
-
+    /**
+     * Start the input stream
+     *
+     * @throws IOException If we cannot write to the stream.
+     * @throws InterruptedException If we get interrupted while we sleep.
+     */
     public void startStream() throws IOException, InterruptedException {
         out.write("5".getBytes());
         out.close();
@@ -189,16 +221,16 @@ public class COMReader {
         Thread.sleep(100);
     }
 
+    /**
+     * Close the serial port.
+     */
     public void closeStreams(){
         try {
             out.close();
-        } catch (Exception e) {
-            //e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        } catch (Exception e) {}
         try{
             in.close();
         } catch (Exception e) {
-            //e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         serialPort.close();
     }

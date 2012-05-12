@@ -1,9 +1,17 @@
 package gui;
 
 /**
- * Created with IntelliJ IDEA. User: bduong Date: 4/9/12 Time: 10:07 PM To
- * change this template use File | Settings | File Templates.
+ * An Enum to check track of which data format the user has selected.
  */
 public enum DataType {
-        RAW, PROCESSED
+
+    /**
+     * 12-Bit Raw Data
+     */
+        RAW,
+
+    /**
+     * 6-Bit Flag, 10-Bit Data
+     */
+        PROCESSED
 }

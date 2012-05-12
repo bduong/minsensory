@@ -6,6 +6,13 @@ import data.DataLine;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The <code>StaticDataBank</code> object is used to hold data points for play
+ * back mode.
+ *
+ * The data is in the form of a list of <code>DataLine</code> objects, where each
+ * object in the data bank represents the data for 1/30 of second.
+ */
 public class StaticDataBank implements DataBank {
 
     private List<DataLine> data;
