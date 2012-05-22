@@ -1,5 +1,9 @@
 package gui;
 
+import gui.tabs.PlayBackPanel;
+import gui.tabs.RealTimePanel;
+import gui.tabs.SDCapturePanel;
+
 import javax.swing.*;
 
 /**
@@ -12,6 +16,9 @@ import javax.swing.*;
 public class SelectionPanelBuilder {
     
     private SelectionPanel selectionPanel;
+    private PlayBackPanel playBackPanel;
+    private RealTimePanel realTimePanel;
+    private SDCapturePanel sdCapturePanel;
     
     
     public SelectionPanelBuilder() {
@@ -20,129 +27,187 @@ public class SelectionPanelBuilder {
     
     public SelectionPanelBuilder aSelectionPanel() {
         selectionPanel = new SelectionPanel();
-        return this;
-    }
-
-    public SelectionPanelBuilder withSlider(JSlider slider){
-        selectionPanel.setSlider(slider);
-        return this;
-    }
-
-    public SelectionPanelBuilder withNext(JButton next){
-        selectionPanel.setNext(next);
-        return this;
-    }
-
-    public SelectionPanelBuilder withBack(JButton back){
-        selectionPanel.setBack(back);
-        return this;
-    }
-
-    public SelectionPanelBuilder withLoadButton(JButton load) {
-        selectionPanel.setLoad(load);
-        return this;
-    }
-
-    public SelectionPanelBuilder withFileLoadNameLabel(JLabel fileNameLabel) {
-        selectionPanel.setFileNameLoad(fileNameLabel);
-        return this;
-    }
-
-    public SelectionPanelBuilder withProcessedDataRadioButton(JRadioButton processedDataRadioButton){
-        selectionPanel.setProcessedDataMode(processedDataRadioButton);
-        return this;
-    }
-
-    public SelectionPanelBuilder withRawDataRadioButton(JRadioButton rawDataRadioButton){
-        selectionPanel.setRawDataMode(rawDataRadioButton);
-        return this;
-    }
-
-    public SelectionPanelBuilder withPlayStartButton(JButton playStartButton){
-        selectionPanel.setStartPlay(playStartButton);
-        return this;
-    }
-
-    public SelectionPanelBuilder withPlayStopButton(JButton playStopButton) {
-        selectionPanel.setStopPlay(playStopButton);
-        return this;
-    }
-
-    public SelectionPanelBuilder withGoToButton(JButton goToButton) {
-        selectionPanel.setGoTo(goToButton);
-        return this;
-    }
-
-    public SelectionPanelBuilder withSeekEditField(JTextField seekEditField) {
-        selectionPanel.setSeek(seekEditField);
+        playBackPanel = selectionPanel.getPlayBackOptions();
+        realTimePanel = selectionPanel.getRealTimeOptions();
+        sdCapturePanel = selectionPanel.getSDCardOptions();
         return this;
     }
 
     /**
-     * COM Options
+     * Play Back Options
+     *
      */
-    public SelectionPanelBuilder withCOMStartButton(JButton comStartButton) {
-        selectionPanel.setStartCOM(comStartButton);
+    public SelectionPanelBuilder withSlider(JSlider slider){
+        playBackPanel.setSlider(slider);
         return this;
     }
 
-    public SelectionPanelBuilder withCOMStopButton(JButton comStopButton) {
-        selectionPanel.setStopCOM(comStopButton);
+    public SelectionPanelBuilder withNext(JButton next){
+        playBackPanel.setNext(next);
         return this;
     }
 
-    public SelectionPanelBuilder withSaveButton(JButton saveButton) {
-        selectionPanel.setSave(saveButton);
+    public SelectionPanelBuilder withBack(JButton back){
+        playBackPanel.setBack(back);
+        return this;
+    }
+
+    public SelectionPanelBuilder withLoadButton(JButton load) {
+        playBackPanel.setLoad(load);
+        return this;
+    }
+
+    public SelectionPanelBuilder withFileLoadNameLabel(JLabel fileNameLabel) {
+        playBackPanel.setFileNameLoad(fileNameLabel);
+        return this;
+    }
+
+    public SelectionPanelBuilder withProcessedDataRadioButton(JRadioButton processedDataRadioButton){
+        playBackPanel.setProcessedDataMode(processedDataRadioButton);
+        return this;
+    }
+
+    public SelectionPanelBuilder withRawDataRadioButton(JRadioButton rawDataRadioButton){
+        playBackPanel.setRawDataMode(rawDataRadioButton);
+        return this;
+    }
+
+    public SelectionPanelBuilder withPlayStartButton(JButton playStartButton){
+        playBackPanel.setStartPlay(playStartButton);
+        return this;
+    }
+
+    public SelectionPanelBuilder withPlayStopButton(JButton playStopButton) {
+        playBackPanel.setStopPlay(playStopButton);
+        return this;
+    }
+
+    public SelectionPanelBuilder withGoToButton(JButton goToButton) {
+        playBackPanel.setGoTo(goToButton);
+        return this;
+    }
+
+    public SelectionPanelBuilder withSeekEditField(JTextField seekEditField) {
+        playBackPanel.setSeek(seekEditField);
+        return this;
+    }
+
+    /**
+     * Real Time Options
+     */
+
+    public SelectionPanelBuilder withRealTimeSaveButton(JButton saveButton) {
+        realTimePanel.setSave(saveButton);
         return this;
     }
 
     public SelectionPanelBuilder withFileSaveNameLabel(JLabel fileSaveNameLabel) {
-        selectionPanel.setFileNameSave(fileSaveNameLabel);
+        realTimePanel.setFileNameSave(fileSaveNameLabel);
+        return this;
+    }
+
+    public SelectionPanelBuilder withCOMStartButton(JButton comStartButton) {
+        realTimePanel.setStartCOM(comStartButton);
+        return this;
+    }
+
+    public SelectionPanelBuilder withCOMStopButton(JButton comStopButton) {
+        realTimePanel.setStopCOM(comStopButton);
         return this;
     }
 
     public SelectionPanelBuilder withReadingStatusLabel(JLabel readingStatusLabel) {
-        selectionPanel.setReadingStatus(readingStatusLabel);
+        realTimePanel.setReadingStatus(readingStatusLabel);
+        return this;
+    }
+
+    public SelectionPanelBuilder withRealTimeCOMBox(JComboBox comBox) {
+        realTimePanel.setComBox(comBox);
+        return this;
+    }
+
+    public SelectionPanelBuilder withRealTimeBaudBox(JComboBox baudBox) {
+        realTimePanel.setBaudComboBox(baudBox);
+        return this;
+    }
+
+    public SelectionPanelBuilder withRealTimeDataBox(JComboBox dataBox) {
+        realTimePanel.setDataComboBox(dataBox);
+        return this;
+    }
+
+    public SelectionPanelBuilder withRealTimeStopBitsBox(JComboBox stopBitsBox) {
+        realTimePanel.setStopBitsComboBox(stopBitsBox);
+        return this;
+    }
+
+    public SelectionPanelBuilder withRealTimeParityBox(JComboBox parityBox) {
+        realTimePanel.setParityComboBox(parityBox);
         return this;
     }
 
     public SelectionPanelBuilder withConnectButton(JButton connectButton) {
-        selectionPanel.setConnect(connectButton);
+        realTimePanel.setConnect(connectButton);
         return this;
     }
 
     public SelectionPanelBuilder withDisconnectButton(JButton disconnectButton) {
-        selectionPanel.setDisconnect(disconnectButton);
+        realTimePanel.setDisconnect(disconnectButton);
         return this;
     }
 
-    public SelectionPanelBuilder withCOMBox(JComboBox comBox) {
-        selectionPanel.setComBox(comBox);
+
+    /**
+     * SD Card Options
+     */
+
+    public SelectionPanelBuilder withSDFileSaveName(JLabel saveNameLabel) {
+        sdCapturePanel.setSaveFileSelected(saveNameLabel);
         return this;
     }
 
-    public SelectionPanelBuilder withBaudBox(JComboBox baudBox) {
-        selectionPanel.setBaudComboBox(baudBox);
+    public SelectionPanelBuilder withSDSaveButton(JButton saveButton) {
+        sdCapturePanel.setSelectSaveFileButton(saveButton);
         return this;
     }
 
-    public SelectionPanelBuilder withDataBox(JComboBox dataBox) {
-        selectionPanel.setDataComboBox(dataBox);
+    public SelectionPanelBuilder withSDCOMBox(JComboBox comboBox) {
+        sdCapturePanel.setComBox(comboBox);
         return this;
     }
 
-    public SelectionPanelBuilder withStopBitsBox(JComboBox stopBitsBox) {
-        selectionPanel.setStopBitsComboBox(stopBitsBox);
+    public SelectionPanelBuilder withSDBaudBox(JComboBox baudBox) {
+        sdCapturePanel.setBaudComboBox(baudBox);
         return this;
     }
 
-    public SelectionPanelBuilder withParityBox(JComboBox parityBox) {
-        selectionPanel.setParityComboBox(parityBox);
+    public SelectionPanelBuilder withSDDataBox(JComboBox dataBox) {
+        sdCapturePanel.setDataComboBox(dataBox);
         return this;
     }
-    
-    public SelectionPanelBuilder withButtonGroup(ButtonGroup buttonGroup){
-        selectionPanel.setButtonGroup(buttonGroup);
+
+    public SelectionPanelBuilder withSDStopBitsBox(JComboBox stopBitsBox) {
+        sdCapturePanel.setStopBitsComboBox(stopBitsBox);
+        return this;
+    }
+
+    public SelectionPanelBuilder withSDParityBox(JComboBox parityBox) {
+        sdCapturePanel.setParityComboBox(parityBox);
+        return this;
+    }
+
+    public SelectionPanelBuilder withStartTransferButton(JButton startTransfer) {
+        sdCapturePanel.setStartTransfer(startTransfer);
+        return this;
+    }
+
+    public SelectionPanelBuilder withStopTransferButton(JButton stopTransfer) {
+        sdCapturePanel.setStopTransfer(stopTransfer);
+        return this;
+    }
+
+    public SelectionPanelBuilder withBytesTransferredLabel(JLabel bytesTransferred) {
+        sdCapturePanel.setBytesTransferred(bytesTransferred);
         return this;
     }
 

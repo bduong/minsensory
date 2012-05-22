@@ -43,6 +43,10 @@ public class UI {
     private int windowHeight;
     private OperatingMode operatingMode;
 
+    private static Integer [] baudRates = new Integer[] { 300, 600, 1200, 1800, 2400, 4800, 7200, 9600, 14400, 19200, 38400, 57600, 115200, 230400, 460800, 921600 };
+    private static Integer [] dataBitSettings = new Integer[] { 5, 6, 7, 8 };
+    private static String [] paritySettings =  new String[] { "NONE", "ODD", "EVEN", "MARK", "SPACE" };
+
     public UI() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         windowWidth = screenSize.width / 2;
@@ -123,17 +127,34 @@ public class UI {
 
     private JLabel readingStatus;
     private JButton chooseSaveFile;
-    private JComboBox comBox;
-    private JComboBox baudBox;
-    private JComboBox dataBox;
-    private JComboBox stopBitsBox;
-    private JComboBox parityBitBox;
+    private JComboBox realTimeComBox;
+    private JComboBox realTimeBaudBox;
+    private JComboBox realTimeDataBox;
+    private JComboBox realTimeStopBitsBox;
+    private JComboBox realTimeParityBitBox;
 
     private String comPortName;
     private int baud;
     private int dataBits;
     private int stopBits;
     private int parity;
+
+    /**
+     * SD Card Options
+     */
+
+    private JLabel sdSaveFileName;
+    private JButton sdSaveFileSelect;
+    private JComboBox sdComBox;
+    private JComboBox sdBaudBox;
+    private JComboBox sdDataBox;
+    private JComboBox sdStopBitsBox;
+    private JComboBox sdParityBitBox;
+
+    private JButton sdStartTransfer;
+    private JButton sdStopTransfer;
+    private JLabel sdBytesTransferred;
+
 
     private COMReader comReader;
     private BufferedOutputStream fileSaveStream;
@@ -156,17 +177,17 @@ public class UI {
         chooseSaveFile.setEnabled(enabled);
         connect.setEnabled(enabled);
         disconnect.setEnabled(enabled);
-        comBox.setEnabled(enabled);
-        baudBox.setEnabled(enabled);
-        dataBox.setEnabled(enabled);
-        stopBitsBox.setEnabled(enabled);
-        parityBitBox.setEnabled(enabled);
+        realTimeComBox.setEnabled(enabled);
+        realTimeBaudBox.setEnabled(enabled);
+        realTimeDataBox.setEnabled(enabled);
+        realTimeStopBitsBox.setEnabled(enabled);
+        realTimeParityBitBox.setEnabled(enabled);
     }
 
     /**
      * Enabled or Disabled all of the configuration buttons for the play mode.
      *
-     * @param enabled
+     * @param enabled enable
      */
     private void setEnabledForPlaybackObjects(boolean enabled) {
         seekField.setEnabled(enabled);
@@ -252,9 +273,14 @@ public class UI {
         };
         fileChooser.setMultiSelectionEnabled(false);
 
+        baud = 9600;
+        dataBits = SerialPort.DATABITS_8;
+        stopBits = SerialPort.STOPBITS_1;
+
+
         /**
-         * RealTime
-         */
+        * RealTime
+        */
 
         initializeRealTimeButtons();
 
@@ -263,6 +289,8 @@ public class UI {
          */
 
         initializePlayBackButtons();
+
+        initializeSDCaptureButtons();
 
         seekSlider.setEnabled(false);
         back.setEnabled(false);
@@ -279,6 +307,9 @@ public class UI {
         processedDataRadioButton.setSelected(true);
 
         selectionPanel = new SelectionPanelBuilder().aSelectionPanel()
+          /**
+           * Play Back
+           */
           .withGoToButton(seekGoTo)
           .withSeekEditField(seekField)
           .withBack(back)
@@ -286,24 +317,41 @@ public class UI {
           .withSlider(seekSlider)
           .withLoadButton(loadData)
           .withFileLoadNameLabel(loadFileLabel)
-          .withButtonGroup(dataTypeButtonGroup)
           .withProcessedDataRadioButton(processedDataRadioButton)
           .withRawDataRadioButton(rawDataRadioButton)
           .withPlayStartButton(startPlayBack)
           .withPlayStopButton(stopPlayBack)
 
+            /**
+             * Real Time
+             */
           .withCOMStartButton(startDataRead)
           .withCOMStopButton(stopDataRead)
           .withReadingStatusLabel(readingStatus)
-          .withSaveButton(chooseSaveFile)
+          .withRealTimeSaveButton(chooseSaveFile)
           .withFileSaveNameLabel(saveFileLabel)
+          .withRealTimeCOMBox(realTimeComBox)
+          .withRealTimeBaudBox(realTimeBaudBox)
+          .withRealTimeDataBox(realTimeDataBox)
+          .withRealTimeStopBitsBox(realTimeStopBitsBox)
+          .withRealTimeParityBox(realTimeParityBitBox)
           .withConnectButton(connect)
           .withDisconnectButton(disconnect)
-          .withCOMBox(comBox)
-          .withBaudBox(baudBox)
-          .withDataBox(dataBox)
-          .withStopBitsBox(stopBitsBox)
-          .withParityBox(parityBitBox)
+
+            /**
+             * SD Card Capture
+             */
+          .withSDFileSaveName(sdSaveFileName)
+          .withSDSaveButton(sdSaveFileSelect)
+          .withSDCOMBox(sdComBox)
+          .withSDBaudBox(sdBaudBox)
+          .withSDDataBox(sdDataBox)
+          .withSDStopBitsBox(sdStopBitsBox)
+          .withSDParityBox(sdParityBitBox)
+          .withStartTransferButton(sdStartTransfer)
+          .withStopTransferButton(sdStopTransfer)
+          .withBytesTransferredLabel(sdBytesTransferred)
+
           .build();
 
         addMenuBar();
@@ -523,29 +571,27 @@ public class UI {
             if (ports.size() > 0) comPortName = ports.get(0);
             else comPortName = "";
             if (portNames.length <= 0)
-                comBox = new JComboBox(new String[] { "None" });
-            else comBox = new JComboBox(portNames);
+                realTimeComBox = new JComboBox(new String[] { "None" });
+            else realTimeComBox = new JComboBox(portNames);
         } catch (NoSuchPortException e) {
-            comBox = new JComboBox(new String[] { "None" });
+            realTimeComBox = new JComboBox(new String[] { "None" });
         }
-        ;
-        baudBox = new JComboBox(
-          new Integer[] { 300, 600, 1200, 1800, 2400, 4800, 7200, 9600, 14400, 19200, 38400, 57600, 115200, 230400, 460800, 921600 });
-        baudBox.setEditable(true);
-        baudBox.setSelectedItem(9600);
-        baudBox.addActionListener(new ActionListener() {
+
+        realTimeBaudBox = new JComboBox(baudRates);
+        realTimeBaudBox.setEditable(true);
+        realTimeBaudBox.setSelectedItem(9600);
+        realTimeBaudBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                baud = (Integer) baudBox.getSelectedItem();
+                baud = (Integer) realTimeBaudBox.getSelectedItem();
             }
         });
-        baud = 9600;
-        dataBox = new JComboBox(new Integer[] { 5, 6, 7, 8 });
-        dataBox.setSelectedItem(8);
-        dataBox.addActionListener(new ActionListener() {
+        realTimeDataBox = new JComboBox(dataBitSettings);
+        realTimeDataBox.setSelectedItem(8);
+        realTimeDataBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int bits = (Integer) dataBox.getSelectedItem();
+                int bits = (Integer) realTimeDataBox.getSelectedItem();
                 switch (bits) {
                 case 5:
                     dataBits = SerialPort.DATABITS_5;
@@ -558,13 +604,12 @@ public class UI {
                 }
             }
         });
-        dataBits = SerialPort.DATABITS_8;
-        stopBitsBox = new JComboBox(new String[] { "1", "2", "1.5" });
-        stopBitsBox.setSelectedItem("1");
-        stopBitsBox.addActionListener(new ActionListener() {
+        realTimeStopBitsBox = new JComboBox(new String[] { "1", "2", "1.5" });
+        realTimeStopBitsBox.setSelectedItem("1");
+        realTimeStopBitsBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int index = stopBitsBox.getSelectedIndex();
+                int index = realTimeStopBitsBox.getSelectedIndex();
                 switch (index) {
                 case 0:
                     stopBits = SerialPort.STOPBITS_1;
@@ -575,14 +620,13 @@ public class UI {
                 }
             }
         });
-        stopBits = SerialPort.STOPBITS_1;
-        parityBitBox = new JComboBox(
+        realTimeParityBitBox = new JComboBox(
           new String[] { "NONE", "ODD", "EVEN", "MARK", "SPACE" });
-        parityBitBox.setSelectedItem("NONE");
-        parityBitBox.addActionListener(new ActionListener() {
+        realTimeParityBitBox.setSelectedItem("NONE");
+        realTimeParityBitBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int index = stopBitsBox.getSelectedIndex();
+                int index = realTimeStopBitsBox.getSelectedIndex();
                 switch (index) {
                 case 0:
                     parity = SerialPort.PARITY_NONE;
@@ -680,6 +724,96 @@ public class UI {
             }
         });
 
+    }
+
+    private void initializeSDCaptureButtons() {
+        try {
+            List<String> ports = COMReader.listPorts();
+            String[] portNames = new String[ports.size()];
+            ports.toArray(portNames);
+            if (ports.size() > 0) comPortName = ports.get(0);
+            else comPortName = "";
+            if (portNames.length <= 0)
+                sdComBox = new JComboBox(new String[] { "None" });
+            else sdComBox = new JComboBox(portNames);
+        } catch (NoSuchPortException e) {
+            sdComBox = new JComboBox(new String[] { "None" });
+        }
+
+
+        sdBaudBox = new JComboBox(baudRates);
+        sdBaudBox.setEditable(true);
+        sdBaudBox.setSelectedItem(baud);
+        sdBaudBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                baud = (Integer) sdBaudBox.getSelectedItem();
+            }
+        });
+
+        sdDataBox = new JComboBox(dataBitSettings);
+        sdDataBox.setSelectedItem(8);
+        sdDataBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int bits = (Integer) sdDataBox.getSelectedItem();
+                switch (bits) {
+                case 5:
+                    dataBits = SerialPort.DATABITS_5;
+                case 6:
+                    dataBits = SerialPort.DATABITS_6;
+                case 7:
+                    dataBits = SerialPort.DATABITS_7;
+                case 8:
+                    dataBits = SerialPort.DATABITS_8;
+                }
+            }
+        });
+
+        sdStopBitsBox = new JComboBox(new String[] { "1", "2", "1.5" });
+        sdStopBitsBox.setSelectedItem("1");
+        sdStopBitsBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int index = sdStopBitsBox.getSelectedIndex();
+                switch (index) {
+                case 0:
+                    stopBits = SerialPort.STOPBITS_1;
+                case 1:
+                    stopBits = SerialPort.STOPBITS_2;
+                case 2:
+                    stopBits = SerialPort.STOPBITS_1_5;
+                }
+            }
+        });
+
+        sdParityBitBox = new JComboBox(paritySettings);
+        sdParityBitBox.setSelectedItem("NONE");
+        sdParityBitBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int index = sdParityBitBox.getSelectedIndex();
+                switch (index) {
+                case 0:
+                    parity = SerialPort.PARITY_NONE;
+                case 1:
+                    parity = SerialPort.PARITY_ODD;
+                case 2:
+                    parity = SerialPort.PARITY_EVEN;
+                case 3:
+                    parity = SerialPort.PARITY_MARK;
+                case 4:
+                    parity = SerialPort.PARITY_SPACE;
+                }
+            }
+        });
+
+
+        sdSaveFileName = new JLabel("NONE");
+        sdSaveFileSelect = new JButton("Select");
+        sdStartTransfer = new JButton("Start Transfer");
+        sdStopTransfer = new JButton("Stop Transfer");
+        sdBytesTransferred = new JLabel("0 B");
     }
 
     /** Initialize the buttons for play back mode */
