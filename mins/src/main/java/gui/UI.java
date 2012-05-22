@@ -12,6 +12,13 @@ import gnu.io.NoSuchPortException;
 import gnu.io.SerialPort;
 import gui.MacOS.MacOSEventHandler;
 import gui.menu.items.ValidationTestPanel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -19,6 +26,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -155,6 +164,47 @@ public class UI {
     private JButton sdStopTransfer;
     private JLabel sdBytesTransferred;
 
+    /**
+     * Frequency Analysis Options
+     */
+
+    private JLabel freqSaveFileName;
+    private JButton freqSaveFileSelect;
+
+    private JFormattedTextField alphaField;
+    private JFormattedTextField betaField;
+    private JFormattedTextField deltaField;
+    private JFormattedTextField gammaField;
+    private JFormattedTextField thetaField;
+
+    private JSlider alphaSlider;
+    private JSlider betaSlider;
+    private JSlider deltaSlider;
+    private JSlider gammaSlider;
+    private JSlider thetaSlider;
+
+    private JButton freqProcessButton;
+    private ChartPanel freqChartPanel;
+    private XYSeries alphaLine;
+    private XYSeries betaLine;
+    private XYSeries deltaLine;
+    private XYSeries gammaLine;
+    private XYSeries thetaLine;
+
+
+    /**
+     * Properties
+     */
+
+    /** Frequency Analysis */
+    private int alphaThreshold;
+    private int betaThreshold;
+    private int deltaThreshold;
+    private int gammaThreshold;
+    private int thetaThreshold;
+
+
+
 
     private COMReader comReader;
     private BufferedOutputStream fileSaveStream;
@@ -279,8 +329,8 @@ public class UI {
 
 
         /**
-        * RealTime
-        */
+         * RealTime
+         */
 
         initializeRealTimeButtons();
 
@@ -291,6 +341,8 @@ public class UI {
         initializePlayBackButtons();
 
         initializeSDCaptureButtons();
+
+        initializeFrequencyButtons();
 
         seekSlider.setEnabled(false);
         back.setEnabled(false);
@@ -351,6 +403,24 @@ public class UI {
           .withStartTransferButton(sdStartTransfer)
           .withStopTransferButton(sdStopTransfer)
           .withBytesTransferredLabel(sdBytesTransferred)
+
+            /**
+             * Frequency Analysis
+             */
+          .withFrequencySaveFileLabel(freqSaveFileName)
+          .withFrequencySaveButton(freqSaveFileSelect)
+          .withAlphaField(alphaField)
+          .withBetaField(betaField)
+          .withDeltaField(deltaField)
+          .withGammaField(gammaField)
+          .withThetaField(thetaField)
+          .withAlphaSlider(alphaSlider)
+          .withBetaSlider(betaSlider)
+          .withDeltaSlider(deltaSlider)
+          .withGammaSlider(gammaSlider)
+          .withThetaSlider(thetaSlider)
+          .withProcessButton(freqProcessButton)
+          .withFrequencyChart(freqChartPanel)
 
           .build();
 
@@ -507,7 +577,6 @@ public class UI {
                   Short.MAX_VALUE)
                 .addGap(0, 10, 20)
                 .addComponent(selectionPanel)
-                .addGap(0, 0, 20)
             )
             .addComponent(plotPanel, 0, GroupLayout.PREFERRED_SIZE,
               Short.MAX_VALUE)));
@@ -726,96 +795,6 @@ public class UI {
 
     }
 
-    private void initializeSDCaptureButtons() {
-        try {
-            List<String> ports = COMReader.listPorts();
-            String[] portNames = new String[ports.size()];
-            ports.toArray(portNames);
-            if (ports.size() > 0) comPortName = ports.get(0);
-            else comPortName = "";
-            if (portNames.length <= 0)
-                sdComBox = new JComboBox(new String[] { "None" });
-            else sdComBox = new JComboBox(portNames);
-        } catch (NoSuchPortException e) {
-            sdComBox = new JComboBox(new String[] { "None" });
-        }
-
-
-        sdBaudBox = new JComboBox(baudRates);
-        sdBaudBox.setEditable(true);
-        sdBaudBox.setSelectedItem(baud);
-        sdBaudBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                baud = (Integer) sdBaudBox.getSelectedItem();
-            }
-        });
-
-        sdDataBox = new JComboBox(dataBitSettings);
-        sdDataBox.setSelectedItem(8);
-        sdDataBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int bits = (Integer) sdDataBox.getSelectedItem();
-                switch (bits) {
-                case 5:
-                    dataBits = SerialPort.DATABITS_5;
-                case 6:
-                    dataBits = SerialPort.DATABITS_6;
-                case 7:
-                    dataBits = SerialPort.DATABITS_7;
-                case 8:
-                    dataBits = SerialPort.DATABITS_8;
-                }
-            }
-        });
-
-        sdStopBitsBox = new JComboBox(new String[] { "1", "2", "1.5" });
-        sdStopBitsBox.setSelectedItem("1");
-        sdStopBitsBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int index = sdStopBitsBox.getSelectedIndex();
-                switch (index) {
-                case 0:
-                    stopBits = SerialPort.STOPBITS_1;
-                case 1:
-                    stopBits = SerialPort.STOPBITS_2;
-                case 2:
-                    stopBits = SerialPort.STOPBITS_1_5;
-                }
-            }
-        });
-
-        sdParityBitBox = new JComboBox(paritySettings);
-        sdParityBitBox.setSelectedItem("NONE");
-        sdParityBitBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int index = sdParityBitBox.getSelectedIndex();
-                switch (index) {
-                case 0:
-                    parity = SerialPort.PARITY_NONE;
-                case 1:
-                    parity = SerialPort.PARITY_ODD;
-                case 2:
-                    parity = SerialPort.PARITY_EVEN;
-                case 3:
-                    parity = SerialPort.PARITY_MARK;
-                case 4:
-                    parity = SerialPort.PARITY_SPACE;
-                }
-            }
-        });
-
-
-        sdSaveFileName = new JLabel("NONE");
-        sdSaveFileSelect = new JButton("Select");
-        sdStartTransfer = new JButton("Start Transfer");
-        sdStopTransfer = new JButton("Stop Transfer");
-        sdBytesTransferred = new JLabel("0 B");
-    }
-
     /** Initialize the buttons for play back mode */
     private void initializePlayBackButtons() {
 
@@ -1010,6 +989,231 @@ public class UI {
                 seekTime();
             }
         });
+    }
+
+    private void initializeSDCaptureButtons() {
+        try {
+            List<String> ports = COMReader.listPorts();
+            String[] portNames = new String[ports.size()];
+            ports.toArray(portNames);
+            if (ports.size() > 0) comPortName = ports.get(0);
+            else comPortName = "";
+            if (portNames.length <= 0)
+                sdComBox = new JComboBox(new String[] { "None" });
+            else sdComBox = new JComboBox(portNames);
+        } catch (NoSuchPortException e) {
+            sdComBox = new JComboBox(new String[] { "None" });
+        }
+
+
+        sdBaudBox = new JComboBox(baudRates);
+        sdBaudBox.setEditable(true);
+        sdBaudBox.setSelectedItem(baud);
+        sdBaudBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                baud = (Integer) sdBaudBox.getSelectedItem();
+            }
+        });
+
+        sdDataBox = new JComboBox(dataBitSettings);
+        sdDataBox.setSelectedItem(8);
+        sdDataBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int bits = (Integer) sdDataBox.getSelectedItem();
+                switch (bits) {
+                case 5:
+                    dataBits = SerialPort.DATABITS_5;
+                case 6:
+                    dataBits = SerialPort.DATABITS_6;
+                case 7:
+                    dataBits = SerialPort.DATABITS_7;
+                case 8:
+                    dataBits = SerialPort.DATABITS_8;
+                }
+            }
+        });
+
+        sdStopBitsBox = new JComboBox(new String[] { "1", "2", "1.5" });
+        sdStopBitsBox.setSelectedItem("1");
+        sdStopBitsBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int index = sdStopBitsBox.getSelectedIndex();
+                switch (index) {
+                case 0:
+                    stopBits = SerialPort.STOPBITS_1;
+                case 1:
+                    stopBits = SerialPort.STOPBITS_2;
+                case 2:
+                    stopBits = SerialPort.STOPBITS_1_5;
+                }
+            }
+        });
+
+        sdParityBitBox = new JComboBox(paritySettings);
+        sdParityBitBox.setSelectedItem("NONE");
+        sdParityBitBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int index = sdParityBitBox.getSelectedIndex();
+                switch (index) {
+                case 0:
+                    parity = SerialPort.PARITY_NONE;
+                case 1:
+                    parity = SerialPort.PARITY_ODD;
+                case 2:
+                    parity = SerialPort.PARITY_EVEN;
+                case 3:
+                    parity = SerialPort.PARITY_MARK;
+                case 4:
+                    parity = SerialPort.PARITY_SPACE;
+                }
+            }
+        });
+
+
+        sdSaveFileName = new JLabel("NONE");
+        sdSaveFileSelect = new JButton("Select");
+        sdStartTransfer = new JButton("Start Transfer");
+        sdStopTransfer = new JButton("Stop Transfer");
+        sdBytesTransferred = new JLabel("0 B");
+    }
+
+    private void initializeFrequencyButtons() {
+        freqSaveFileName = new JLabel("");
+        freqSaveFileSelect = new JButton("Select");
+
+        alphaField = createThresholdField();
+        betaField = createThresholdField();
+        deltaField = createThresholdField();
+        gammaField = createThresholdField();
+        thetaField = createThresholdField();
+
+        alphaSlider = createThresholdSlider();
+        betaSlider = createThresholdSlider();
+        deltaSlider = createThresholdSlider();
+        gammaSlider = createThresholdSlider();
+        thetaSlider = createThresholdSlider();
+
+        freqProcessButton = new JButton("Process Data");
+        alphaLine = createFreqLine("Alpha");
+        betaLine = createFreqLine("Beta");
+        deltaLine = createFreqLine("Delta");
+        gammaLine = createFreqLine("Gamma");
+        thetaLine = createFreqLine("Theta");
+
+        XYSeriesCollection seriesCollection = new XYSeriesCollection();
+        seriesCollection.addSeries(alphaLine);
+        seriesCollection.addSeries(betaLine);
+        seriesCollection.addSeries(deltaLine);
+        seriesCollection.addSeries(gammaLine);
+        seriesCollection.addSeries(thetaLine);
+
+
+         freqChartPanel = new ChartPanel(ChartFactory.createXYLineChart(
+           null,
+           null,
+           null,
+           seriesCollection,
+           PlotOrientation.VERTICAL,
+           false,
+           true,
+           false
+         ));
+
+
+        NumberAxis rangeAxis = (NumberAxis) freqChartPanel.getChart().getXYPlot().getRangeAxis();
+        rangeAxis.setRange(0, 100);
+        rangeAxis.setTickUnit(new NumberTickUnit(25));
+    }
+
+    private XYSeries createFreqLine(String name) {
+        XYSeries line = new XYSeries(name);
+        line.add(-100, 50);
+        line.add(100,50);
+        return line;
+    }
+
+    private JFormattedTextField createThresholdField() {
+        JFormattedTextField field = new JFormattedTextField();
+        field.setValue(50);
+        field.setColumns(3);
+        field.setHorizontalAlignment(JTextField.CENTER);
+        field.addPropertyChangeListener("value", new FreqThresholdFieldChangeListener());
+        return field;
+    }
+
+    private JSlider createThresholdSlider() {
+        JSlider slider = new JSlider(0,100,50);
+        slider.setMajorTickSpacing(25);
+        slider.setMinorTickSpacing(10);
+        slider.setPaintLabels(true);
+        slider.setPaintTicks(true);
+        slider.addChangeListener(new FreqSliderChangeListener());
+        return slider;
+    }
+
+    private class FreqThresholdFieldChangeListener implements PropertyChangeListener{
+
+        @Override
+        public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+            Object source = propertyChangeEvent.getSource();
+            if(source == alphaField) {
+               alphaThreshold = (Integer) alphaField.getValue();
+               alphaSlider.setValue(alphaThreshold);
+               changeThresholdLine(alphaLine, alphaThreshold);
+            } else if(source == betaField) {
+               betaThreshold = (Integer)  betaField.getValue();
+               betaSlider.setValue(betaThreshold);
+               changeThresholdLine(betaLine, betaThreshold);
+            } else if(source == deltaField) {
+                deltaThreshold = (Integer) deltaField.getValue();
+                deltaSlider.setValue(deltaThreshold);
+                changeThresholdLine(deltaLine, deltaThreshold);
+            } else if(source == gammaField) {
+                gammaThreshold = (Integer) gammaField.getValue();
+                gammaSlider.setValue(gammaThreshold);
+                changeThresholdLine(gammaLine, gammaThreshold);
+            } else {
+                thetaThreshold = (Integer) thetaField.getValue();
+                thetaSlider.setValue(thetaThreshold);
+                changeThresholdLine(thetaLine, thetaThreshold);
+            }
+        }
+
+
+    }
+    private void changeThresholdLine(XYSeries line, int threshold) {
+        line.clear();
+        line.add(-100, threshold);
+        line.add(100, threshold);
+    }
+
+    private class FreqSliderChangeListener implements ChangeListener{
+
+        @Override
+        public void stateChanged(ChangeEvent changeEvent) {
+            Object source = changeEvent.getSource();
+            if(source == alphaSlider) {
+                alphaThreshold = alphaSlider.getValue();
+                alphaField.setValue(alphaThreshold);
+            } else if(source == betaSlider) {
+                betaThreshold = betaSlider.getValue();
+                betaField.setValue(betaThreshold);
+            } else if(source == deltaSlider) {
+                deltaThreshold = deltaSlider.getValue();
+                deltaField.setValue(deltaThreshold);
+            } else if(source == gammaSlider) {
+                gammaThreshold = gammaSlider.getValue();
+                gammaField.setValue(gammaThreshold);
+            } else {
+                thetaThreshold = thetaSlider.getValue();
+                thetaField.setValue(thetaThreshold);
+
+            }
+        }
     }
 
     /** Resets the plots and image to a certain time for playback mode */

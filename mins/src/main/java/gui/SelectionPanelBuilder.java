@@ -1,8 +1,10 @@
 package gui;
 
+import gui.tabs.FrequencyAnalysisPanel;
 import gui.tabs.PlayBackPanel;
 import gui.tabs.RealTimePanel;
 import gui.tabs.SDCapturePanel;
+import org.jfree.chart.ChartPanel;
 
 import javax.swing.*;
 
@@ -19,6 +21,7 @@ public class SelectionPanelBuilder {
     private PlayBackPanel playBackPanel;
     private RealTimePanel realTimePanel;
     private SDCapturePanel sdCapturePanel;
+    private FrequencyAnalysisPanel frequencyAnalysisPanel;
     
     
     public SelectionPanelBuilder() {
@@ -30,6 +33,7 @@ public class SelectionPanelBuilder {
         playBackPanel = selectionPanel.getPlayBackOptions();
         realTimePanel = selectionPanel.getRealTimeOptions();
         sdCapturePanel = selectionPanel.getSDCardOptions();
+        frequencyAnalysisPanel = selectionPanel.getFrequencyAnalysisOptions();
         return this;
     }
 
@@ -208,6 +212,80 @@ public class SelectionPanelBuilder {
 
     public SelectionPanelBuilder withBytesTransferredLabel(JLabel bytesTransferred) {
         sdCapturePanel.setBytesTransferred(bytesTransferred);
+        return this;
+    }
+
+    /**
+     * Frequency Analysis Options
+     */
+
+    public SelectionPanelBuilder withFrequencySaveFileLabel(JLabel saveFileLabel) {
+        frequencyAnalysisPanel.setSaveFileSelected(saveFileLabel);
+        return this;
+    }
+
+    public SelectionPanelBuilder withFrequencySaveButton(JButton saveButton) {
+        frequencyAnalysisPanel.setSelectSaveFileButton(saveButton);
+        return this;
+    }
+
+    public SelectionPanelBuilder withAlphaField(JFormattedTextField alphaField) {
+        frequencyAnalysisPanel.setAlphaField(alphaField);
+        return this;
+    }
+
+    public SelectionPanelBuilder withBetaField(JFormattedTextField betaField) {
+        frequencyAnalysisPanel.setBetaField(betaField);
+        return this;
+    }
+
+    public SelectionPanelBuilder withGammaField(JFormattedTextField gammaField){
+        frequencyAnalysisPanel.setGammaField(gammaField);
+        return this;
+    }
+
+    public SelectionPanelBuilder withDeltaField(JFormattedTextField deltaField) {
+        frequencyAnalysisPanel.setDeltaField(deltaField);
+        return this;
+    }
+
+    public SelectionPanelBuilder withThetaField(JFormattedTextField thetaField) {
+        frequencyAnalysisPanel.setThetaField(thetaField);
+        return this;
+    }
+
+    public SelectionPanelBuilder withAlphaSlider(JSlider alphaSlider) {
+        frequencyAnalysisPanel.setAlphaSlider(alphaSlider);
+        return this;
+    }
+
+    public SelectionPanelBuilder withBetaSlider(JSlider betaSlider){
+        frequencyAnalysisPanel.setBetaSlider(betaSlider);
+        return this;
+    }
+
+    public SelectionPanelBuilder withDeltaSlider(JSlider deltaSlider) {
+        frequencyAnalysisPanel.setDeltaSlider(deltaSlider);
+        return this;
+    }
+
+    public SelectionPanelBuilder withGammaSlider(JSlider gammaSlider) {
+        frequencyAnalysisPanel.setGammaSlider(gammaSlider);
+        return this;
+    }
+
+    public SelectionPanelBuilder withThetaSlider(JSlider thetaSlider) {
+        frequencyAnalysisPanel.setThetaSlider(thetaSlider);
+        return this;
+    }
+
+    public SelectionPanelBuilder withProcessButton(JButton processButton) {
+        frequencyAnalysisPanel.setProcessButton(processButton);
+        return this;
+    }
+
+    public SelectionPanelBuilder withFrequencyChart(ChartPanel frequencyChart) {
+        frequencyAnalysisPanel.setFrequencyChart(frequencyChart);
         return this;
     }
 

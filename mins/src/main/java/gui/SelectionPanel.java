@@ -1,5 +1,6 @@
 package gui;
 
+import gui.tabs.FrequencyAnalysisPanel;
 import gui.tabs.PlayBackPanel;
 import gui.tabs.RealTimePanel;
 import gui.tabs.SDCapturePanel;
@@ -18,11 +19,13 @@ public class SelectionPanel extends JTabbedPane{
     private PlayBackPanel playBackOptions;
     private RealTimePanel realTimeOptions;
     private SDCapturePanel sdCardOptions;
+    private FrequencyAnalysisPanel frequencyAnalysisOptions;
 
     public SelectionPanel() {
         playBackOptions = new PlayBackPanel();
         realTimeOptions = new RealTimePanel();
         sdCardOptions = new SDCapturePanel();
+        frequencyAnalysisOptions = new FrequencyAnalysisPanel();
     }
 
     /**
@@ -33,10 +36,12 @@ public class SelectionPanel extends JTabbedPane{
         playBackOptions.layoutComponents();
         realTimeOptions.layoutComponents();
         sdCardOptions.layoutComponents();
+        frequencyAnalysisOptions.layoutComponents();
 
         addTab("Play Back", null, playBackOptions, "Play back data from File");
         addTab("Real Time", null, realTimeOptions, "Record Data From USB");
         addTab("SD Capture", null, sdCardOptions, "Capture Data From SD Card");
+        addTab("Freq Analysis", null, frequencyAnalysisOptions, "Do Frequency Analysis");
     }
 
     public PlayBackPanel getPlayBackOptions() {
@@ -49,5 +54,9 @@ public class SelectionPanel extends JTabbedPane{
 
     public SDCapturePanel getSDCardOptions() {
         return sdCardOptions;
+    }
+
+    public FrequencyAnalysisPanel getFrequencyAnalysisOptions(){
+        return frequencyAnalysisOptions;
     }
 }
