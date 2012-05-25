@@ -22,7 +22,7 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
-            <url>file://${project.basedir}${file.separator}lib</url>
+            <url>file://${root}${file.separator}lib</url>
         </repository>
     </repositories>
 
@@ -32,7 +32,7 @@
         <izpack.plugin.version>5.0.0-beta10</izpack.plugin.version>
         <izpack.staging>${project.build.directory}/staging</izpack.staging>
         <osx.install>false</osx.install>
-        <!--<root>${basedir}</root>-->
+        <root>${basedir}</root>
     </properties>
 
     <dependencyManagement>
