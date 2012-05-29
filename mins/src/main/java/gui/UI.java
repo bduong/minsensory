@@ -637,11 +637,11 @@ public class UI {
             List<String> ports = COMReader.listPorts();
             String[] portNames = new String[ports.size()];
             ports.toArray(portNames);
-            if (ports.size() > 0) comPortName = ports.get(0);
+            if (ports.size() > 0) comPortName = "COM3";
             else comPortName = "";
             if (portNames.length <= 0)
                 realTimeComBox = new JComboBox(new String[] { "None" });
-            else realTimeComBox = new JComboBox(portNames);
+            else realTimeComBox = new JComboBox(new String[] {"COM3"});
         } catch (NoSuchPortException e) {
             realTimeComBox = new JComboBox(new String[] { "None" });
         }
@@ -784,8 +784,8 @@ public class UI {
                 chooseSaveFile.setEnabled(true);
                 if (saveDataFile != null) startDataRead.setEnabled(true);
                 try {
-                    comReader
-                      .connectTo(comPortName, baud, dataBits, stopBits, parity);
+//                    comReader
+//                      .connectTo(comPortName, baud, dataBits, stopBits, parity);
                     //comReader.connectTo(comPortName);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -996,11 +996,11 @@ public class UI {
             List<String> ports = COMReader.listPorts();
             String[] portNames = new String[ports.size()];
             ports.toArray(portNames);
-            if (ports.size() > 0) comPortName = ports.get(0);
+            if (ports.size() > 0) comPortName = "COM3";
             else comPortName = "";
             if (portNames.length <= 0)
                 sdComBox = new JComboBox(new String[] { "None" });
-            else sdComBox = new JComboBox(portNames);
+            else sdComBox = new JComboBox(new String[] {"COM3"});
         } catch (NoSuchPortException e) {
             sdComBox = new JComboBox(new String[] { "None" });
         }
@@ -1123,16 +1123,28 @@ public class UI {
            false
          ));
 
+        freqChartPanel.getChart().getXYPlot().getRenderer().setSeriesPaint(0, new Color(255,0,0));
+        freqChartPanel.getChart().getXYPlot().getRenderer().setSeriesPaint(1, new Color(0,0, 255));
+        freqChartPanel.getChart().getXYPlot().getRenderer().setSeriesPaint(2, new Color(255,0,127));
+        freqChartPanel.getChart().getXYPlot().getRenderer().setSeriesPaint(3, new Color(0,255,0));
+        freqChartPanel.getChart().getXYPlot().getRenderer().setSeriesPaint(4, new Color(127,255,0));
 
         NumberAxis rangeAxis = (NumberAxis) freqChartPanel.getChart().getXYPlot().getRangeAxis();
         rangeAxis.setRange(0, 100);
         rangeAxis.setTickUnit(new NumberTickUnit(25));
+        NumberAxis domainAxis = (NumberAxis) freqChartPanel.getChart().getXYPlot().getDomainAxis();
+        domainAxis.setRange(-10,10);
+        domainAxis.setTickUnit(new NumberTickUnit(1));
+
+        for (int ii = 0; ii < 5; ii++){
+            freqChartPanel.getChart().getXYPlot().getRenderer().setSeriesStroke(ii, new BasicStroke(5.0f));
+        }
     }
 
     private XYSeries createFreqLine(String name) {
         XYSeries line = new XYSeries(name);
-        line.add(-100, 50);
-        line.add(100,50);
+        line.add(-10, 50);
+        line.add(10,50);
         return line;
     }
 
@@ -1187,8 +1199,8 @@ public class UI {
     }
     private void changeThresholdLine(XYSeries line, int threshold) {
         line.clear();
-        line.add(-100, threshold);
-        line.add(100, threshold);
+        line.add(-10, threshold);
+        line.add(10, threshold);
     }
 
     private class FreqSliderChangeListener implements ChangeListener{

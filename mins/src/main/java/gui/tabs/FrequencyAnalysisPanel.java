@@ -1,8 +1,12 @@
 package gui.tabs;
 
 import org.jfree.chart.ChartPanel;
+import sun.swing.table.DefaultTableCellHeaderRenderer;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 
 public class FrequencyAnalysisPanel extends JPanel {
 
@@ -37,7 +41,7 @@ public class FrequencyAnalysisPanel extends JPanel {
 
 
     public FrequencyAnalysisPanel() {
-        saveToFileLabel = new JLabel("Save To File:");
+        saveToFileLabel = new JLabel("Data File:");
         thresholdLabel = new JLabel("Band Threshold Percentages:");
 
         alphaLabel = new JLabel("Alpha");
@@ -55,6 +59,9 @@ public class FrequencyAnalysisPanel extends JPanel {
         };
 
         bandColorTable = new JTable(data,new String[]{"Band", "Freq & Color"});
+        bandColorTable.setEnabled(false);
+
+
     }
 
     public void layoutComponents() {
