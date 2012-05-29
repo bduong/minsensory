@@ -1,0 +1,9 @@
+.idea/
+.git/
+*/target/
+.DS_Store
+minsensory.iml
+minsensory.ipr
+minsensory.iws
+*.iml
+*.bin
