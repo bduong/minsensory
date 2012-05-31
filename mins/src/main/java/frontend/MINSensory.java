@@ -1,4 +1,11 @@
-package frontend;
+/* **************************************************************************
+ * Copyright (C) 2011
+ * Benjamin Duong, ECE @ Boston University
+  *
+ * All rights reserved.
+ * ************************************************************************** */
+
+ package frontend;
 
 import gui.OperatingMode;
 import gui.UI;

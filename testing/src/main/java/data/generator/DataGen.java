@@ -1,4 +1,11 @@
-package data.generator;
+/* **************************************************************************
+ * Copyright (C) 2011
+ * Benjamin Duong, ECE @ Boston University
+  *
+ * All rights reserved.
+ * ************************************************************************** */
+
+ package data.generator;
 
 import data.DataLine;
 import java.util.Random;

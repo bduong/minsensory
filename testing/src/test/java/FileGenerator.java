@@ -1,4 +1,11 @@
-import data.DataBank;
+/* **************************************************************************
+ * Copyright (C) 2011
+ * Benjamin Duong, ECE @ Boston University
+  *
+ * All rights reserved.
+ * ************************************************************************** */
+
+ import data.DataBank;
 import data.DataLine;
 import data.playback.FileReader;
 import data.playback.StaticDataBank;

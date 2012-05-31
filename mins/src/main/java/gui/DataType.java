@@ -1,4 +1,11 @@
-package gui;
+/* **************************************************************************
+ * Copyright (C) 2011
+ * Benjamin Duong, ECE @ Boston University
+  *
+ * All rights reserved.
+ * ************************************************************************** */
+
+ package gui;
 
 /**
  * An Enum to check track of which data format the user has selected.

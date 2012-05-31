@@ -1,4 +1,11 @@
-package gui.tabs;
+/* **************************************************************************
+ * Copyright (C) 2011
+ * Benjamin Duong, ECE @ Boston University
+  *
+ * All rights reserved.
+ * ************************************************************************** */
+
+ package gui.tabs;
 
 import org.jfree.chart.ChartPanel;
 import sun.swing.table.DefaultTableCellHeaderRenderer;

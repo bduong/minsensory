@@ -1,4 +1,11 @@
-package data;
+/* **************************************************************************
+ * Copyright (C) 2011
+ * Benjamin Duong, ECE @ Boston University
+  *
+ * All rights reserved.
+ * ************************************************************************** */
+
+ package data;
 
 import java.util.List;
 

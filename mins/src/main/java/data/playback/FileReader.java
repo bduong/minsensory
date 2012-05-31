@@ -1,4 +1,11 @@
-package data.playback;
+/* **************************************************************************
+ * Copyright (C) 2011
+ * Benjamin Duong, ECE @ Boston University
+  *
+ * All rights reserved.
+ * ************************************************************************** */
+
+ package data.playback;
 
 import java.io.BufferedInputStream;
 import java.io.File;

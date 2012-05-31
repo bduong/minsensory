@@ -1,4 +1,11 @@
-package freq;
+/* **************************************************************************
+ * Copyright (C) 2011
+ * Benjamin Duong, ECE @ Boston University
+  *
+ * All rights reserved.
+ * ************************************************************************** */
+
+ package freq;
 
 import data.playback.FileReader;
 

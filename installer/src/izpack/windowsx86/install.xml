@@ -38,12 +38,12 @@
     </panels>
 
     <packs>
-        <pack name="Core - Windows" required="yes">
+        <pack name="Core - Windows" required="no">
             <description>The core application</description>
             <file src="MINSensory Application-1.0.exe" targetdir="${INSTALL_PATH}"/>
             <file src="mins-1.0-javadoc.jar" targetdir="${INSTALL_PATH}"/>
         </pack>
-        <pack name="Java USB Communications - Windows" required="no">
+        <pack name="Java USB Communications - Windows (32-bit)" required="no">
             <description>The dlls needed to communicate with serial port</description>
             <file src="RXTXcomm.jar" targetdir="${jre.path}\lib\ext"/>
             <file src="rxtxParallel.dll" targetdir="${jre.path}\bin"/>

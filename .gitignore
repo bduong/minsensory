@@ -7,3 +7,5 @@ minsensory.ipr
 minsensory.iws
 *.iml
 *.bin
+*.uml
+*.png

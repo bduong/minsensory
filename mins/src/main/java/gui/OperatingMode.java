@@ -1,4 +1,11 @@
-package gui;
+/* **************************************************************************
+ * Copyright (C) 2011
+ * Benjamin Duong, ECE @ Boston University
+  *
+ * All rights reserved.
+ * ************************************************************************** */
+
+ package gui;
 
 /**
  * An Enum that checks track of which data mode the user has selected.

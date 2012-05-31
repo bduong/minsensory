@@ -14,11 +14,9 @@
 
     <profiles>
         <profile>
-            <id>windows-install</id>
+            <id>build-installer-windows</id>
             <activation>
-                <os>
-                    <family>Windows</family>
-                </os>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <build>
                 <plugins>
@@ -33,15 +31,21 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <copy todir="${izpack.staging}">
-                                            <fileset dir="${basedir}/src/izpack"/>
-                                        </copy>
-                                        <copy todir="${izpack.staging}">
-                                            <fileset dir="${basedir}/src/izpack/windows"/>
-                                        </copy>
-                                        <copy todir="${izpack.staging}" file="${project.parent.basedir}/mins/target/MINSensory Application-1.0-exe"/>
-                                        <copy todir="${izpack.staging}" file="${project.parent.basedir}/mins/target/MINSensory-javadoc.jar"/>
+                                        <copy todir="${izpack.staging}/windowsx64" file="${basedir}/src/izpack/RXTXcomm.jar"/>
 
+                                        <copy todir="${izpack.staging}/windowsx64">
+                                            <fileset dir="${basedir}/src/izpack/windowsx86_x64"/>
+                                        </copy>
+                                        <copy todir="${izpack.staging}/windowsx64" file="${project.parent.basedir}/mins/target/MINSensory Application-1.0.exe"/>
+                                        <copy todir="${izpack.staging}/windowsx64" file="${project.parent.basedir}/mins/target/MINSensory-javadoc.jar"/>
+
+
+                                        <copy todir="${izpack.staging}/windowsx86" file="${basedir}/src/izpack/RXTXcomm.jar"/>
+                                        <copy todir="${izpack.staging}/windowsx86">
+                                            <fileset dir="${basedir}/src/izpack/windowsx86"/>
+                                        </copy>
+                                        <copy todir="${izpack.staging}/windowsx86" file="${project.parent.basedir}/mins/target/MINSensory Application-1.0.exe"/>
+                                        <copy todir="${izpack.staging}/windowsx86" file="${project.parent.basedir}/mins/target/MINSensory-javadoc.jar"/>
                                     </tasks>
                                 </configuration>
                             </execution>
@@ -53,12 +57,26 @@
                         <artifactId>izpack-maven-plugin</artifactId>
                         <executions>
                             <execution>
+                                <id>windowsx64</id>
                                 <phase>package</phase>
                                 <goals><goal>izpack</goal></goals>
                                 <configuration>
                                     <!-- base for relative paths in izpack descriptor -->
-                                    <baseDir>${izpack.staging}</baseDir>
-                                    <installFile>${basedir}/src/izpack/windows/install.xml</installFile>
+                                    <baseDir>${izpack.staging}/windowsx64</baseDir>
+                                    <installFile>${basedir}/src/izpack/windowsx86_x64/install.xml</installFile>
+                                    <output>${project.build.directory}/MINSensory-Installer-Winx64.jar</output>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>windowsx86</id>
+                                <phase>package</phase>
+                                <goals><goal>izpack</goal></goals>
+                                <configuration>
+                                    <!-- base for relative paths in izpack descriptor -->
+                                    <baseDir>${izpack.staging}/windowsx86</baseDir>
+                                    <installFile>${basedir}/src/izpack/windowsx86/install.xml</installFile>
+                                    <output>${project.build.directory}/MINSensory-Installer-Winx86.jar</output>
                                 </configuration>
                             </execution>
                         </executions>
@@ -66,27 +84,43 @@
                         </dependencies>
                     </plugin>
 
-
                     <plugin>
                         <groupId>com.akathist.maven.plugins.launch4j </groupId>
                         <artifactId>launch4j-maven-plugin</artifactId>
                         <version>1.5.1</version>
                         <executions>
                             <execution>
-                                <id>launch4j</id>
+                                <id>package-winx64</id>
                                 <phase>package</phase>
                                 <goals>
                                     <goal>launch4j</goal>
                                 </goals>
                                 <configuration>
                                     <headerType>gui</headerType>
-                                    <outfile>${basedir}${file.separator}target${file.separator}MINSensory-Setup-${project.version}}.exe</outfile>
-                                    <jar>${basedir}${file.separator}target${file.separator}installer-1.0-installer.jar</jar>
+                                    <outfile>${project.build.directory}/MINSensory-Installer-Winx86.exe</outfile>
+                                    <jar>${project.build.directory}/MINSensory-Installer-Winx86.jar</jar>
                                     <errTitle>MINSensory</errTitle>
                                     <jre>
                                         <minVersion>1.6.0</minVersion>
                                     </jre>
-                                    <icon>${project.parent.basedir}/mins/src/main/resources/WindowsIcon.ico</icon>
+                                    <!--<icon>${basedir}/src/main/resources/WindowsIcon.ico</icon>-->
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>package-winx86</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>launch4j</goal>
+                                </goals>
+                                <configuration>
+                                    <headerType>gui</headerType>
+                                    <outfile>${project.build.directory}/MINSensory-Installer-Winx64.exe</outfile>
+                                    <jar>${project.build.directory}/MINSensory-Installer-Winx64.jar</jar>
+                                    <errTitle>MINSensory</errTitle>
+                                    <jre>
+                                        <minVersion>1.6.0</minVersion>
+                                    </jre>
+                                    <!--<icon>${basedir}/src/main/resources/WindowsIcon.ico</icon>-->
                                 </configuration>
                             </execution>
                         </executions>
@@ -96,12 +130,11 @@
 
         </profile>
 
+
         <profile>
             <id>osx-install</id>
             <activation>
-                <os>
-                    <family>mac</family>
-                </os>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <build>
                 <plugins>

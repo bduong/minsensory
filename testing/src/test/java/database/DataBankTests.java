@@ -1,4 +1,11 @@
-package database;
+/* **************************************************************************
+ * Copyright (C) 2011
+ * Benjamin Duong, ECE @ Boston University
+  *
+ * All rights reserved.
+ * ************************************************************************** */
+
+ package database;
 
 import data.DataBank;
 import data.DataLine;

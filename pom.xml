@@ -288,7 +288,7 @@
             </modules>
         </profile>
         <profile>
-            <id>installWindows</id>
+            <id>build-installer-windows</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>

@@ -1,4 +1,11 @@
-package ui;
+/* **************************************************************************
+ * Copyright (C) 2011
+ * Benjamin Duong, ECE @ Boston University
+  *
+ * All rights reserved.
+ * ************************************************************************** */
+
+ package ui;
 
 
 import freq.FrequencyAnalysisProcessor;

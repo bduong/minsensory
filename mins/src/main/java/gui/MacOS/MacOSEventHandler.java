@@ -1,4 +1,11 @@
-package gui.MacOS;
+/* **************************************************************************
+ * Copyright (C) 2011
+ * Benjamin Duong, ECE @ Boston University
+  *
+ * All rights reserved.
+ * ************************************************************************** */
+
+ package gui.MacOS;
 
 import com.apple.eawt.AboutHandler;
 import com.apple.eawt.AppEvent;

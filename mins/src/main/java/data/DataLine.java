@@ -1,4 +1,11 @@
-package data;
+/* **************************************************************************
+ * Copyright (C) 2011
+ * Benjamin Duong, ECE @ Boston University
+  *
+ * All rights reserved.
+ * ************************************************************************** */
+
+ package data;
 
 /**
  * The <code>DataLine</code> object represents a set of 256 data points. Each

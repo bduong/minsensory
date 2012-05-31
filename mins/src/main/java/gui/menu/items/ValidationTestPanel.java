@@ -1,4 +1,11 @@
-package gui.menu.items;
+/* **************************************************************************
+ * Copyright (C) 2011
+ * Benjamin Duong, ECE @ Boston University
+  *
+ * All rights reserved.
+ * ************************************************************************** */
+
+ package gui.menu.items;
 
 import data.realtime.COMReader;
 import gnu.io.NoSuchPortException;

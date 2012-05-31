@@ -1,4 +1,11 @@
-package comRead;
+/* **************************************************************************
+ * Copyright (C) 2011
+ * Benjamin Duong, ECE @ Boston University
+  *
+ * All rights reserved.
+ * ************************************************************************** */
+
+ package comRead;
 
 import data.realtime.COMReader;
 import data.realtime.DataTimer;
