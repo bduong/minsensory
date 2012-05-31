@@ -5,7 +5,7 @@
  * All rights reserved.
  * ************************************************************************** */
 
-package com.minsensory.data.generator.testng;
+package com.minsensory.testng;
 
 import org.apache.log4j.Logger;
 import org.testng.*;

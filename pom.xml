@@ -213,7 +213,7 @@
                         <properties>
                             <property>
                                 <name>listener</name>
-                                <value>com.minsensory.data.generator.testng.LoggingListener</value>
+                                <value>com.minsensory.testng.LoggingListener</value>
                             </property>
                         </properties>
                     </configuration>
