@@ -58,7 +58,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>frontend.MINSensory</mainClass>
+                            <mainClass>com.minsensory.frontend.MINSensory</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -117,7 +117,7 @@
                         <version>1.0-alpha-2</version>
                         <configuration>
                             <bundleName>MINSensory</bundleName>
-                            <mainClass>frontend.MINSensory</mainClass>
+                            <mainClass>com.minsensory.frontend.MINSensory</mainClass>
                             <iconFile>
                                 ${basedir}/src/main/resources/MINSIcon.icns
                             </iconFile>
@@ -183,7 +183,7 @@
                                         <minVersion>1.6.0</minVersion>
                                     </jre>
                                     <classPath>
-                                        <mainClass>frontend.MINSensory</mainClass>
+                                        <mainClass>com.minsensory.frontend.MINSensory</mainClass>
                                     </classPath>
                                     <icon>${basedir}/src/main/resources/WindowsIcon.ico</icon>
                                     <versionInfo>
