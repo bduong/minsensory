@@ -5,16 +5,18 @@
  * All rights reserved.
  * ************************************************************************** */
 
- package com.minsensory.gui;
+package com.minsensory.gui;
 
 import com.minsensory.data.DataBank;
 import com.minsensory.data.DataLine;
+import com.minsensory.data.capture.SDCapture;
 import com.minsensory.data.playback.DataPopulator;
 import com.minsensory.data.playback.FileReader;
 import com.minsensory.data.playback.StaticDataBank;
 import com.minsensory.data.playback.UpdateTimer;
 import com.minsensory.data.realtime.COMReader;
 import com.minsensory.data.realtime.DataTimer;
+import com.minsensory.freq.FrequencyAnalysisProcessor;
 import gnu.io.NoSuchPortException;
 import gnu.io.SerialPort;
 import com.minsensory.gui.MacOS.MacOSEventHandler;
@@ -37,6 +39,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -119,6 +122,12 @@ public class UI {
 
     private JButton back;
     private JButton next;
+
+    /** Things for SD Capture */
+    private SDCapture sdCapture;
+
+    /** Things for Frequency Analysis */
+    private FrequencyAnalysisProcessor frequencyAnalysisProcessor;
 
     private boolean started;
 
@@ -999,15 +1008,16 @@ public class UI {
     }
 
     private void initializeSDCaptureButtons() {
+        sdCapture = new SDCapture();
         try {
             List<String> ports = COMReader.listPorts();
             String[] portNames = new String[ports.size()];
             ports.toArray(portNames);
-            if (ports.size() > 0) comPortName = "COM3";
+            if (ports.size() > 0) comPortName = portNames[0];
             else comPortName = "";
             if (portNames.length <= 0)
                 sdComBox = new JComboBox(new String[] { "None" });
-            else sdComBox = new JComboBox(new String[] {"COM3"});
+            else sdComBox = new JComboBox(portNames);
         } catch (NoSuchPortException e) {
             sdComBox = new JComboBox(new String[] { "None" });
         }
@@ -1019,7 +1029,7 @@ public class UI {
         sdBaudBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                baud = (Integer) sdBaudBox.getSelectedItem();
+                sdCapture.setBaud((Integer) sdBaudBox.getSelectedItem());
             }
         });
 
@@ -1031,13 +1041,13 @@ public class UI {
                 int bits = (Integer) sdDataBox.getSelectedItem();
                 switch (bits) {
                 case 5:
-                    dataBits = SerialPort.DATABITS_5;
+                    sdCapture.setDataBits(SerialPort.DATABITS_5);
                 case 6:
-                    dataBits = SerialPort.DATABITS_6;
+                    sdCapture.setDataBits(SerialPort.DATABITS_6);
                 case 7:
-                    dataBits = SerialPort.DATABITS_7;
+                    sdCapture.setDataBits(SerialPort.DATABITS_7);
                 case 8:
-                    dataBits = SerialPort.DATABITS_8;
+                    sdCapture.setDataBits(SerialPort.DATABITS_8);
                 }
             }
         });
@@ -1050,11 +1060,11 @@ public class UI {
                 int index = sdStopBitsBox.getSelectedIndex();
                 switch (index) {
                 case 0:
-                    stopBits = SerialPort.STOPBITS_1;
+                    sdCapture.setStopBits(SerialPort.STOPBITS_1);
                 case 1:
-                    stopBits = SerialPort.STOPBITS_2;
+                    sdCapture.setStopBits(SerialPort.STOPBITS_2);
                 case 2:
-                    stopBits = SerialPort.STOPBITS_1_5;
+                    sdCapture.setStopBits(SerialPort.STOPBITS_1_5);
                 }
             }
         });
@@ -1067,15 +1077,15 @@ public class UI {
                 int index = sdParityBitBox.getSelectedIndex();
                 switch (index) {
                 case 0:
-                    parity = SerialPort.PARITY_NONE;
+                    sdCapture.setParity(SerialPort.PARITY_NONE);
                 case 1:
-                    parity = SerialPort.PARITY_ODD;
+                    sdCapture.setParity(SerialPort.PARITY_ODD);
                 case 2:
-                    parity = SerialPort.PARITY_EVEN;
+                    sdCapture.setParity(SerialPort.PARITY_EVEN);
                 case 3:
-                    parity = SerialPort.PARITY_MARK;
+                    sdCapture.setParity(SerialPort.PARITY_MARK);
                 case 4:
-                    parity = SerialPort.PARITY_SPACE;
+                    sdCapture.setParity(SerialPort.PARITY_SPACE);
                 }
             }
         });
@@ -1083,14 +1093,66 @@ public class UI {
 
         sdSaveFileName = new JLabel("NONE");
         sdSaveFileSelect = new JButton("Select");
+        sdSaveFileSelect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                int returnVal = fileChooser.showSaveDialog(application);
+
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    saveDataFile = fileChooser.getSelectedFile();
+                    sdSaveFileName.setText(saveDataFile.getName());
+                    sdSaveFileName.setBackground(Color.GREEN);
+                    sdCapture.setSaveFile(saveDataFile);
+                }
+            }
+        });
         sdStartTransfer = new JButton("Start Transfer");
+        sdStartTransfer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    sdCapture.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         sdStopTransfer = new JButton("Stop Transfer");
+        sdStartTransfer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    sdCapture.stop();
+                } catch (IOException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+            }
+        });
         sdBytesTransferred = new JLabel("0 B");
+        sdCapture.setBytesLabel(sdBytesTransferred);
     }
 
     private void initializeFrequencyButtons() {
+        frequencyAnalysisProcessor = new FrequencyAnalysisProcessor();
         freqSaveFileName = new JLabel("");
         freqSaveFileSelect = new JButton("Select");
+        freqSaveFileSelect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                int returnVal = fileChooser.showSaveDialog(application);
+
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    saveDataFile = fileChooser.getSelectedFile();
+                    freqSaveFileName.setText(saveDataFile.getName());
+                    freqSaveFileName.setBackground(Color.GREEN);
+                    try {
+                        frequencyAnalysisProcessor.setLoadFile(saveDataFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
 
         alphaField = createThresholdField();
         betaField = createThresholdField();
@@ -1105,6 +1167,27 @@ public class UI {
         thetaSlider = createThresholdSlider();
 
         freqProcessButton = new JButton("Process Data");
+        freqProcessButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                createNewSaveFile(saveDataFile);
+                frequencyAnalysisProcessor.init();
+                try {
+                    frequencyAnalysisProcessor.run();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            private void createNewSaveFile(File loadFile) {
+                try {
+                    frequencyAnalysisProcessor.setSaveFile(new File(loadFile.getName() + "_processed.bin"));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         alphaLine = createFreqLine("Alpha");
         betaLine = createFreqLine("Beta");
         deltaLine = createFreqLine("Delta");
@@ -1119,16 +1202,16 @@ public class UI {
         seriesCollection.addSeries(thetaLine);
 
 
-         freqChartPanel = new ChartPanel(ChartFactory.createXYLineChart(
-           null,
-           null,
-           null,
-           seriesCollection,
-           PlotOrientation.VERTICAL,
-           false,
-           true,
-           false
-         ));
+        freqChartPanel = new ChartPanel(ChartFactory.createXYLineChart(
+          null,
+          null,
+          null,
+          seriesCollection,
+          PlotOrientation.VERTICAL,
+          false,
+          true,
+          false
+        ));
 
         freqChartPanel.getChart().getXYPlot().getRenderer().setSeriesPaint(0, new Color(255,0,0));
         freqChartPanel.getChart().getXYPlot().getRenderer().setSeriesPaint(1, new Color(0,0, 255));
@@ -1180,13 +1263,13 @@ public class UI {
         public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
             Object source = propertyChangeEvent.getSource();
             if(source == alphaField) {
-               alphaThreshold = (Integer) alphaField.getValue();
-               alphaSlider.setValue(alphaThreshold);
-               changeThresholdLine(alphaLine, alphaThreshold);
+                alphaThreshold = (Integer) alphaField.getValue();
+                alphaSlider.setValue(alphaThreshold);
+                changeThresholdLine(alphaLine, alphaThreshold);
             } else if(source == betaField) {
-               betaThreshold = (Integer)  betaField.getValue();
-               betaSlider.setValue(betaThreshold);
-               changeThresholdLine(betaLine, betaThreshold);
+                betaThreshold = (Integer)  betaField.getValue();
+                betaSlider.setValue(betaThreshold);
+                changeThresholdLine(betaLine, betaThreshold);
             } else if(source == deltaField) {
                 deltaThreshold = (Integer) deltaField.getValue();
                 deltaSlider.setValue(deltaThreshold);

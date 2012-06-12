@@ -100,9 +100,14 @@
                                     <outfile>${project.build.directory}/MINSensory-Installer-Winx86.exe</outfile>
                                     <jar>${project.build.directory}/MINSensory-Installer-Winx86.jar</jar>
                                     <errTitle>MINSensory</errTitle>
+                                    <classPath>
+                                        <mainClass>com.izforge.izpack.installer.bootstrap.Installer</mainClass>
+                                    </classPath>
                                     <jre>
                                         <minVersion>1.6.0</minVersion>
                                     </jre>
+
+
                                     <!--<icon>${basedir}/src/main/resources/WindowsIcon.ico</icon>-->
                                 </configuration>
                             </execution>
@@ -117,9 +122,13 @@
                                     <outfile>${project.build.directory}/MINSensory-Installer-Winx64.exe</outfile>
                                     <jar>${project.build.directory}/MINSensory-Installer-Winx64.jar</jar>
                                     <errTitle>MINSensory</errTitle>
+                                    <classPath>
+                                        <mainClass>com.izforge.izpack.installer.bootstrap.Installer</mainClass>
+                                    </classPath>
                                     <jre>
                                         <minVersion>1.6.0</minVersion>
                                     </jre>
+
                                     <!--<icon>${basedir}/src/main/resources/WindowsIcon.ico</icon>-->
                                 </configuration>
                             </execution>
@@ -132,7 +141,7 @@
 
 
         <profile>
-            <id>osx-install</id>
+            <id>build-installer-osx</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>

@@ -37,7 +37,7 @@
         <pack name="Java USB Communications - Mac OSX" required="no">
             <description>The libraries needed to communicate with serial port</description>
             <file src="RXTXcomm.jar" targetdir="/Library/Java/Extensions"/>
-            <file src="librxtxSerial.jnilib" targetdir="$/Library/Java/Extensions"/>
+            <file src="librxtxSerial.jnilib" targetdir="/Library/Java/Extensions"/>
         </pack>
     </packs>
 </installation>

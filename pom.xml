@@ -298,7 +298,7 @@
             </modules>
         </profile>
         <profile>
-            <id>installOSX</id>
+            <id>build-installer-osx</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
