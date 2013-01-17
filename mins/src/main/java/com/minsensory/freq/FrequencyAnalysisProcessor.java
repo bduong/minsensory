@@ -5,11 +5,17 @@
  * All rights reserved.
  * ************************************************************************** */
 
- package com.minsensory.freq;
+package com.minsensory.freq;
 
 import com.minsensory.data.playback.FileReader;
 import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class FrequencyAnalysisProcessor {
 
@@ -56,13 +63,29 @@ public class FrequencyAnalysisProcessor {
     }
 
     public void run() throws IOException {
-        boolean notEOF = true;
-        while (notEOF) {
-            notEOF = readData(NUMBER_OF_POINTS_PER_ITERATION);
-            runFrequencyAnalysis();
-            saveData();
-        }
-        writer.close();
+//        boolean notEOF = true;
+//        while (notEOF) {
+//            notEOF = readData(NUMBER_OF_POINTS_PER_ITERATION);
+//            runFrequencyAnalysis();
+//            saveData();
+//        }
+//        writer.close();
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                JFrame frame = new JFrame("Frequency Analysis");
+                ProgressPanel progressPanel = new ProgressPanel();
+                progressPanel.setOpaque(true);
+                frame.setContentPane(progressPanel);
+
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+
+            }
+
+        });
+
     }
 
     private void clearFlags() {
@@ -92,7 +115,7 @@ public class FrequencyAnalysisProcessor {
                     node.add(dataPoint);
                 } catch (IOException e) {
                     if (e.getMessage().equals("End of File")) {
-                       return false;
+                        return false;
                     } else {
                         throw e;
                     }
@@ -233,4 +256,113 @@ public class FrequencyAnalysisProcessor {
     public void setGammaThreshold(float gammaThreshold) {
         this.gammaThreshold = gammaThreshold;
     }
+
+    private class ProgressPanel extends JPanel implements ActionListener, PropertyChangeListener {
+
+        private JButton startButton;
+        private JButton cancelButton;
+        private JProgressBar progressBar;
+        private JTextArea taskOutput;
+        private Task task;
+
+        public ProgressPanel() {
+            super();
+            super.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+            startButton = new JButton("Start");
+            startButton.setActionCommand("start");
+            startButton.addActionListener(this);
+
+            cancelButton = new JButton("Cancel");
+            cancelButton.setActionCommand("cancel");
+            cancelButton.addActionListener(this);
+
+            progressBar = new JProgressBar(0, 100);
+            progressBar.setValue(0);
+            progressBar.setStringPainted(true);
+
+            taskOutput = new JTextArea(5, 20);
+            taskOutput.setMargin(new Insets(5, 5, 5, 5));
+            taskOutput.setEditable(false);
+
+            JPanel panel = new JPanel();
+            panel.add(startButton);
+            panel.add(cancelButton);
+//            panel.add(progressBar);
+
+            add(panel);
+            add(progressBar);
+            add(new JScrollPane(taskOutput));
+            setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        }
+
+        class Task extends SwingWorker<Void, Void> {
+            /*
+            * Main task. Executed in background thread.
+            */
+            @Override
+            public Void doInBackground() {
+                Random random = new Random();
+                int progress = 0;
+                //Initialize progress property.
+                setProgress(0);
+                while (progress < 100) {
+                    if(isCancelled()) break;
+                    //Sleep for up to one second.
+                    try {
+                        Thread.sleep(random.nextInt(1000));
+                    } catch (InterruptedException ignore) {
+                        break;
+                    }
+                    //Make random progress.
+                    progress += random.nextInt(10);
+                    setProgress(Math.min(progress, 100));
+                }
+                return null;
+            }
+
+            /*
+            * Executed in event dispatching thread
+            */
+            @Override
+            public void done() {
+                Toolkit.getDefaultToolkit().beep();
+                cancelButton.setEnabled(false);
+                setCursor(null);
+                taskOutput.append("Done!\n");
+            }
+        }
+
+
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            if("start".equals(actionEvent.getActionCommand())) {
+                cancelButton.setEnabled(true);
+                startButton.setEnabled(false);
+
+                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                task = new Task();
+                task.addPropertyChangeListener(this);
+                task.execute();
+
+            } else if("cancel".equals(actionEvent.getActionCommand())) {
+                cancelButton.setEnabled(false);
+                task.cancel(true);
+            }
+
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if ("progress".equals(evt.getPropertyName())) {
+                int progress = (Integer) evt.getNewValue();
+                progressBar.setValue(progress);
+                taskOutput.append(String.format(
+                  "Completed %d%% of task.\n", task.getProgress()));
+            }
+        }
+    }
+
 }
+

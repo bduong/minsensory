@@ -1301,19 +1301,23 @@ public class UI {
             if(source == alphaSlider) {
                 alphaThreshold = alphaSlider.getValue();
                 alphaField.setValue(alphaThreshold);
+                frequencyAnalysisProcessor.setAlphaThreshold(alphaThreshold);
             } else if(source == betaSlider) {
                 betaThreshold = betaSlider.getValue();
                 betaField.setValue(betaThreshold);
+                frequencyAnalysisProcessor.setBetaThreshold(betaThreshold);
             } else if(source == deltaSlider) {
                 deltaThreshold = deltaSlider.getValue();
                 deltaField.setValue(deltaThreshold);
+                frequencyAnalysisProcessor.setDeltaThreshold(deltaThreshold);
             } else if(source == gammaSlider) {
                 gammaThreshold = gammaSlider.getValue();
                 gammaField.setValue(gammaThreshold);
+                frequencyAnalysisProcessor.setGammaThreshold(gammaThreshold);
             } else {
                 thetaThreshold = thetaSlider.getValue();
                 thetaField.setValue(thetaThreshold);
-
+                frequencyAnalysisProcessor.setThetaThreshold(thetaThreshold);
             }
         }
     }
