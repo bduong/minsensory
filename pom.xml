@@ -13,16 +13,8 @@
 
     <repositories>
         <repository>
-            <id>lib</id>
-            <name>lib</name>
-            <releases>
-                <enabled>true</enabled>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <url>file://${root}${file.separator}lib</url>
+		<id>Dropbox</id>
+		<url>https://dl.dropbox.com/u/2469167/mvn-repo</url>
         </repository>
     </repositories>
 
