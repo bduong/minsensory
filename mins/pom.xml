@@ -159,7 +159,7 @@
         <profile>
             <id>windows-deploy</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <build>
                 <plugins>

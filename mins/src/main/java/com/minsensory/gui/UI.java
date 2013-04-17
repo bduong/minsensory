@@ -199,6 +199,8 @@ public class UI {
     private JSlider gammaSlider;
     private JSlider thetaSlider;
 
+    private List<String> ports;
+
     private JButton freqProcessButton;
     private ChartPanel freqChartPanel;
     private XYSeries alphaLine;
@@ -650,17 +652,27 @@ public class UI {
         });
 
         try {
-            List<String> ports = COMReader.listPorts();
+            ports = COMReader.listPorts();
             String[] portNames = new String[ports.size()];
             ports.toArray(portNames);
-            if (ports.size() > 0) comPortName = "COM3";
+            for (String name: portNames) {
+                System.out.println(name);
+            }
+            if (ports.size() > 0) comPortName = portNames[0];
             else comPortName = "";
             if (portNames.length <= 0)
                 realTimeComBox = new JComboBox(new String[] { "None" });
-            else realTimeComBox = new JComboBox(new String[] {"COM3"});
+            else realTimeComBox = new JComboBox(portNames);
         } catch (NoSuchPortException e) {
             realTimeComBox = new JComboBox(new String[] { "None" });
         }
+
+        realTimeComBox.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent e) {
+                int index = realTimeComBox.getSelectedIndex();
+                comPortName = ports.get(index);
+            }
+        });
 
         realTimeBaudBox = new JComboBox(baudRates);
         realTimeBaudBox.setEditable(true);
@@ -800,9 +812,9 @@ public class UI {
                 chooseSaveFile.setEnabled(true);
                 if (saveDataFile != null) startDataRead.setEnabled(true);
                 try {
-//                    comReader
-//                      .connectTo(comPortName, baud, dataBits, stopBits, parity);
-                    //comReader.connectTo(comPortName);
+                    comReader
+                      .connectTo(comPortName, baud, dataBits, stopBits, parity);
+//                    comReader.connectTo(comPortName);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

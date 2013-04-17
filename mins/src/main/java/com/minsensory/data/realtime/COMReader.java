@@ -192,19 +192,22 @@ public class COMReader {
     public int[] readAllInts(BufferedOutputStream out) throws IOException {
         int [] numbers = new int[256];
 
-        in.read(startByte, 0, 1);
-        while(startByte[0] != 0x10) {in.read(startByte, 0, 1); };
-        if (in.available() >= 512){
+//        if (in.available() >= 512){
             int num = in.read(allBytes, 0, 512);
 
             out.write(allBytes, 0, 512);
             for (int jj = 0; jj< allBytes.length; jj+=2){
                 int value = allBytes[jj] << 8;
                 numbers[jj/2] =  (0x0000FFFF & ((value) | (allBytes[jj+1] & 0x000000FF)));
+                System.out.print(numbers[jj/2] + " ");
             }
+            System.out.println("");
             return numbers;
-        }
-        return null;
+//        } else {
+//            System.out.print(in.available());
+
+//        }
+//        return null;
     }
 
     /**
